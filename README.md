@@ -1,4 +1,4 @@
-# FireRecover
+# ReGreen
 
 FireRecover, Huawei ICT Competition – Innovation Track kapsamında geliştirilen, yangın sonrası doğal toparlanma sürecini analiz eden ve uzmanlara müdahale önceliği konusunda karar desteği sunan bir sistemdir.
 
