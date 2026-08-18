@@ -1,4 +1,4 @@
-# FireRecover Data Contract
+# ReGreen Data Contract
 
 Bu doküman, AI, backend ve frontend tarafında kullanılacak ortak veri alanlarını tanımlar.
 

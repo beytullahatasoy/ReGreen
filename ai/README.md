@@ -1,6 +1,6 @@
 # AI
 
-FireRecover yapay zekâ ve veri çalışmaları bu klasörde yürütülür.
+ReGreen yapay zekâ ve veri çalışmaları bu klasörde yürütülür.
 
 Sorumlu: Buğra
 

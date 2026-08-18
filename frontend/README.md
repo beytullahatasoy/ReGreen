@@ -1,6 +1,6 @@
 # Frontend
 
-FireRecover kullanıcı arayüzleri ve harita çalışmaları bu klasörde yürütülür.
+ReGreen kullanıcı arayüzleri ve harita çalışmaları bu klasörde yürütülür.
 
 Sorumlu: Zeynep
 

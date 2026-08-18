@@ -1,6 +1,6 @@
 # Backend
 
-FireRecover arka uç, API ve veritabanı çalışmaları bu klasörde yürütülür.
+ReGreen arka uç, API ve veritabanı çalışmaları bu klasörde yürütülür.
 
 Sorumlu: Beytullah
 
