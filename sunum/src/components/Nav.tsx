@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 
 const BOLUMLER = [
-  { id: 'sorun', ad: 'Sorun' },
-  { id: 'yontem', ad: 'Yöntem' },
-  { id: 'test', ad: 'Fizibilite testi' },
-  { id: 'bulgular', ad: 'Bulgular' },
+  { id: 'sorun', ad: 'Problem' },
+  { id: 'yontem', ad: 'Method' },
+  { id: 'test', ad: 'Feasibility' },
+  { id: 'bulgular', ad: 'Findings' },
 ]
 
 export default function Nav() {
@@ -13,15 +13,13 @@ export default function Nav() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between p-4 sm:p-5">
-      {/* sol: logo + kelime isareti */}
       <a href="#top" className="flex items-center gap-2.5 group">
         <svg width="26" height="26" viewBox="0 0 256 256" fill="#ffffff" aria-hidden="true">
           <path d="M 256 256 L 128 256 L 0 128 L 128 128 Z M 256 128 L 128 128 L 0 0 L 128 0 Z" />
         </svg>
-        <span className="text-white text-2xl font-playfair italic">FireRecover</span>
+        <span className="text-white text-2xl font-playfair italic">ReGreen</span>
       </a>
 
-      {/* orta: hap seklinde menu */}
       <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-2 py-2 items-center gap-1">
         {BOLUMLER.map((b, i) => (
           <a
@@ -38,19 +36,17 @@ export default function Nav() {
         ))}
       </div>
 
-      {/* sag: masaustu eylem */}
       <a
         href="#sirada"
         className="hidden md:block bg-white text-gray-900 text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-gray-100 transition-colors"
       >
-        Sırada ne var
+        What's next
       </a>
 
-      {/* mobil hamburger */}
       <button
         type="button"
         onClick={() => setAcik((v) => !v)}
-        aria-label={acik ? 'Menüyü kapat' : 'Menüyü aç'}
+        aria-label={acik ? 'Close menu' : 'Open menu'}
         aria-expanded={acik}
         className="md:hidden text-white p-2 -mr-2 rounded-full hover:bg-white/15 transition-colors"
       >
@@ -59,7 +55,12 @@ export default function Nav() {
 
       {acik && (
         <div className="md:hidden absolute top-full left-4 right-4 mt-1 bg-black/85 backdrop-blur-md border border-white/15 rounded-2xl p-2 flex flex-col">
-          {[...BOLUMLER, { id: 'sirada', ad: 'Sırada ne var' }].map((b) => (
+          {[
+            ...BOLUMLER,
+            { id: 'recovery', ad: 'Recovery Zone' },
+            { id: 'gonullu', ad: 'Volunteer Journey' },
+            { id: 'sirada', ad: "What's next" },
+          ].map((b) => (
             <a
               key={b.id}
               href={`#${b.id}`}

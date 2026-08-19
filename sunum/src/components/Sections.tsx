@@ -1,43 +1,8 @@
-import type { ReactNode } from 'react'
 import Reveal from './Reveal'
+import { Bolum, Baslik, It, Metin, V } from './Kabuk'
 import { CokusGrafigi, IzlenceGrafigi, TutarlilikGrafigi } from './Charts'
 
-/* ---------------------------------------------------------------- kabuklar */
-
-function Bolum({ id, children }: { id?: string; children: ReactNode }) {
-  return (
-    <section id={id} className="px-5 sm:px-8 py-24 sm:py-28 border-t border-white/[0.09]">
-      <div className="max-w-6xl mx-auto">{children}</div>
-    </section>
-  )
-}
-
-function Baslik({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return (
-    <h2 className={`text-white text-[2rem] sm:text-[2.6rem] lg:text-[3rem] font-normal
-      leading-[1.09] tracking-[-0.035em] text-balance pb-1 ${className}`}>
-      {children}
-    </h2>
-  )
-}
-
-function It({ children }: { children: ReactNode }) {
-  return <span className="font-playfair italic leading-[1.15]">{children}</span>
-}
-
-function Metin({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return (
-    <p className={`text-white/60 text-[16.5px] leading-[1.72] max-w-[62ch] ${className}`}>
-      {children}
-    </p>
-  )
-}
-
-function V({ children }: { children: ReactNode }) {
-  return <strong className="text-white/95 font-medium">{children}</strong>
-}
-
-/* ------------------------------------------------------------------ sorun */
+/* ------------------------------------------------------------------ problem */
 
 export function Sorun() {
   return (
@@ -46,21 +11,22 @@ export function Sorun() {
         <div className="lg:col-span-7">
           <Reveal>
             <Baslik>
-              Yangın söndüğünde <It>asıl karar</It> başlıyor
+              When the fire is out, <It>the real decision</It> begins
             </Baslik>
           </Reveal>
           <Reveal delay={90}>
             <Metin className="mt-8">
-              Türkiye’de her yaz on binlerce hektar orman yanıyor. Alevler söndükten sonra
-              ortaya çok daha sessiz bir soru çıkıyor:{' '}
-              <V>elde sınırlı ekip, bütçe ve fidan varken hangi bölgeye önce gidilmeli?</V>
+              Every summer in Turkey, tens of thousands of hectares of forest burn.
+              Once the flames are out, a much quieter question emerges:{' '}
+              <V>with limited crews, budgets and seedlings — which area should be addressed first?</V>
             </Metin>
           </Reveal>
           <Reveal delay={140}>
             <Metin className="mt-6">
-              Bu karar bugün saha tecrübesiyle veriliyor. Tecrübe değerli, ama yüzlerce
-              bölgeyi aynı anda ve aynı ölçütlerle karşılaştırmak insan gözüyle mümkün değil.
-              FireRecover karar vermiyor, <V>veriye dayalı bir sıralama öneriyor.</V>
+              Today this decision relies on field experience. Experience matters, but
+              comparing hundreds of areas simultaneously against the same criteria is
+              beyond human capacity.
+              ReGreen does not decide — <V>it proposes a data-driven prioritisation.</V>
             </Metin>
           </Reveal>
         </div>
@@ -68,23 +34,23 @@ export function Sorun() {
         <div className="lg:col-span-5 lg:pt-3">
           <Reveal delay={180}>
             <p className="text-white/40 text-sm mb-6 leading-relaxed">
-              Bir bölge iki ayrı nedenden öncelikli olabilir.
+              An area can be high-priority for two distinct reasons.
             </p>
             <div className="border-t border-white/15">
               <div className="py-6 border-b border-white/[0.09]">
                 <h3 className="text-white text-[18px] font-medium tracking-[-0.015em] mb-2">
-                  Kendi başına toparlanamaz
+                  Cannot recover on its own
                 </h3>
                 <p className="text-white/55 text-[15px] leading-[1.6]">
-                  Dik yamaç, yüksek rakım, kozalağı yanınca geri gelmeyen ibreli orman.
+                  Steep slope, high elevation, conifer forest whose cones are destroyed by fire.
                 </p>
               </div>
               <div className="py-6">
                 <h3 className="text-white text-[18px] font-medium tracking-[-0.015em] mb-2">
-                  Toparlanamazsa bedeli ağır
+                  Failure to recover is costly
                 </h3>
                 <p className="text-white/55 text-[15px] leading-[1.6]">
-                  Yakınında köy var. Ağaç örtüsü olmayınca ilk sağanakta toprak aşağı iniyor.
+                  A nearby village. Without tree cover, the first heavy rain brings soil erosion.
                 </p>
               </div>
             </div>
@@ -95,36 +61,36 @@ export function Sorun() {
   )
 }
 
-/* ----------------------------------------------------------------- yöntem */
+/* ------------------------------------------------------------------ method */
 
 export function Yontem() {
   const bant = [
-    { d: '0,1 - 0,2', a: 'Çıplak toprak, kül', w: '26%', c: '#6b4a35' },
-    { d: '0,2 - 0,4', a: 'Seyrek ot ve çalı', w: '28%', c: '#8f7a3c' },
-    { d: '0,4 - 0,7', a: 'Sağlıklı orman', w: '46%', c: '#2f7a35' },
+    { d: '0.1 – 0.2', a: 'Bare soil, ash', w: '26%', c: '#6b4a35' },
+    { d: '0.2 – 0.4', a: 'Sparse grass & shrub', w: '28%', c: '#8f7a3c' },
+    { d: '0.4 – 0.7', a: 'Healthy forest', w: '46%', c: '#2f7a35' },
   ]
   return (
     <Bolum id="yontem">
       <Reveal>
         <Baslik className="max-w-[24ch]">
-          Doğru cevabı kimse yazmıyor, biz de <It>doğaya sorduk</It>
+          No one wrote the right answer, so we <It>asked nature</It>
         </Baslik>
       </Reveal>
 
       <Reveal delay={90}>
         <Metin className="mt-8">
-          Böyle bir sistemi eğitmek için “bu bölgeye 8 puan öncelik verilmeliydi” diyen bir
-          kayıt gerekir. Böyle bir kayıt tutulmuyor. Onun yerine{' '}
-          <V>doğanın kendi verdiği cevabı okuduk:</V> yangından iki yıl sonra hâlâ
-          toparlanamamış olan yer, insan yardımı gereken yerdir.
+          Training this kind of system requires a record saying "this area deserved
+          priority score 8." No such record exists. Instead,{' '}
+          <V>we read nature's own answer:</V> an area that still hasn't recovered
+          two years after a fire is the area that needs human intervention.
         </Metin>
       </Reveal>
 
       <Reveal delay={130}>
         <Metin className="mt-6">
-          Bunu uydudan ölçüyoruz. Sağlıklı yapraklar kızılötesi ışığı güçlü yansıtır,
-          kırmızıyı yutar. Uydu bu ikisini oranlarsa{' '}
-          <V>o noktada ne kadar canlı bitki olduğunu gösteren tek bir sayı</V> çıkıyor.
+          We measure this from satellite. Healthy leaves strongly reflect near-infrared
+          and absorb red. When the satellite computes the ratio,{' '}
+          <V>a single number emerges showing how much live vegetation exists at that point.</V>
         </Metin>
       </Reveal>
 
@@ -148,37 +114,37 @@ export function Yontem() {
 
       <Reveal delay={210}>
         <p className="mt-16 text-white text-[21px] sm:text-[25px] leading-[1.45] tracking-[-0.022em] max-w-[56ch] text-balance">
-          Sistem “öncelik” denen soyut şeyi değil, ormanın{' '}
-          <It>kendi kendine iyileşme kapasitesini</It> öğreniyor. Öncelik bunun tam tersi.
+          The system doesn't learn the abstract concept of "priority." It learns a forest's{' '}
+          <It>natural recovery capacity.</It> Priority is exactly the opposite.
         </p>
       </Reveal>
     </Bolum>
   )
 }
 
-/* ------------------------------------------------------- fizibilite testi */
+/* --------------------------------------------------------- feasibility test */
 
 const SORULAR = [
-  ['Veri kaynakları', 'Sentinel-2, Copernicus DEM, ESA WorldCover ve OpenStreetMap. Dördü de açık veri; ücret, hesap ya da API anahtarı gerekmiyor.'],
-  ['Ölçüm doğruluğu', 'Bitki yoğunluğu dört yıl boyunca sabit, yangın ayında uçuruma düşüyor. Yöntem olayı doğru tarihte tespit ediyor.'],
-  ['Ölçeklenebilirlik', 'Üç bölge, 27.970 hücre, uçtan uca beş dakika. Tek makinede, paralel altyapı gerektirmeden.'],
-  ['Öğrenilebilir yapı', 'Aynı ilişkiler birbirinden bağımsız üç bölgede de aynı yönde çıkıyor. Model kurmanın önü açık.'],
+  ['Data sources', 'Sentinel-2, Copernicus DEM, ESA WorldCover and OpenStreetMap. All four are open data — no cost, no account, no API key required.'],
+  ['Measurement accuracy', 'Vegetation density is stable for four years, then collapses in the fire month. The method detects the event on the correct date.'],
+  ['Scalability', 'Three regions, 27,970 cells, end-to-end in five minutes. Single machine, no parallel infrastructure.'],
+  ['Learnable structure', 'The same relationships appear in the same direction across three independent regions. The path to building a model is clear.'],
 ]
 
 export function Test() {
   return (
     <Bolum id="test">
       <Reveal>
-        <div className="text-[#e8702a] text-[13px] font-medium mb-6">Fizibilite testi</div>
+        <div className="text-[#e8702a] text-[13px] font-medium mb-6">Feasibility study</div>
         <Baslik className="max-w-[22ch]">
-          Model kurulmadan önce <It>dört koşul</It> doğrulandı
+          Before building the model, <It>four conditions</It> were verified
         </Baslik>
       </Reveal>
       <Reveal delay={90}>
         <Metin className="mt-8">
-          Sistemin kurulabilir olması dört şeye bağlıydı: veriye erişim, ölçümün
-          doğruluğu, ölçeklenebilirlik ve veride öğrenilebilir bir yapının varlığı.{' '}
-          <V>Dördü de doğrulandı.</V>
+          The system's viability depended on four things: data access, measurement
+          accuracy, scalability, and the existence of a learnable structure in the data.{' '}
+          <V>All four were confirmed.</V>
         </Metin>
       </Reveal>
 
@@ -195,16 +161,15 @@ export function Test() {
         </div>
       </Reveal>
 
-      {/* gercek uydu kanit gorseli */}
       <Reveal delay={170}>
         <figure className="m-0 mt-24">
           <div className="grid sm:grid-cols-2 gap-4">
             {[
-              ['/yangin-oncesi.jpg', 'Yangından önce', 'Kapalı orman örtüsü'],
-              ['/yangin-sonrasi.jpg', '40 gün sonra', 'Aynı kare, aynı uydu'],
+              ['/yangin-oncesi.jpg', 'Before the fire', 'Closed forest canopy'],
+              ['/yangin-sonrasi.jpg', '40 days later', 'Same frame, same satellite'],
             ].map(([src, t, a]) => (
               <div key={src}>
-                <img src={src} alt={`${t}: uydu görüntüsü`}
+                <img src={src} alt={`${t}: satellite image`}
                   className="w-full h-auto block" loading="lazy" />
                 <div className="mt-3 flex items-baseline gap-3">
                   <span className="text-white text-[15px]">{t}</span>
@@ -214,8 +179,8 @@ export function Test() {
             ))}
           </div>
           <figcaption className="text-white/40 text-[14px] mt-6 leading-relaxed max-w-[62ch]">
-            Yanık iz çıplak gözle görülüyor. Ama sistemin işi bakmak değil ölçmek, çünkü
-            yüzlerce bölgeyi tek tek gözle karşılaştıramazsınız.
+            The burn scar is visible to the naked eye. But the system's job is not to look
+            — it's to measure, because you cannot compare hundreds of areas by eye.
           </figcaption>
         </figure>
       </Reveal>
@@ -229,10 +194,10 @@ export function Test() {
       <Reveal delay={140}>
         <div className="mt-20 grid grid-cols-2 lg:grid-cols-4 border-t border-white/15">
           {[
-            ['27.970', 'incelenen hücre'],
-            ['3.269', 'yanmış hücre'],
-            ['1.880', 'güvenilir ölçüm'],
-            ['5 dk', 'uçtan uca süre'],
+            ['27,970', 'cells analysed'],
+            ['3,269', 'burned cells'],
+            ['1,880', 'reliable measurements'],
+            ['5 min', 'end-to-end runtime'],
           ].map(([s, a]) => (
             <div key={a} className="py-8 pr-6 border-b lg:border-b-0 border-white/[0.09]">
               <div className="text-white text-[2.3rem] font-normal tabular-nums tracking-[-0.045em] leading-none">
@@ -243,9 +208,10 @@ export function Test() {
           ))}
         </div>
         <Metin className="mt-8">
-          Yanmış araziyi 500 metrelik karelere bölüp her kare için yedi ölçüm topladık:
-          yangın şiddeti, eğim, yükselti, ağaç oranı, suya, yola ve yerleşime mesafe.{' '}
-          <V>Hiçbir sayı elle girilmedi.</V>
+          The burned land was divided into 500-metre grid cells. For each cell we collected
+          seven measurements: fire severity, slope, elevation, tree cover ratio, and distance
+          to water, roads and settlements.{' '}
+          <V>Not a single number was entered manually.</V>
         </Metin>
       </Reveal>
 
@@ -253,21 +219,21 @@ export function Test() {
   )
 }
 
-/* --------------------------------------------------------------- bulgular */
+/* ----------------------------------------------------------------- findings */
 
 export function Bulgular() {
   return (
     <Bolum id="bulgular">
       <Reveal>
         <Baslik className="max-w-[22ch]">
-          Test beklemediğimiz <It>bir şey</It> gösterdi
+          The test revealed <It>something unexpected</It>
         </Baslik>
       </Reveal>
       <Reveal delay={90}>
         <Metin className="mt-8 mb-14">
-          Yangın ne kadar ağır olursa olsun, iki yıl sonra bütün bölgeler aynı bitki
-          yoğunluğuna geliyor. Aradaki fark, yangından <V>önce</V> ne kadar zengin
-          olduklarında.
+          Regardless of how severe the fire was, all areas converge to the same
+          vegetation density two years later. The difference lies in how rich they were{' '}
+          <V>before</V> the fire.
         </Metin>
       </Reveal>
 
@@ -275,8 +241,9 @@ export function Bulgular() {
 
       <Reveal delay={100}>
         <p className="my-20 text-white text-[21px] sm:text-[25px] leading-[1.45] tracking-[-0.022em] max-w-[56ch] text-balance">
-          Ağır yanan yerler daha zengindi, daha çoğunu kaybetti ve aynı yerde bitti. Yani
-          ağır yanan iyi toparlanmıyor, <It>çok daha büyük bir açık veriyor.</It>
+          Severely burned areas were richer, lost more, and ended up in the same place.
+          So severe burning doesn't just mean slow recovery —{' '}
+          <It>it means a far larger deficit.</It>
         </p>
       </Reveal>
 
@@ -284,17 +251,18 @@ export function Bulgular() {
 
       <Reveal delay={100}>
         <Metin className="mt-14">
-          Asıl önemli olan bu ikinci grafik. Tek bir bölgede görülen örüntü tesadüf olabilir;
-          birbirinden yüzlerce kilometre uzaktaki üç bölgede tekrarlanıyorsa{' '}
-          <V>modelin tutunabileceği gerçek bir yapı var demektir.</V> Fizibilite testinin
-          asıl cevabı da bu.
+          The second graph is what matters most. A pattern found in a single region could
+          be coincidence; when it repeats across three regions hundreds of kilometres
+          apart,{' '}
+          <V>there is a real structure the model can learn from.</V> That is the true
+          answer from this feasibility study.
         </Metin>
       </Reveal>
     </Bolum>
   )
 }
 
-/* ----------------------------------------------------------------- sırada */
+/* ----------------------------------------------------------------- what's next */
 
 export function Sirada() {
   return (
@@ -303,15 +271,16 @@ export function Sirada() {
         <div className="lg:col-span-5">
           <Reveal>
             <Baslik>
-              Sırada <It>tahmin</It> var
+              Next up: <It>prediction</It>
             </Baslik>
           </Reveal>
           <Reveal delay={90}>
             <Metin className="mt-8">
-              Buraya kadar her şey geçmişi ölçmek. Ama bu yaz yanan bir orman için iki yıl
-              bekleyemeyiz. <V>Modelin tek işi bu bekleyişi ortadan kaldırmak:</V> yangından
-              hemen sonra eğime, yüksekliğe, ağaç oranına ve yola bakıp iki yıl sonrasını
-              bugünden tahmin etmek.
+              Everything so far has been measuring the past. But we can't wait two years
+              for a forest that burned this summer.{' '}
+              <V>The model's sole purpose is to eliminate that wait:</V> using slope,
+              elevation, tree cover and road proximity, predict two years from now —
+              right after the fire.
             </Metin>
           </Reveal>
         </div>
@@ -320,10 +289,10 @@ export function Sirada() {
           <Reveal delay={130}>
             <div className="border-t border-white/15">
               {[
-                ['Hafta 2', 'Model ve doğrulama',
-                  'Sınav şu: iki bölgede öğren, hiç görmediğin üçüncü bölgede test et. Gerçek hayatta karşılaşacağı durum bu.'],
-                ['Hafta 3', 'Harita ve açıklama',
-                  'Harita üzerinde öncelik sıralaması ve her bölge için düz Türkçe gerekçe.'],
+                ['Week 2', 'Model & validation',
+                  "The test: train on two regions, evaluate on a third you've never seen. That's exactly the real-world scenario."],
+                ['Week 3', 'Map & explanation',
+                  'A priority ranking on a map and plain-language reasoning for each area.'],
               ].map(([h, b, m]) => (
                 <div key={h} className="grid sm:grid-cols-12 gap-x-8 gap-y-2 py-7 border-b border-white/[0.09]">
                   <div className="sm:col-span-3 text-[#e8702a] text-[14px] tabular-nums">{h}</div>
@@ -338,10 +307,10 @@ export function Sirada() {
 
           <Reveal delay={170}>
             <p className="mt-9 text-white/45 text-[14.5px] leading-[1.65] max-w-[58ch]">
-              <span className="text-white/70">Bilinen sınırlar.</span> Üç bölge de aynı
-              yaza ait, dolayısıyla mevsimsel genelleme farklı yıllardan veriyle
-              doğrulanmalı. Yanık alanların bir bölümünde idari müdahale yapılmış;
-              oradaki ölçüm saf doğal iyileşmeyi yansıtmıyor.
+              <span className="text-white/70">Known limitations.</span> All three regions
+              belong to the same summer, so seasonal generalisation must be validated with
+              data from other years. Some burned areas received administrative intervention;
+              measurements there do not reflect pure natural recovery.
             </p>
           </Reveal>
         </div>
@@ -350,18 +319,18 @@ export function Sirada() {
       <Reveal delay={200}>
         <div className="mt-24 border-t border-white/15 pt-9">
           <h3 className="text-white text-[19px] font-medium tracking-[-0.02em] mb-2">
-            Huawei Cloud üzerinde çalışacak mimari
+            Architecture to run on Huawei Cloud
           </h3>
           <Metin className="mb-9">
-            Fizibilite testi hız için yerel makinede koştu. Sistemin buluta taşınan
-            hâli dört parçadan oluşuyor.
+            The feasibility study ran locally for speed. The cloud-deployed system
+            consists of four components.
           </Metin>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-8">
             {[
-              ['OBS', 'Ham uydu çıktıları', 'Nesne depolama. Her yangın için üretilen katmanlar burada tutuluyor.'],
-              ['GaussDB', 'Öznitelik tablosu', 'Hücre başına ölçümler ve üretilen öncelik skorları.'],
-              ['ModelArts', 'Model eğitimi', 'Random Forest eğitimi ve yeni yangınlar için tahmin.'],
-              ['Huawei LLM', 'Açıklama katmanı', 'Skoru düz Türkçeye çeviriyor. Karar vermiyor, gerekçe yazıyor.'],
+              ['OBS', 'Raw satellite outputs', 'Object storage. All layers generated for each fire event are stored here.'],
+              ['GaussDB', 'Feature table', 'Per-cell measurements and the generated priority scores.'],
+              ['ModelArts', 'Model training', 'Random Forest training and prediction for new fire events.'],
+              ['Huawei LLM', 'Explanation layer', 'Converts scores into plain language. It doesn\'t decide — it writes the reasoning.'],
             ].map(([ad, rol, aciklama]) => (
               <div key={ad} className="border-t border-[#e8702a]/30 pt-4">
                 <div className="text-[#e8702a] text-[15px] font-medium tracking-[-0.01em]">
@@ -392,20 +361,21 @@ export function Footer() {
               <path d="M 256 256 L 128 256 L 0 128 L 128 128 Z M 256 128 L 128 128 L 0 0 L 128 0 Z" />
             </svg>
             <span className="text-white text-xl font-playfair italic leading-[1.15]">
-              FireRecover
+              ReGreen
             </span>
           </div>
           <p className="text-white/45 text-[14.5px] leading-[1.65]">
-            Huawei ICT Competition, Innovation Track. Üç kişilik öğrenci ekibi.
+            Huawei ICT Competition, Innovation Track. Three-person student team.
           </p>
         </div>
         <div className="lg:col-span-7">
           <p className="text-white/45 text-[14.5px] leading-[1.65] max-w-[62ch]">
-            Sayfadaki bütün sayılar projenin kendi kodundan üretildi ve yeniden
-            çalıştırılabilir. Sistem karar vermez, sıralama önerir ve gerekçesini yazar.
+            All figures on this page were produced by the project's own code and are
+            fully reproducible. The system doesn't decide — it ranks, recommends and
+            writes its reasoning.
           </p>
           <p className="text-white/28 text-[12.5px] leading-[1.6] mt-5 max-w-[62ch]">
-            Veri kaynakları: Copernicus Sentinel-2 ve Copernicus DEM, ESA WorldCover,
+            Data sources: Copernicus Sentinel-2, Copernicus DEM, ESA WorldCover,
             OpenStreetMap, Microsoft Planetary Computer.
           </p>
         </div>
