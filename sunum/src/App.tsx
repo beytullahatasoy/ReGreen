@@ -1,6 +1,7 @@
 import Nav from './components/Nav'
 import Hero from './components/Hero'
 import { Sorun, Yontem, Test, Bulgular, Sirada, Footer } from './components/Sections'
+import { RecoveryZone, GonulluYolculugu } from './components/Sosyal'
 
 export default function App() {
   return (
@@ -15,6 +16,8 @@ export default function App() {
       <Yontem />
       <Test />
       <Bulgular />
+      <RecoveryZone />
+      <GonulluYolculugu />
       <Sirada />
       <Footer />
     </div>

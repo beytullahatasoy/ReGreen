@@ -167,13 +167,13 @@ export default function Hero() {
             className="block font-playfair italic font-normal text-5xl sm:text-7xl md:text-8xl hero-anim hero-reveal"
             style={{ letterSpacing: '-0.05em', animationDelay: '0.25s' }}
           >
-            Kül altında
+            Beneath the ash
           </span>
           <span
             className="block font-normal text-5xl sm:text-7xl md:text-8xl -mt-1 hero-anim hero-reveal"
             style={{ letterSpacing: '-0.08em', animationDelay: '0.42s' }}
           >
-            ne kaybettik?
+            what did we lose?
           </span>
         </h1>
       </div>
@@ -184,9 +184,9 @@ export default function Hero() {
         style={{ animationDelay: '0.7s' }}
       >
         <p className="text-sm text-white/80 leading-relaxed">
-          İmlecinizi gezdirin. Işığın düştüğü yerde arazi yeşeriyor - sistemin
-          yaptığı iş tam olarak bu: yanmış alanın hangi bölümünün geri
-          gelebileceğini önceden görmek.
+          Move your cursor. Where the light falls, the land turns green — that is
+          exactly what the system does: predict which parts of a burned area
+          can still come back.
         </p>
       </div>
 
@@ -196,15 +196,15 @@ export default function Hero() {
         style={{ animationDelay: '0.85s' }}
       >
         <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
-          Yangın söndükten sonra kaynaklar sınırlı, yanmış alan çok geniş.
-          FireRecover, uydu verisiyle hangi bölgenin önce onarılması
-          gerektiğini önerir.
+          After a fire, resources are limited and burned land is vast.
+          ReGreen uses satellite data to recommend which area
+          should be addressed first.
         </p>
         <a
           href="#sorun"
           className="bg-[#e8702a] hover:bg-[#d2611f] text-white text-sm font-medium px-7 py-3 rounded-full transition-all hover:scale-[1.03] active:scale-95 hover:shadow-lg hover:shadow-[#e8702a]/30"
         >
-          Nasıl çalıştığını gör
+          See how it works
         </a>
       </div>
 
