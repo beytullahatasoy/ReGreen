@@ -1,1 +1,23 @@
 .vscode/
+
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# Loglar
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ortam degiskenleri
+.env
+.env.*
+!.env.example
+
+# Isletim sistemi
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
