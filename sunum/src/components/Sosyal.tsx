@@ -1,5 +1,5 @@
 import Reveal from './Reveal'
-import { Bolum, Baslik, It, Metin, V } from './Kabuk'
+import { Bolum, Baslik, It, Metin } from './Kabuk'
 
 /* ─────────────────────────────────────────────────────────────────────────────
    SLIDE 1 — FROM PRIORITY TO ACTION
