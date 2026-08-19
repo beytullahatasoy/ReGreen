@@ -127,8 +127,8 @@ export function Yontem() {
 const SORULAR = [
   ['Data sources', 'Sentinel-2, Copernicus DEM, ESA WorldCover and OpenStreetMap. All four are open data — no cost, no account, no API key required.'],
   ['Measurement accuracy', 'Vegetation density is stable for four years, then collapses in the fire month. The method detects the event on the correct date.'],
-  ['Scalability', 'Three regions, 27,970 cells, end-to-end in five minutes. Single machine, no parallel infrastructure.'],
-  ['Learnable structure', 'The same relationships appear in the same direction across three independent regions. The path to building a model is clear.'],
+  ['Scalability', '53 fires nationwide, 303,153 cells, seven fire seasons — on a single machine, no parallel infrastructure.'],
+  ['Learnable structure', 'The same relationships appear in the same direction across 27 independent spatial groups. The path to building a model is clear.'],
 ]
 
 export function Test() {
@@ -194,10 +194,10 @@ export function Test() {
       <Reveal delay={140}>
         <div className="mt-20 grid grid-cols-2 lg:grid-cols-4 border-t border-white/15">
           {[
-            ['27,970', 'cells analysed'],
-            ['3,269', 'burned cells'],
-            ['1,880', 'reliable measurements'],
-            ['5 min', 'end-to-end runtime'],
+            ['53', 'fires, nationwide'],
+            ['303,153', 'cells analysed'],
+            ['37,163', 'burned cells'],
+            ['16,074', 'reliable measurements'],
           ].map(([s, a]) => (
             <div key={a} className="py-8 pr-6 border-b lg:border-b-0 border-white/[0.09]">
               <div className="text-white text-[2.3rem] font-normal tabular-nums tracking-[-0.045em] leading-none">
@@ -208,9 +208,11 @@ export function Test() {
           ))}
         </div>
         <Metin className="mt-8">
-          The burned land was divided into 500-metre grid cells. For each cell we collected
-          seven measurements: fire severity, slope, elevation, tree cover ratio, and distance
-          to water, roads and settlements.{' '}
+          The burned land was divided into 250-metre grid cells — 6.25 hectares each.
+          For each cell we collected six measurements: fire severity, slope, elevation,
+          two independent tree-cover readings and distance to the nearest road. Three
+          further candidates were tested and dropped because we could not measure any
+          contribution.{' '}
           <V>Not a single number was entered manually.</V>
         </Metin>
       </Reveal>
@@ -251,11 +253,12 @@ export function Bulgular() {
 
       <Reveal delay={100}>
         <Metin className="mt-14">
-          The second graph is what matters most. A pattern found in a single region could
-          be coincidence; when it repeats across three regions hundreds of kilometres
-          apart,{' '}
-          <V>there is a real structure the model can learn from.</V> That is the true
-          answer from this feasibility study.
+          The second graph is what matters most. A pattern found in a single fire could
+          be coincidence; when it repeats across 27 spatial groups spread over seven
+          fire seasons,{' '}
+          <V>there is a real structure the model can learn from.</V> Overlapping and
+          neighbouring fires are treated as one group, so no area is ever used for both
+          training and testing.
         </Metin>
       </Reveal>
     </Bolum>
@@ -271,16 +274,22 @@ export function Sirada() {
         <div className="lg:col-span-5">
           <Reveal>
             <Baslik>
-              Next up: <It>prediction</It>
+              The model <It>is trained</It>
             </Baslik>
           </Reveal>
           <Reveal delay={90}>
             <Metin className="mt-8">
-              Everything so far has been measuring the past. But we can't wait two years
-              for a forest that burned this summer.{' '}
-              <V>The model's sole purpose is to eliminate that wait:</V> using slope,
-              elevation, tree cover and road proximity, predict two years from now —
-              right after the fire.
+              Everything above measures the past. But we cannot wait two years for a
+              forest that burned this summer.{' '}
+              <V>The model's sole purpose is to remove that wait:</V> from six
+              measurements available within days of a fire, it predicts what the land
+              will look like two years on.
+            </Metin>
+          </Reveal>
+          <Reveal delay={130}>
+            <Metin className="mt-6">
+              Today, standard practice is to start with the most severely burned area.
+              We measured that baseline and beat it.
             </Metin>
           </Reveal>
         </div>
@@ -289,12 +298,14 @@ export function Sirada() {
           <Reveal delay={130}>
             <div className="border-t border-white/15">
               {[
-                ['Week 2', 'Model & validation',
-                  "The test: train on two regions, evaluate on a third you've never seen. That's exactly the real-world scenario."],
-                ['Week 3', 'Map & explanation',
-                  'A priority ranking on a map and plain-language reasoning for each area.'],
+                ['Done', 'Model & validation',
+                  'Random Forest, trained on 16,074 labelled cells. Validated by holding out entire spatial groups — never the same area in training and testing. Ranking accuracy within a fire: 0.58 Spearman, positive in 26 of 27 groups.'],
+                ['Done', 'Beating current practice',
+                  'Asked to name the worst-affected fifth of a fire, ranking by burn severity alone is right 39% of the time. The model is right 47% — a fifth more correct parcels for the same budget.'],
+                ['Now', 'Map & explanation',
+                  'A priority ranking on the map and plain-language reasoning for every parcel. 53 fires and 37,163 cells are already handed over to the backend.'],
               ].map(([h, b, m]) => (
-                <div key={h} className="grid sm:grid-cols-12 gap-x-8 gap-y-2 py-7 border-b border-white/[0.09]">
+                <div key={b} className="grid sm:grid-cols-12 gap-x-8 gap-y-2 py-7 border-b border-white/[0.09]">
                   <div className="sm:col-span-3 text-[#e8702a] text-[14px] tabular-nums">{h}</div>
                   <div className="sm:col-span-9">
                     <h3 className="text-white text-[18px] font-medium tracking-[-0.02em] mb-2">{b}</h3>
@@ -307,10 +318,12 @@ export function Sirada() {
 
           <Reveal delay={170}>
             <p className="mt-9 text-white/45 text-[14.5px] leading-[1.65] max-w-[58ch]">
-              <span className="text-white/70">Known limitations.</span> All three regions
-              belong to the same summer, so seasonal generalisation must be validated with
-              data from other years. Some burned areas received administrative intervention;
-              measurements there do not reflect pure natural recovery.
+              <span className="text-white/70">Known limitations.</span> 2021 accounts for
+              roughly half the spatial groups — no other Turkish fire season resembled it.
+              The data is concentrated in the Aegean and Mediterranean, because that is where
+              Turkey's forest-fire burden sits: we measured that 95% of large burn scars
+              inland are stubble burning, not forest fire. And some burned areas received
+              administrative intervention, so those measurements are not pure natural recovery.
             </p>
           </Reveal>
         </div>

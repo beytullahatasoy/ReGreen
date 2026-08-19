@@ -99,9 +99,9 @@ export function CokusGrafigi() {
 
 export function IzlenceGrafigi() {
   const seri = [
-    { ad: 'Lightly burned', renk: OK1, v: [0.551, 0.277, 0.193, 0.241] },
-    { ad: 'Moderately burned', renk: OK2, v: [0.579, 0.224, 0.176, 0.242] },
-    { ad: 'Severely burned', renk: OK3, v: [0.65, 0.187, 0.153, 0.241] },
+    { ad: 'Lightly burned', renk: OK1, v: [0.532, 0.254, 0.179, 0.224] },
+    { ad: 'Moderately burned', renk: OK2, v: [0.572, 0.219, 0.168, 0.227] },
+    { ad: 'Severely burned', renk: OK3, v: [0.664, 0.198, 0.172, 0.244] },
   ]
   const X = [80, 265, 450, 635]
   const y = (v: number) => 230 - (v / 0.7) * 190
@@ -110,11 +110,11 @@ export function IzlenceGrafigi() {
   return (
     <Cerceve
       baslik="Regardless of fire severity, all areas converge at the same point after two years"
-      alt="Average of 1,880 cells. Three lines start from very different places and meet at one point."
+      alt="Average of 16,074 cells across 53 fires. Three lines start from very different places and meet at one point."
       not="Year-1 values drop even below the immediate post-fire reading. Delayed death in conifer forest: the tree survives the fire, then dies the following year. Recovery only begins in year two."
     >
       <svg viewBox="0 0 720 275" className="w-full h-auto" role="img"
-        aria-label="Three fire severity classes: diverge from 0.551–0.650 before fire, all converge at 0.241 after two years">
+        aria-label="Three fire severity classes: spread from 0.532 to 0.664 before the fire, converging to 0.224–0.244 after two years">
         {[0.6, 0.4, 0.2].map((v) => (
           <g key={v}>
             <line x1="80" y1={y(v)} x2="680" y2={y(v)} stroke={IZ} />
@@ -126,7 +126,7 @@ export function IzlenceGrafigi() {
         <line x1="80" y1="230" x2="680" y2="230" stroke="rgba(255,255,255,0.2)" />
 
         {/* convergence highlight */}
-        <circle cx={X[3]} cy={y(0.241)} r="17" fill="none" stroke="rgba(255,255,255,0.22)" />
+        <circle cx={X[3]} cy={y(0.232)} r="19" fill="none" stroke="rgba(255,255,255,0.22)" />
 
         {seri.map((s) => (
           <polyline key={s.ad} fill="none" stroke={s.renk} strokeWidth="2.25"
@@ -142,7 +142,7 @@ export function IzlenceGrafigi() {
           </g>
         ))}
 
-        <text x={X[3] + 26} y={y(0.241) + 4} fontSize="12.5" fill="#fff">all at 0.241</text>
+        <text x={X[3] + 26} y={y(0.232) + 4} fontSize="12.5" fill="#fff">0.22 – 0.24</text>
 
         {durak.map((t, i) => (
           <text key={t} x={X[i]} y="254" textAnchor="middle" fontSize="11" fill={EKSEN}>{t}</text>
@@ -165,8 +165,8 @@ export function IzlenceGrafigi() {
 
 export function EgimGrafigi() {
   const d = [
-    ['0–5°', 0.281, 126], ['5–10°', 0.322, 545], ['10–15°', 0.346, 675],
-    ['15–20°', 0.365, 313], ['20–25°', 0.384, 125], ['25°+', 0.359, 96],
+    ['0–5°', 0.276, 883], ['5–10°', 0.316, 3933], ['10–15°', 0.347, 4718],
+    ['15–20°', 0.368, 3357], ['20–25°', 0.379, 1883], ['25°+', 0.380, 1300],
   ] as [string, number, number][]
   const x = (i: number) => 90 + i * 108
   const y = (v: number) => 195 - ((v - 0.25) / 0.16) * 150
@@ -175,10 +175,10 @@ export function EgimGrafigi() {
     <Cerceve
       baslik="Steeper slopes recover less"
       alt="Vertical axis: remaining vegetation deficit two years on. Higher is worse."
-      not="The last bin has only 96 cells, so the slight drop there is not reliable. The relationship holds in the same direction across all three regions."
+      not="16,074 labelled cells across 53 fires. The relationship is monotonic across every bin and holds in the same direction in 21 of 27 spatial groups."
     >
       <svg viewBox="0 0 720 250" className="w-full h-auto" role="img"
-        aria-label="Remaining vegetation deficit by slope class: rises from 0.281 at 0–5° to 0.384 at 20–25°">
+        aria-label="Remaining vegetation deficit by slope class: rises from 0.276 at 0–5° to 0.380 above 25°">
         {[0.30, 0.35].map((v) => (
           <g key={v}>
             <line x1="90" y1={y(v)} x2="660" y2={y(v)} stroke={IZ} />
@@ -212,31 +212,29 @@ export function EgimGrafigi() {
 /* -------------------------------- 4) cross-region consistency ---------- */
 
 export function TutarlilikGrafigi() {
-  const bolge = [
-    { ad: 'Manavgat', renk: OK1 },
-    { ad: 'Bodrum', renk: OK2 },
-    { ad: 'Milas', renk: OK3 },
-  ]
+  // Olculen degerler: 16.074 etiketli hucre, 27 mekansal grup.
+  // rho = havuzlanmis Spearman. tutarli = kac grupta ayni yonde cikti.
   const satir = [
-    { ad: 'Tree cover ratio', v: [0.763, 0.734, 0.756] },
-    { ad: 'Elevation', v: [0.240, 0.449, 0.637] },
-    { ad: 'Fire severity', v: [0.242, 0.615, 0.530] },
-    { ad: 'Distance to road', v: [0.239, 0.390, 0.463] },
-    { ad: 'Slope', v: [0.331, 0.045, 0.440] },
-    { ad: 'Distance to settlement', v: [0.300, 0.065, 0.474] },
+    { ad: 'Tree cover (annual)', rho: 0.556, tutarli: 24 },
+    { ad: 'Tree cover (2021)', rho: 0.542, tutarli: 24 },
+    { ad: 'Fire severity', rho: 0.371, tutarli: 24 },
+    { ad: 'Elevation', rho: 0.272, tutarli: 20 },
+    { ad: 'Slope', rho: 0.262, tutarli: 21 },
+    { ad: 'Distance to road', rho: 0.105, tutarli: 20 },
   ]
-  const x = (v: number) => 200 + (v / 0.8) * 470
+  const TOPLAM = 27
+  const x = (v: number) => 210 + (v / 0.6) * 400
   const y = (i: number) => 46 + i * 40
 
   return (
     <Cerceve
-      baslik="Does the same relationship appear across all three regions?"
-      alt="Three dots per row, one per fire region. The further right, the stronger the relationship."
-      not="Tree cover ratio has three nearly overlapping dots: this measurement works the same way everywhere. Slope and distance to settlement lag in Bodrum because that area is flat and coastal — not enough steep terrain to measure the relationship."
+      baslik="Does the same relationship hold across every fire?"
+      alt="Bar length: strength of the relationship with the recovery deficit. Right-hand figure: how many of the 27 spatial groups agree on the direction."
+      not="Overlapping and neighbouring fires are merged into one spatial group, so the count is 27 rather than 53. Three further variables — distance to water, distance to settlement and aspect — were tested the same way and dropped: their contribution could not be separated from noise."
     >
       <svg viewBox="0 0 720 290" className="w-full h-auto" role="img"
-        aria-label="Relationship strength of six variables across three regions. Tree cover ratio 0.73–0.76 in all three; slope drops to 0.045 in Bodrum">
-        {[0, 0.2, 0.4, 0.6, 0.8].map((v) => (
+        aria-label="Relationship strength of six variables. Tree cover 0.556 agreeing in 24 of 27 groups, down to distance to road 0.105 in 20 of 27">
+        {[0, 0.2, 0.4, 0.6].map((v) => (
           <g key={v}>
             <line x1={x(v)} y1="26" x2={x(v)} y2="266" stroke={IZ} />
             <text x={x(v)} y="284" textAnchor="middle" fontSize="11" fill={EKSEN}>
@@ -247,26 +245,27 @@ export function TutarlilikGrafigi() {
 
         {satir.map((s, i) => (
           <g key={s.ad}>
-            <text x="182" y={y(i) + 4} textAnchor="end" fontSize="13" fill="rgba(255,255,255,0.8)">
+            <text x="192" y={y(i) + 4} textAnchor="end" fontSize="13" fill="rgba(255,255,255,0.8)">
               {s.ad}
             </text>
-            <line x1={x(Math.min(...s.v))} y1={y(i)} x2={x(Math.max(...s.v))} y2={y(i)}
-              stroke="rgba(255,255,255,0.16)" strokeWidth="1.5" />
-            {s.v.map((v, j) => (
-              <circle key={j} cx={x(v)} cy={y(i)} r="5.5" fill={bolge[j].renk} />
-            ))}
+            <rect x={x(0)} y={y(i) - 8} width={x(s.rho) - x(0)} height="16"
+              fill={s.tutarli >= 24 ? OK3 : s.tutarli >= 21 ? OK2 : OK1} />
+            <text x={x(s.rho) + 10} y={y(i) + 4} fontSize="12" fill="#fff">
+              {s.rho.toFixed(3)}
+            </text>
+            <text x="700" y={y(i) + 4} textAnchor="end" fontSize="11.5"
+              fill="rgba(255,255,255,0.45)">
+              {s.tutarli} / {TOPLAM}
+            </text>
           </g>
         ))}
       </svg>
 
-      <div className="flex flex-wrap gap-x-7 gap-y-2 mt-5">
-        {bolge.map((b) => (
-          <span key={b.ad} className="inline-flex items-center gap-2.5 text-sm text-white/60">
-            <i className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: b.renk }} />
-            {b.ad}
-          </span>
-        ))}
-      </div>
+      <p className="text-white/45 text-[13.5px] mt-5 leading-relaxed">
+        The right-hand column is the honest one. A strong average means little if the
+        relationship flips direction from one fire to the next — these six hold.
+      </p>
     </Cerceve>
   )
 }
+
