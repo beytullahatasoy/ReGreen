@@ -1,0 +1,48 @@
+{
+  "fire_id": "MAR_2024_02",
+  "fire_date": "2024-06-20",
+  "province": "Bursa",
+  "region": "Marmara",
+  "modis_area_ha": 453,
+  "cell_size_m": 250,
+  "cell_count": 274,
+  "burned_area_ha": 1712.5,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": false,
+  "out_of_fold_cells": 0,
+  "status_counts": {
+    "low_severity": 259,
+    "predicted": 12,
+    "no_data": 3
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.1932,
+      "max": 0.3159
+    },
+    "slope_deg": {
+      "min": 9.356926,
+      "max": 17.17939
+    },
+    "road_distance_km": {
+      "min": 0.56478775,
+      "max": 1.3969398
+    }
+  },
+  "has_perimeter": true
+}

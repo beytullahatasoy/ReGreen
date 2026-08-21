@@ -1,0 +1,47 @@
+{
+  "fire_id": "EGE_2024_03",
+  "fire_date": "2024-08-17",
+  "province": "Aydın",
+  "region": "Ege",
+  "modis_area_ha": 2283,
+  "cell_size_m": 250,
+  "cell_count": 483,
+  "burned_area_ha": 3018.8,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": false,
+  "out_of_fold_cells": 0,
+  "status_counts": {
+    "low_severity": 390,
+    "predicted": 93
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.2051,
+      "max": 0.4657
+    },
+    "slope_deg": {
+      "min": 0.36802402,
+      "max": 78.78537
+    },
+    "road_distance_km": {
+      "min": 0.023692241,
+      "max": 1.8411261
+    }
+  },
+  "has_perimeter": true
+}

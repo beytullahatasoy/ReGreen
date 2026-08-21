@@ -1,0 +1,48 @@
+{
+  "fire_id": "AKD_2021_04",
+  "fire_date": "2021-07-29",
+  "province": "Osmaniye",
+  "region": "Akdeniz",
+  "modis_area_ha": 3971,
+  "cell_size_m": 250,
+  "cell_count": 1740,
+  "burned_area_ha": 10875.0,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": true,
+  "out_of_fold_cells": 762,
+  "status_counts": {
+    "low_severity": 973,
+    "predicted": 759,
+    "no_data": 8
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.1187,
+      "max": 0.4974
+    },
+    "slope_deg": {
+      "min": 0.0648951,
+      "max": 37.749237
+    },
+    "road_distance_km": {
+      "min": 0.0060538948,
+      "max": 2.3665562
+    }
+  },
+  "has_perimeter": true
+}

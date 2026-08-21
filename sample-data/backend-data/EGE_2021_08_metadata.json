@@ -1,0 +1,47 @@
+{
+  "fire_id": "EGE_2021_08",
+  "fire_date": "2021-08-14",
+  "province": "İzmir",
+  "region": "Ege",
+  "modis_area_ha": 315,
+  "cell_size_m": 250,
+  "cell_count": 67,
+  "burned_area_ha": 418.8,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": true,
+  "out_of_fold_cells": 49,
+  "status_counts": {
+    "predicted": 49,
+    "low_severity": 18
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.2096,
+      "max": 0.4089
+    },
+    "slope_deg": {
+      "min": 7.274545,
+      "max": 33.67108
+    },
+    "road_distance_km": {
+      "min": 0.1114686,
+      "max": 2.0455472
+    }
+  },
+  "has_perimeter": true
+}

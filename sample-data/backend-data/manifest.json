@@ -1,0 +1,776 @@
+{
+  "project": "ReGreen / FireRecover",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "model_version": "rf_v1",
+  "schema_version": "1.1",
+  "cell_size_m": 250,
+  "crs": "EPSG:4326",
+  "fire_count": 53,
+  "total_cells": 37163,
+  "training_rows": 16074,
+  "training_groups": 27,
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "files_per_fire": [
+    "{fire_id}_hucreler.csv",
+    "{fire_id}_sinir.geojson",
+    "{fire_id}_metadata.json"
+  ],
+  "fires": [
+    {
+      "fire_id": "AKD_2017_01",
+      "fire_date": "2017-07-01",
+      "province": "Mersin",
+      "region": "Akdeniz",
+      "cell_count": 167,
+      "burned_area_ha": 1043.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 104,
+        "low_severity": 63
+      }
+    },
+    {
+      "fire_id": "AKD_2020_01",
+      "fire_date": "2020-09-05",
+      "province": "Hatay",
+      "region": "Akdeniz",
+      "cell_count": 1184,
+      "burned_area_ha": 7400.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 711,
+        "predicted": 473
+      }
+    },
+    {
+      "fire_id": "AKD_2021_01",
+      "fire_date": "2021-07-29",
+      "province": "Antalya",
+      "region": "Akdeniz",
+      "cell_count": 9048,
+      "burned_area_ha": 56550.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 4917,
+        "low_severity": 4130,
+        "no_data": 1
+      }
+    },
+    {
+      "fire_id": "AKD_2021_02",
+      "fire_date": "2021-08-01",
+      "province": "Antalya",
+      "region": "Akdeniz",
+      "cell_count": 2158,
+      "burned_area_ha": 13487.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 1098,
+        "predicted": 1060
+      }
+    },
+    {
+      "fire_id": "AKD_2021_03",
+      "fire_date": "2021-07-29",
+      "province": "Mersin",
+      "region": "Akdeniz",
+      "cell_count": 1481,
+      "burned_area_ha": 9256.2,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 1016,
+        "predicted": 465
+      }
+    },
+    {
+      "fire_id": "AKD_2021_04",
+      "fire_date": "2021-07-29",
+      "province": "Osmaniye",
+      "region": "Akdeniz",
+      "cell_count": 1740,
+      "burned_area_ha": 10875.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 973,
+        "predicted": 759,
+        "no_data": 8
+      }
+    },
+    {
+      "fire_id": "AKD_2021_05",
+      "fire_date": "2021-07-29",
+      "province": "Adana",
+      "region": "Akdeniz",
+      "cell_count": 1428,
+      "burned_area_ha": 8925.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 978,
+        "predicted": 442,
+        "no_data": 8
+      }
+    },
+    {
+      "fire_id": "AKD_2021_06",
+      "fire_date": "2021-07-30",
+      "province": "Mersin",
+      "region": "Akdeniz",
+      "cell_count": 530,
+      "burned_area_ha": 3312.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 432,
+        "predicted": 98
+      }
+    },
+    {
+      "fire_id": "AKD_2021_07",
+      "fire_date": "2021-07-28",
+      "province": "Adana",
+      "region": "Akdeniz",
+      "cell_count": 83,
+      "burned_area_ha": 518.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 49,
+        "predicted": 34
+      }
+    },
+    {
+      "fire_id": "AKD_2021_08",
+      "fire_date": "2021-08-11",
+      "province": "Burdur",
+      "region": "Akdeniz",
+      "cell_count": 95,
+      "burned_area_ha": 593.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 55,
+        "low_severity": 40
+      }
+    },
+    {
+      "fire_id": "AKD_2021_09",
+      "fire_date": "2021-08-02",
+      "province": "Isparta",
+      "region": "Akdeniz",
+      "cell_count": 176,
+      "burned_area_ha": 1100.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 106,
+        "predicted": 70
+      }
+    },
+    {
+      "fire_id": "AKD_2021_10",
+      "fire_date": "2021-08-02",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 94,
+      "burned_area_ha": 587.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 49,
+        "low_severity": 45
+      }
+    },
+    {
+      "fire_id": "AKD_2021_11",
+      "fire_date": "2021-07-29",
+      "province": "Mersin",
+      "region": "Akdeniz",
+      "cell_count": 115,
+      "burned_area_ha": 718.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 106,
+        "predicted": 9
+      }
+    },
+    {
+      "fire_id": "AKD_2022_01",
+      "fire_date": "2022-09-07",
+      "province": "Mersin",
+      "region": "Akdeniz",
+      "cell_count": 351,
+      "burned_area_ha": 2193.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 266,
+        "predicted": 85
+      }
+    },
+    {
+      "fire_id": "AKD_2023_01",
+      "fire_date": "2023-07-16",
+      "province": "Mersin",
+      "region": "Akdeniz",
+      "cell_count": 124,
+      "burned_area_ha": 775.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 114,
+        "predicted": 10
+      }
+    },
+    {
+      "fire_id": "AKD_2023_02",
+      "fire_date": "2023-07-17",
+      "province": "Hatay",
+      "region": "Akdeniz",
+      "cell_count": 170,
+      "burned_area_ha": 1062.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 100,
+        "predicted": 70
+      }
+    },
+    {
+      "fire_id": "DAN_2021_01",
+      "fire_date": "2021-08-27",
+      "province": "Tunceli",
+      "region": "Dogu Anadolu",
+      "cell_count": 710,
+      "burned_area_ha": 4437.5,
+      "quality_flag": "check",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 596,
+        "predicted": 114
+      }
+    },
+    {
+      "fire_id": "EGE_2017_01",
+      "fire_date": "2017-07-02",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 390,
+      "burned_area_ha": 2437.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 224,
+        "low_severity": 166
+      }
+    },
+    {
+      "fire_id": "EGE_2017_02",
+      "fire_date": "2017-07-27",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 216,
+      "burned_area_ha": 1350.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 157,
+        "low_severity": 59
+      }
+    },
+    {
+      "fire_id": "EGE_2017_03",
+      "fire_date": "2017-09-07",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 99,
+      "burned_area_ha": 618.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 55,
+        "low_severity": 44
+      }
+    },
+    {
+      "fire_id": "EGE_2019_01",
+      "fire_date": "2019-07-11",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 246,
+      "burned_area_ha": 1537.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 172,
+        "low_severity": 74
+      }
+    },
+    {
+      "fire_id": "EGE_2019_02",
+      "fire_date": "2019-08-19",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 74,
+      "burned_area_ha": 462.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 41,
+        "predicted": 33
+      }
+    },
+    {
+      "fire_id": "EGE_2019_03",
+      "fire_date": "2019-08-19",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 92,
+      "burned_area_ha": 575.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 46,
+        "predicted": 46
+      }
+    },
+    {
+      "fire_id": "EGE_2020_01",
+      "fire_date": "2020-08-02",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 126,
+      "burned_area_ha": 787.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 64,
+        "low_severity": 62
+      }
+    },
+    {
+      "fire_id": "EGE_2021_01",
+      "fire_date": "2021-08-02",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 2667,
+      "burned_area_ha": 16668.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 1943,
+        "low_severity": 724
+      }
+    },
+    {
+      "fire_id": "EGE_2021_02",
+      "fire_date": "2021-08-05",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 2208,
+      "burned_area_ha": 13800.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 1465,
+        "low_severity": 743
+      }
+    },
+    {
+      "fire_id": "EGE_2021_03",
+      "fire_date": "2021-07-30",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 1849,
+      "burned_area_ha": 11556.2,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 1306,
+        "low_severity": 543
+      }
+    },
+    {
+      "fire_id": "EGE_2021_04",
+      "fire_date": "2021-08-04",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 1415,
+      "burned_area_ha": 8843.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 807,
+        "predicted": 608
+      }
+    },
+    {
+      "fire_id": "EGE_2021_05",
+      "fire_date": "2021-08-07",
+      "province": "Aydın",
+      "region": "Ege",
+      "cell_count": 318,
+      "burned_area_ha": 1987.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 162,
+        "low_severity": 156
+      }
+    },
+    {
+      "fire_id": "EGE_2021_06",
+      "fire_date": "2021-08-03",
+      "province": "Denizli",
+      "region": "Ege",
+      "cell_count": 184,
+      "burned_area_ha": 1150.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 98,
+        "low_severity": 86
+      }
+    },
+    {
+      "fire_id": "EGE_2021_07",
+      "fire_date": "2021-08-04",
+      "province": "Aydın",
+      "region": "Ege",
+      "cell_count": 159,
+      "burned_area_ha": 993.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 83,
+        "predicted": 76
+      }
+    },
+    {
+      "fire_id": "EGE_2021_08",
+      "fire_date": "2021-08-14",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 67,
+      "burned_area_ha": 418.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 49,
+        "low_severity": 18
+      }
+    },
+    {
+      "fire_id": "EGE_2022_01",
+      "fire_date": "2022-06-22",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 758,
+      "burned_area_ha": 4737.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 500,
+        "low_severity": 258
+      }
+    },
+    {
+      "fire_id": "EGE_2022_02",
+      "fire_date": "2022-07-13",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 113,
+      "burned_area_ha": 706.2,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 73,
+        "predicted": 40
+      }
+    },
+    {
+      "fire_id": "EGE_2022_03",
+      "fire_date": "2022-09-21",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 78,
+      "burned_area_ha": 487.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 50,
+        "predicted": 28
+      }
+    },
+    {
+      "fire_id": "EGE_2023_01",
+      "fire_date": "2023-07-27",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 284,
+      "burned_area_ha": 1775.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 151,
+        "low_severity": 133
+      }
+    },
+    {
+      "fire_id": "EGE_2024_01",
+      "fire_date": "2024-08-16",
+      "province": "Manisa",
+      "region": "Ege",
+      "cell_count": 843,
+      "burned_area_ha": 5268.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 612,
+        "predicted": 231
+      }
+    },
+    {
+      "fire_id": "EGE_2024_02",
+      "fire_date": "2024-08-16",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 443,
+      "burned_area_ha": 2768.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 374,
+        "predicted": 69
+      }
+    },
+    {
+      "fire_id": "EGE_2024_03",
+      "fire_date": "2024-08-17",
+      "province": "Aydın",
+      "region": "Ege",
+      "cell_count": 483,
+      "burned_area_ha": 3018.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 390,
+        "predicted": 93
+      }
+    },
+    {
+      "fire_id": "EGE_2024_05",
+      "fire_date": "2024-06-30",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 109,
+      "burned_area_ha": 681.2,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 68,
+        "low_severity": 41
+      }
+    },
+    {
+      "fire_id": "EGE_2024_07",
+      "fire_date": "2024-08-17",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 192,
+      "burned_area_ha": 1200.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 176,
+        "predicted": 16
+      }
+    },
+    {
+      "fire_id": "EGE_2024_08",
+      "fire_date": "2024-08-17",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 180,
+      "burned_area_ha": 1125.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 164,
+        "predicted": 16
+      }
+    },
+    {
+      "fire_id": "EGE_2024_09",
+      "fire_date": "2024-08-16",
+      "province": "Aydın",
+      "region": "Ege",
+      "cell_count": 37,
+      "burned_area_ha": 231.2,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 26,
+        "predicted": 11
+      }
+    },
+    {
+      "fire_id": "EGE_2024_10",
+      "fire_date": "2024-08-16",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 53,
+      "burned_area_ha": 331.2,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 34,
+        "predicted": 19
+      }
+    },
+    {
+      "fire_id": "EGE_2024_11",
+      "fire_date": "2024-08-18",
+      "province": "İzmir",
+      "region": "Ege",
+      "cell_count": 55,
+      "burned_area_ha": 343.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 36,
+        "predicted": 19
+      }
+    },
+    {
+      "fire_id": "GDA_2021_01",
+      "fire_date": "2021-08-26",
+      "province": "Hakkâri",
+      "region": "Dogu Anadolu",
+      "cell_count": 327,
+      "burned_area_ha": 2043.8,
+      "quality_flag": "check",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 319,
+        "predicted": 8
+      }
+    },
+    {
+      "fire_id": "IAN_2021_01",
+      "fire_date": "2021-07-29",
+      "province": "Adana",
+      "region": "Akdeniz",
+      "cell_count": 92,
+      "burned_area_ha": 575.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 64,
+        "predicted": 28
+      }
+    },
+    {
+      "fire_id": "IAN_2023_01",
+      "fire_date": "2023-08-23",
+      "province": "Eskişehir",
+      "region": "Ic Anadolu",
+      "cell_count": 223,
+      "burned_area_ha": 1393.8,
+      "quality_flag": "check",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 189,
+        "predicted": 34
+      }
+    },
+    {
+      "fire_id": "IAN_2024_01",
+      "fire_date": "2024-06-18",
+      "province": "Uşak",
+      "region": "Ege",
+      "cell_count": 705,
+      "burned_area_ha": 4406.2,
+      "quality_flag": "check",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 665,
+        "predicted": 38,
+        "no_data": 2
+      }
+    },
+    {
+      "fire_id": "KAR_2024_01",
+      "fire_date": "2024-08-16",
+      "province": "Bolu",
+      "region": "Karadeniz",
+      "cell_count": 534,
+      "burned_area_ha": 3337.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 300,
+        "predicted": 234
+      }
+    },
+    {
+      "fire_id": "MAR_2023_01",
+      "fire_date": "2023-08-22",
+      "province": "Çanakkale",
+      "region": "Marmara",
+      "cell_count": 665,
+      "burned_area_ha": 4156.2,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 485,
+        "predicted": 180
+      }
+    },
+    {
+      "fire_id": "MAR_2024_01",
+      "fire_date": "2024-08-15",
+      "province": "Çanakkale",
+      "region": "Marmara",
+      "cell_count": 951,
+      "burned_area_ha": 5943.8,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 744,
+        "predicted": 207
+      }
+    },
+    {
+      "fire_id": "MAR_2024_02",
+      "fire_date": "2024-06-20",
+      "province": "Bursa",
+      "region": "Marmara",
+      "cell_count": 274,
+      "burned_area_ha": 1712.5,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 259,
+        "predicted": 12,
+        "no_data": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "fire_id": "IAN_2024_01",
+  "fire_date": "2024-06-18",
+  "province": "Uşak",
+  "region": "Ege",
+  "modis_area_ha": 1039,
+  "cell_size_m": 250,
+  "cell_count": 705,
+  "burned_area_ha": 4406.2,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "check",
+  "quality_note": "alan uyusmuyor (MODIS 1,039 ha, biz 4,406 ha)",
+  "in_training_set": false,
+  "out_of_fold_cells": 0,
+  "status_counts": {
+    "low_severity": 665,
+    "predicted": 38,
+    "no_data": 2
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.2104,
+      "max": 0.4693
+    },
+    "slope_deg": {
+      "min": 0.6172064,
+      "max": 14.390773
+    },
+    "road_distance_km": {
+      "min": 0.19014591,
+      "max": 2.3969727
+    }
+  },
+  "has_perimeter": true
+}

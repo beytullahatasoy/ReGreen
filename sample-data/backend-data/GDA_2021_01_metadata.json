@@ -1,0 +1,47 @@
+{
+  "fire_id": "GDA_2021_01",
+  "fire_date": "2021-08-26",
+  "province": "Hakkâri",
+  "region": "Dogu Anadolu",
+  "modis_area_ha": 370,
+  "cell_size_m": 250,
+  "cell_count": 327,
+  "burned_area_ha": 2043.8,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "check",
+  "quality_note": "etiketli hucre az (8); alan uyusmuyor (MODIS 370 ha, biz 2,043 ha)",
+  "in_training_set": false,
+  "out_of_fold_cells": 0,
+  "status_counts": {
+    "low_severity": 319,
+    "predicted": 8
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.257,
+      "max": 0.36
+    },
+    "slope_deg": {
+      "min": 19.441761,
+      "max": 29.487534
+    },
+    "road_distance_km": {
+      "min": 1.0851822,
+      "max": 2.0400023
+    }
+  },
+  "has_perimeter": true
+}
