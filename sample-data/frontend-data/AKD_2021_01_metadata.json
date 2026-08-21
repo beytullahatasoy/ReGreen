@@ -1,0 +1,48 @@
+{
+  "fire_id": "AKD_2021_01",
+  "fire_date": "2021-07-29",
+  "province": "Antalya",
+  "region": "Akdeniz",
+  "modis_area_ha": 57716,
+  "cell_size_m": 250,
+  "cell_count": 9048,
+  "burned_area_ha": 56550.0,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": true,
+  "out_of_fold_cells": 4917,
+  "status_counts": {
+    "predicted": 4917,
+    "low_severity": 4130,
+    "no_data": 1
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.1243,
+      "max": 0.5417
+    },
+    "slope_deg": {
+      "min": 0.05127889,
+      "max": 50.46333
+    },
+    "road_distance_km": {
+      "min": 0.0031909307,
+      "max": 2.9277885
+    }
+  },
+  "has_perimeter": true
+}

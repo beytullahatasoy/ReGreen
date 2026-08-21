@@ -1,0 +1,47 @@
+{
+  "fire_id": "AKD_2023_02",
+  "fire_date": "2023-07-17",
+  "province": "Hatay",
+  "region": "Akdeniz",
+  "modis_area_ha": 747,
+  "cell_size_m": 250,
+  "cell_count": 170,
+  "burned_area_ha": 1062.5,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": true,
+  "out_of_fold_cells": 70,
+  "status_counts": {
+    "low_severity": 100,
+    "predicted": 70
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.236,
+      "max": 0.4722
+    },
+    "slope_deg": {
+      "min": 9.015182,
+      "max": 57.959972
+    },
+    "road_distance_km": {
+      "min": 0.02874061,
+      "max": 0.7912877
+    }
+  },
+  "has_perimeter": true
+}

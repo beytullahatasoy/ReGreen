@@ -1,0 +1,47 @@
+{
+  "fire_id": "AKD_2021_06",
+  "fire_date": "2021-07-30",
+  "province": "Mersin",
+  "region": "Akdeniz",
+  "modis_area_ha": 3173,
+  "cell_size_m": 250,
+  "cell_count": 530,
+  "burned_area_ha": 3312.5,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": true,
+  "out_of_fold_cells": 98,
+  "status_counts": {
+    "low_severity": 432,
+    "predicted": 98
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.2161,
+      "max": 0.4489
+    },
+    "slope_deg": {
+      "min": 2.2150862,
+      "max": 28.466318
+    },
+    "road_distance_km": {
+      "min": 0.16679615,
+      "max": 2.241888
+    }
+  },
+  "has_perimeter": true
+}

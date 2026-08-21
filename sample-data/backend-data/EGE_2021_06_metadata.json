@@ -1,0 +1,47 @@
+{
+  "fire_id": "EGE_2021_06",
+  "fire_date": "2021-08-03",
+  "province": "Denizli",
+  "region": "Ege",
+  "modis_area_ha": 1193,
+  "cell_size_m": 250,
+  "cell_count": 184,
+  "burned_area_ha": 1150.0,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": true,
+  "out_of_fold_cells": 98,
+  "status_counts": {
+    "predicted": 98,
+    "low_severity": 86
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.2292,
+      "max": 0.436
+    },
+    "slope_deg": {
+      "min": 4.547716,
+      "max": 19.083616
+    },
+    "road_distance_km": {
+      "min": 0.11518907,
+      "max": 1.8761837
+    }
+  },
+  "has_perimeter": true
+}

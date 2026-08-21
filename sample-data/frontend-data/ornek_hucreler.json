@@ -1,0 +1,93 @@
+{
+  "_not": "Uc durumun her birinden birer hucre. Arayuzu mocklarken kullan. GERCEK API BICIMI BEYTULLAH'IN KARARI - bu sadece CSV satirinin JSON hali.",
+  "_kaynak": "AKD_2021_01",
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.1243,
+      "max": 0.5417
+    },
+    "slope_deg": {
+      "min": 0.05127889,
+      "max": 50.46333
+    },
+    "road_distance_km": {
+      "min": 0.0031909307,
+      "max": 2.9277885
+    }
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "hucreler": {
+    "predicted": {
+      "fire_id": "AKD_2021_01",
+      "cell_id": "AKD_2021_01_032026",
+      "lat": 36.89909,
+      "lon": 31.57598,
+      "tree_cover": 1.0,
+      "tree_cover_annual": 1.0,
+      "burn_severity_dnbr": 0.75222576,
+      "slope_deg": 37.271362,
+      "elevation_m": 318.0186,
+      "road_distance_km": 0.55603516,
+      "ndvi_before": 0.7000745,
+      "ndvi_after": 0.25082406,
+      "ndvi_drop": 0.44925043,
+      "severity_class": "yuksek",
+      "land_cover": "Agaclik",
+      "prediction_status": "predicted",
+      "recovery_gap_pred": 0.4826,
+      "priority_score": 0.8129,
+      "priority_class": "COK_YUKSEK"
+    },
+    "low_severity": {
+      "fire_id": "AKD_2021_01",
+      "cell_id": "AKD_2021_01_061483",
+      "lat": 36.63555,
+      "lon": 31.79056,
+      "tree_cover": 0.44039387,
+      "tree_cover_annual": 0.0,
+      "burn_severity_dnbr": 0.11780603,
+      "slope_deg": 27.100954,
+      "elevation_m": 72.16552,
+      "road_distance_km": 0.13289368,
+      "ndvi_before": 0.30396947,
+      "ndvi_after": 0.1902703,
+      "ndvi_drop": 0.11369917,
+      "severity_class": "dusuk",
+      "land_cover": "Yerlesim",
+      "prediction_status": "low_severity",
+      "recovery_gap_pred": null,
+      "priority_score": 0.0,
+      "priority_class": "DUSUK"
+    },
+    "no_data": {
+      "fire_id": "AKD_2021_01",
+      "cell_id": "AKD_2021_01_011955",
+      "lat": 37.07345,
+      "lon": 31.14809,
+      "tree_cover": 1.0,
+      "tree_cover_annual": 1.0,
+      "burn_severity_dnbr": 0.12218119,
+      "slope_deg": 24.280523,
+      "elevation_m": null,
+      "road_distance_km": 1.12649,
+      "ndvi_before": 0.6413808,
+      "ndvi_after": 0.4268688,
+      "ndvi_drop": 0.21451199,
+      "severity_class": "dusuk",
+      "land_cover": "Agaclik",
+      "prediction_status": "no_data",
+      "recovery_gap_pred": null,
+      "priority_score": null,
+      "priority_class": null
+    }
+  }
+}

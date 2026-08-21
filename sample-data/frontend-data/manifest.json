@@ -1,0 +1,74 @@
+{
+  "project": "ReGreen / FireRecover",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "model_version": "rf_v1",
+  "schema_version": "1.1",
+  "cell_size_m": 250,
+  "crs": "EPSG:4326",
+  "fire_count": 3,
+  "total_cells": 37163,
+  "training_rows": 16074,
+  "training_groups": 27,
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "files_per_fire": [
+    "{fire_id}_hucreler.csv",
+    "{fire_id}_sinir.geojson",
+    "{fire_id}_metadata.json"
+  ],
+  "fires": [
+    {
+      "fire_id": "AKD_2021_01",
+      "fire_date": "2021-07-29",
+      "province": "Antalya",
+      "region": "Akdeniz",
+      "cell_count": 9048,
+      "burned_area_ha": 56550.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "predicted": 4917,
+        "low_severity": 4130,
+        "no_data": 1
+      }
+    },
+    {
+      "fire_id": "AKD_2021_05",
+      "fire_date": "2021-07-29",
+      "province": "Adana",
+      "region": "Akdeniz",
+      "cell_count": 1428,
+      "burned_area_ha": 8925.0,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 978,
+        "predicted": 442,
+        "no_data": 8
+      }
+    },
+    {
+      "fire_id": "EGE_2024_10",
+      "fire_date": "2024-08-16",
+      "province": "Muğla",
+      "region": "Ege",
+      "cell_count": 53,
+      "burned_area_ha": 331.2,
+      "quality_flag": "ok",
+      "has_perimeter": true,
+      "status_counts": {
+        "low_severity": 34,
+        "predicted": 19
+      }
+    }
+  ],
+  "_not": "Bu ornek pakettir. Tam manifest 53 yangin iceriyor; burada sadece secilen 3 tanesi var."
+}

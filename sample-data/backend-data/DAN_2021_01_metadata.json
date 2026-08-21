@@ -1,0 +1,47 @@
+{
+  "fire_id": "DAN_2021_01",
+  "fire_date": "2021-08-27",
+  "province": "Tunceli",
+  "region": "Dogu Anadolu",
+  "modis_area_ha": 552,
+  "cell_size_m": 250,
+  "cell_count": 710,
+  "burned_area_ha": 4437.5,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "check",
+  "quality_note": "alan uyusmuyor (MODIS 552 ha, biz 4,437 ha)",
+  "in_training_set": false,
+  "out_of_fold_cells": 0,
+  "status_counts": {
+    "low_severity": 596,
+    "predicted": 114
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.208,
+      "max": 0.4397
+    },
+    "slope_deg": {
+      "min": 4.066216,
+      "max": 28.327072
+    },
+    "road_distance_km": {
+      "min": 1.0388697,
+      "max": 3.4536164
+    }
+  },
+  "has_perimeter": true
+}

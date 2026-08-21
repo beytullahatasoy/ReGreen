@@ -1,0 +1,47 @@
+{
+  "fire_id": "EGE_2021_03",
+  "fire_date": "2021-07-30",
+  "province": "Muğla",
+  "region": "Ege",
+  "modis_area_ha": 12432,
+  "cell_size_m": 250,
+  "cell_count": 1849,
+  "burned_area_ha": 11556.2,
+  "crs": "EPSG:4326",
+  "schema_version": "1.1",
+  "model_version": "rf_v1",
+  "generated_at": "2026-08-19T17:22:55+00:00",
+  "quality_flag": "ok",
+  "quality_note": null,
+  "in_training_set": true,
+  "out_of_fold_cells": 1306,
+  "status_counts": {
+    "predicted": 1306,
+    "low_severity": 543
+  },
+  "priority_weights": {
+    "recovery": 0.5,
+    "erosion": 0.3,
+    "access": 0.2
+  },
+  "priority_thresholds": {
+    "COK_YUKSEK": 0.75,
+    "YUKSEK": 0.5,
+    "ORTA": 0.25
+  },
+  "normalization_reference": {
+    "recovery_gap_pred": {
+      "min": 0.1967,
+      "max": 0.5334
+    },
+    "slope_deg": {
+      "min": 3.9255729,
+      "max": 38.847908
+    },
+    "road_distance_km": {
+      "min": 0.0050400035,
+      "max": 1.4450026
+    }
+  },
+  "has_perimeter": true
+}
