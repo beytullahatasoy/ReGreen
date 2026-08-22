@@ -1,5 +1,11 @@
 .vscode/
 
+# .NET
+backend/**/bin/
+backend/**/obj/
+*.user
+import-report-*.json
+
 # Node / Vite
 node_modules/
 dist/
