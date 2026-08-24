@@ -106,9 +106,10 @@ Yani dosyaları değiştirmek yeterli olacak, kod değişikliği gerekmeyecek.
 
 ## `docs/data-contract.md` ile ilişkisi
 
-⚠️ `docs/data-contract.md` bu paketten **önce** yazılmış taslak bir dokümandır
-ve alan isimleri buradakiyle uyuşmuyor (`grid_id` ↔ `cell_id`,
-`recovery_score` ↔ `recovery_gap_pred` gibi).
+`docs/data-contract.md` güncel 53 yangınlık paket ve 37.163 hücrenin tamamı
+taranarak güncellenmiştir. Alan adı, tip, null davranışı, enum ve doğrulama
+kuralları için **tek bağlayıcı kaynak bu dokümandır**.
 
-**Bağlayıcı olan bu klasördeki `alan_eslesme.json` dosyasıdır.**
-`data-contract.md` güncellenecek.
+Bu klasördeki `alan_eslesme.json`, Türkçe açıklamalar ve iç isim ↔ API ismi
+eşleşmeleri için yardımcı kaynaktır. Bir uyuşmazlık görülürse
+`docs/data-contract.md` esas alınmalıdır.
