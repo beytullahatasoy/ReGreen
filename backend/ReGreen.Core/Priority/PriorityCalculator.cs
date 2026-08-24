@@ -1,6 +1,4 @@
-using ImportTool.Models;
-
-namespace ImportTool.Priority;
+namespace ReGreen.Core.Priority;
 
 /// <summary>
 /// sample-data/backend-data/oncelik.py'nin C# portu. Referans uygulamayla BİREBİR aynı
@@ -18,9 +16,18 @@ public static class PriorityCalculator
     /// <summary>Ağırlıklar toplamı 1 olacak şekilde normalize edilir (oncelik.py: VARSAYILAN_AGIRLIK / toplam).</summary>
     public static NormalizedWeights NormalizeWeights(PriorityWeights weights)
     {
+        // Bu, paylaşılan Core'un kendi invariant'ı — çağıranlar (API/ImportTool) zaten
+        // kendi girdilerini doğruluyor olsa da, NormalizeWeights DOĞRUDAN çağrılırsa
+        // (ör. ileride başka bir çağıran) negatif/sonsuz bileşenleri sessizce kabul etmemeli.
+        if (!double.IsFinite(weights.Recovery) || !double.IsFinite(weights.Erosion) || !double.IsFinite(weights.Access)
+            || weights.Recovery < 0 || weights.Erosion < 0 || weights.Access < 0)
+            throw new ArgumentException("Ağırlıklar sonlu ve negatif olmayan sayılar olmalı.", nameof(weights));
+
+        // Her ağırlık ayrı ayrı sonlu olsa bile toplamları taşıp Infinity'ye yuvarlanabilir
+        // (ör. 1e308 + 1e308) — bu durumda total<=0 kontrolü tek başına yakalayamaz.
         var total = weights.Recovery + weights.Erosion + weights.Access;
-        if (total <= 0)
-            throw new ArgumentException("Ağırlıkların toplamı pozitif olmalı.", nameof(weights));
+        if (!double.IsFinite(total) || total <= 0)
+            throw new ArgumentException("Ağırlıkların toplamı sonlu ve pozitif olmalı.", nameof(weights));
 
         return new NormalizedWeights(
             weights.Recovery / total,

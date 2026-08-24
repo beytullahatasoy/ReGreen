@@ -62,9 +62,13 @@ public static class ManifestValidator
             return ("CRS_INVALID", $"manifest.crs='EPSG:4326' olmalı, gelen: '{manifest.Crs}'.");
 
         var w = manifest.PriorityWeights;
+        var wTotal = w.Recovery + w.Erosion + w.Access;
         if (!double.IsFinite(w.Recovery) || !double.IsFinite(w.Erosion) || !double.IsFinite(w.Access)
-            || w.Recovery < 0 || w.Erosion < 0 || w.Access < 0 || w.Recovery + w.Erosion + w.Access <= 0)
-            return ("WEIGHTS_INVALID", "manifest.priority_weights negatif olamaz, toplamı pozitif olmalı.");
+            || w.Recovery < 0 || w.Erosion < 0 || w.Access < 0
+            // Her bileşen tek başına sonlu olsa bile toplamları taşıp Infinity'ye
+            // yuvarlanabilir (ör. 1e308 + 1e308) — "toplam <= 0" tek başına bunu yakalamaz.
+            || !double.IsFinite(wTotal) || wTotal <= 0)
+            return ("WEIGHTS_INVALID", "manifest.priority_weights negatif olamaz, toplamı sonlu ve pozitif olmalı.");
 
         var t = manifest.PriorityThresholds;
         if (!double.IsFinite(t.Orta) || !double.IsFinite(t.Yuksek) || !double.IsFinite(t.CokYuksek)

@@ -126,23 +126,26 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         {
             e.ToTable("Predictions", t =>
             {
+                // Not: \n escape'leri BİLEREK kullanılıyor (çok satırlı raw string DEĞİL) —
+                // raw string kullanılsaydı içerik, checkout'un satır sonu ayarına (CRLF/LF)
+                // bağlı olarak derlenirdi ve bu durum EF Core'un modeli, \n ile üretilmiş
+                // InitialCreate migration'ındaki metinle birebir eşleşmediği için
+                // PendingModelChangesWarning ile reddetmesine yol açardı.
                 t.HasCheckConstraint("CK_Predictions_StatusConsistency",
-                    """
-                    (PredictionStatus = 'predicted'
-                        AND RecoveryGapPred IS NOT NULL
-                        AND DefaultPriorityScore IS NOT NULL
-                        AND DefaultPriorityClass IS NOT NULL)
-                    OR (PredictionStatus = 'low_severity'
-                        AND RecoveryGapPred IS NULL
-                        AND DefaultPriorityScore IS NOT NULL
-                        AND DefaultPriorityScore = 0.0
-                        AND DefaultPriorityClass IS NOT NULL
-                        AND DefaultPriorityClass = 'DUSUK')
-                    OR (PredictionStatus = 'no_data'
-                        AND RecoveryGapPred IS NULL
-                        AND DefaultPriorityScore IS NULL
-                        AND DefaultPriorityClass IS NULL)
-                    """);
+                    "(PredictionStatus = 'predicted'\n" +
+                    "    AND RecoveryGapPred IS NOT NULL\n" +
+                    "    AND DefaultPriorityScore IS NOT NULL\n" +
+                    "    AND DefaultPriorityClass IS NOT NULL)\n" +
+                    "OR (PredictionStatus = 'low_severity'\n" +
+                    "    AND RecoveryGapPred IS NULL\n" +
+                    "    AND DefaultPriorityScore IS NOT NULL\n" +
+                    "    AND DefaultPriorityScore = 0.0\n" +
+                    "    AND DefaultPriorityClass IS NOT NULL\n" +
+                    "    AND DefaultPriorityClass = 'DUSUK')\n" +
+                    "OR (PredictionStatus = 'no_data'\n" +
+                    "    AND RecoveryGapPred IS NULL\n" +
+                    "    AND DefaultPriorityScore IS NULL\n" +
+                    "    AND DefaultPriorityClass IS NULL)");
                 t.HasCheckConstraint("CK_Predictions_Status",
                     "PredictionStatus IN ('predicted', 'low_severity', 'no_data')");
                 t.HasCheckConstraint("CK_Predictions_RecoveryGapPred_Range",

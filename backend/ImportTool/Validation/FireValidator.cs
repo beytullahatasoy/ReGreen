@@ -4,7 +4,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using ImportTool.Geo;
 using ImportTool.Models;
-using ImportTool.Priority;
+using ReGreen.Core.Priority;
 
 namespace ImportTool.Validation;
 
@@ -288,11 +288,22 @@ public class FireValidator(string manifestDir, Manifest manifest, Dictionary<str
             return FireValidationResult.Failed("OOF_INCONSISTENT",
                 "in_training_set=false iken out_of_fold_cells 0 olmalı.");
 
-        // §3.1.6 (yangın düzeyinde tekrar) — ağırlık/eşik temel kuralları
+        // §3.1.6 (yangın düzeyinde tekrar) — ağırlık/eşik temel kuralları. Not: yukarıdaki
+        // (259. satır) PRIORITY_WEIGHTS_MISMATCH kontrolü nedeniyle bu satıra normal
+        // pipeline'da SADECE metadata.priority_weights == manifest.priority_weights
+        // olduğunda ulaşılır — yani manifest zaten geçersizse Orchestrator zaten
+        // ManifestValidator'da FATAL vermiş olur, buraya hiç gelinmez. Yine de bilerek
+        // burada tutuluyor: FireValidator ileride manifest kontrolünden BAĞIMSIZ
+        // çağrılırsa (ör. tek bir yangının yeniden doğrulanması) sessizce geçersiz veri
+        // kabul etmesin diye.
         var w = meta.PriorityWeights;
+        var wTotal = w.Recovery + w.Erosion + w.Access;
         if (!double.IsFinite(w.Recovery) || !double.IsFinite(w.Erosion) || !double.IsFinite(w.Access)
-            || w.Recovery < 0 || w.Erosion < 0 || w.Access < 0 || w.Recovery + w.Erosion + w.Access <= 0)
-            return FireValidationResult.Failed("WEIGHTS_INVALID", "priority_weights negatif olamaz, toplamı pozitif olmalı.");
+            || w.Recovery < 0 || w.Erosion < 0 || w.Access < 0
+            // Her bileşen tek başına sonlu olsa bile toplamları taşıp Infinity'ye
+            // yuvarlanabilir (ör. 1e308 + 1e308) — "toplam <= 0" tek başına bunu yakalamaz.
+            || !double.IsFinite(wTotal) || wTotal <= 0)
+            return FireValidationResult.Failed("WEIGHTS_INVALID", "priority_weights negatif olamaz, toplamı sonlu ve pozitif olmalı.");
 
         var t = meta.PriorityThresholds;
         if (!double.IsFinite(t.Orta) || !double.IsFinite(t.Yuksek) || !double.IsFinite(t.CokYuksek)
