@@ -420,6 +420,35 @@ public class FireEndpointsTests(DatabaseFixture fixture) : IAsyncLifetime
         Assert.Equal(expectedNewerId, response!.ModelRunId);
     }
 
+    /// <summary>
+    /// Regresyon: response compression Program.cs'de eklendi ve canlı API'ye karşı elle
+    /// doğrulandı (bkz. docs/api-contract.md §7), ama bunu koruyan otomatik test yoktu —
+    /// örn. `UseResponseCompression()` çağrısı yanlışlıkla silinse bile hiçbir test kırılmazdı.
+    /// </summary>
+    [LocalDbFact]
+    public async Task GetCells_ResponseIsCompressed_WhenClientAcceptsIt()
+    {
+        await SeedStandardFireAsync();
+        using var client = _factory.CreateClient();
+
+        var compressedRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/fires/{SeedHelper.FireId}/cells");
+        compressedRequest.Headers.TryAddWithoutValidation("Accept-Encoding", "gzip");
+        var compressedResponse = await client.SendAsync(compressedRequest);
+        Assert.Equal(HttpStatusCode.OK, compressedResponse.StatusCode);
+        var compressedBytes = (await compressedResponse.Content.ReadAsByteArrayAsync()).Length;
+
+        var identityRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/fires/{SeedHelper.FireId}/cells");
+        identityRequest.Headers.TryAddWithoutValidation("Accept-Encoding", "identity");
+        var identityResponse = await client.SendAsync(identityRequest);
+        Assert.Equal(HttpStatusCode.OK, identityResponse.StatusCode);
+        var identityBytes = (await identityResponse.Content.ReadAsByteArrayAsync()).Length;
+
+        Assert.Contains("gzip", compressedResponse.Content.Headers.ContentEncoding);
+        Assert.DoesNotContain("gzip", identityResponse.Content.Headers.ContentEncoding);
+        Assert.True(compressedBytes < identityBytes,
+            $"Sıkıştırılmış yanıt ({compressedBytes} bayt) sıkıştırılmamıştan ({identityBytes} bayt) küçük olmalı.");
+    }
+
     private static async Task AssertProblemCode(HttpResponseMessage response, string expectedCode)
     {
         var json = await response.Content.ReadAsStringAsync();

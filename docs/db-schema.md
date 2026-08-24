@@ -219,9 +219,12 @@ Ağırlıklar, eşikler, `HasPerimeter`, `QualityFlag`, `OutOfFoldCells`, `CellS
 
 ---
 
-## 8. EF Core Notu (ileri aşama için)
+## 8. EF Core Uygulaması
 
-Veri erişimi **Entity Framework Core (Code-First)** ile yapılacak — bu şema henüz elle yazılmış SQL (`backend/db/schema.sql`) olarak duruyor, backend projesi açıldığında:
+Veri erişimi **Entity Framework Core (Code-First)** ile uygulanmıştır. Güncel
+karşılıklar `backend/ReGreen.Data/AppDbContext.cs`, entity sınıfları ve
+`20260822135150_InitialCreate` migration'ıdır. `backend/db/schema.sql` aynı
+şemanın elle çalıştırılabilir referans karşılığı olarak tutulur:
 
 - Tablo adları tekil (`Fires`, `Cells`) değil PDF'nin kullandığı çoğul haliyle kalıyor — EF Core konvansiyonuyla `DbSet<Fire>` → `Fires` tablosu şeklinde eşleşir, ekstra `[Table("Fires")]` gerekmez.
 - Yukarıdaki `CHECK` kısıtları EF Core migration'larında `.HasCheckConstraint(...)` ile ifade edilir (Fluent API); Code-First entity class'ları bu kısıtları enforce ETMEZ, sadece DB seviyesinde tutulur — C# tarafında da aynı kuralları (ör. `PredictionStatus == "predicted"` iken üç alan da dolu olmalı) ayrıca doğrulamak gerekir.
@@ -242,9 +245,11 @@ modelBuilder.Entity<Prediction>()
 ```
 
   `Cells(FireId, CellId)` ve `ModelRuns(FireId, Id)` için alternate key'ler migration'da `UNIQUE` kısıtlarına karşılık gelmelidir.
-- İlk migration adı önerisi: `InitialCreate` — bu şemanın birebir karşılığı olmalı, sonradan "v4.2 fix" diye ayrı bir migration YOK çünkü düzeltmeler zaten ilk migration'a gömülü.
+- İlk migration `InitialCreate` adıyla oluşturulmuştur. v1.2 düzeltmeleri ilk
+  migration'a gömülüdür; ayrıca bir "v4.2 fix" migration'ı yoktur.
 
-Bu bölüm bir sonraki adımda (backend projesi açıldığında) somutlaşacak, şimdilik sadece yön belirtiyor.
+EF Core modeli, migration ve `backend/db/schema.sql` testler ve şema incelemesiyle
+birbirleriyle hizalanmıştır.
 
 ---
 

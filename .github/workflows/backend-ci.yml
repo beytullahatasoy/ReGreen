@@ -1,0 +1,36 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+
+jobs:
+  build-and-test:
+    # windows-latest kullanılıyor çünkü SQL Server LocalDB runner image'ında hazır geliyor —
+    # bu sayede LocalDB entegrasyon testleri de (REGREEN_RUN_LOCALDB_TESTS=1) CI'da
+    # çalışabiliyor, sadece DB'siz alt küme değil (bkz. backend/README.md test bölümü).
+    runs-on: windows-latest
+    env:
+      REGREEN_RUN_LOCALDB_TESTS: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore
+        run: dotnet restore backend/ReGreen.sln
+
+      - name: Build (Release)
+        run: dotnet build backend/ReGreen.sln --no-restore --configuration Release
+
+      - name: Test (Release, LocalDB dahil)
+        run: dotnet test backend/ReGreen.sln --no-build --configuration Release --logger "console;verbosity=normal"
