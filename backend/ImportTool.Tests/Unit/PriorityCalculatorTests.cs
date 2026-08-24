@@ -1,5 +1,4 @@
-using ImportTool.Models;
-using ImportTool.Priority;
+using ReGreen.Core.Priority;
 using Xunit;
 
 namespace ImportTool.Tests.Unit;
@@ -82,6 +81,29 @@ public class PriorityCalculatorTests
     {
         Assert.Throws<ArgumentException>(() =>
             PriorityCalculator.NormalizeWeights(new PriorityWeights { Recovery = 0, Erosion = 0, Access = 0 }));
+    }
+
+    [Theory]
+    [InlineData(-1.0, 2.0, 1.0)] // negatif bileşen
+    [InlineData(double.NaN, 0.3, 0.2)]
+    [InlineData(double.PositiveInfinity, 0.3, 0.2)]
+    public void NormalizeWeights_InvalidComponent_Throws(double recovery, double erosion, double access)
+    {
+        // Core kendi invariant'ını korumalı: çağıranlar (API/ImportTool) zaten kendi
+        // girdilerini doğruluyor olsa da, NormalizeWeights DOĞRUDAN çağrılırsa negatif/
+        // sonsuz bileşenleri sessizce kabul etmemeli.
+        Assert.Throws<ArgumentException>(() =>
+            PriorityCalculator.NormalizeWeights(new PriorityWeights { Recovery = recovery, Erosion = erosion, Access = access }));
+    }
+
+    [Fact]
+    public void NormalizeWeights_EachFiniteButSumOverflowsToInfinity_Throws()
+    {
+        // Her ağırlık tek başına sonlu (1e308 < double.MaxValue) ama toplamları taşıp
+        // double.PositiveInfinity'ye yuvarlanıyor — sadece "total <= 0" kontrolü bunu
+        // YAKALAMAZ (Infinity <= 0 false'tur), IsFinite(total) da gerekli.
+        Assert.Throws<ArgumentException>(() =>
+            PriorityCalculator.NormalizeWeights(new PriorityWeights { Recovery = 1e308, Erosion = 1e308, Access = 1.0 }));
     }
 
     [Theory]

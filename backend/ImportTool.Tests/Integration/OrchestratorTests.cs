@@ -165,6 +165,37 @@ public class OrchestratorTests
     }
 
     [LocalDbFact]
+    public async Task WeightSumOverflowsToInfinity_RejectedFatalAtManifestLevel()
+    {
+        // Regresyon: her ağırlık bileşeni tek başına sonlu (1e308 < double.MaxValue) ama
+        // toplamları taşıp double.PositiveInfinity'ye yuvarlanıyor — sadece "toplam <= 0"
+        // kontrolü bunu YAKALAMAZ, IsFinite(toplam) da gerekli (ManifestValidator VE
+        // FireValidator'da). manifest.json ve metadata.json'un priority_weights'i BİRLİKTE
+        // bozuluyor ki ikisi eşit kalsın — aksi halde FireValidator'ın kendi intrinsic
+        // kontrolüne varmadan önce PRIORITY_WEIGHTS_MISMATCH devreye girer. Bu, gerçek
+        // pipeline'da manifest paket-geneli kontrol AYNI aşamada, per-fire kontrolden ÖNCE
+        // çalıştığı için ManifestValidator'da FATAL olarak yakalanır — uçtan uca reddedildiği
+        // doğrulanıyor (hangi iç kontrolün önce tetiklendiği değil).
+        var fx = new SyntheticFireFixture("TESTF_2026_09");
+        var overflowWeights = new { recovery = 1e308, erosion = 1e308, access = 1.0 };
+        fx.MutateManifest(d => d["priority_weights"] = overflowWeights);
+        fx.MutateMetadata(d => d["priority_weights"] = overflowWeights);
+        try
+        {
+            var (exitCode, report) = await Run(fx);
+
+            Assert.Equal(2, exitCode);
+            Assert.Equal("fatal", report.Status);
+            Assert.Equal("WEIGHTS_INVALID", report.FatalError?.Code);
+            Assert.Empty(report.Fires);
+
+            await using var db = DatabaseFixture.CreateContext();
+            Assert.Equal(0, db.Fires.Count());
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [LocalDbFact]
     public async Task MalformedRow_DoesNotCrashRun_OtherFiresStillProcessed()
     {
         // v1.1 review bulgusu #3'un regresyon testi: bos cell_id NullReferenceException

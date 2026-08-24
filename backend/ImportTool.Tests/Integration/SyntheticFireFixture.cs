@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
-using ImportTool.Priority;
+using ReGreen.Core.Priority;
 
 namespace ImportTool.Tests.Integration;
 
@@ -54,13 +54,13 @@ public class SyntheticFireFixture
             road_distance_km = new { min = roadMin, max = roadMax },
         };
 
-        var pw = new Models.PriorityWeights { Recovery = 0.5, Erosion = 0.3, Access = 0.2 };
-        var pt = new Models.PriorityThresholds { CokYuksek = 0.75, Yuksek = 0.5, Orta = 0.25 };
-        var normModel = new Models.NormalizationReference
+        var pw = new PriorityWeights { Recovery = 0.5, Erosion = 0.3, Access = 0.2 };
+        var pt = new PriorityThresholds { CokYuksek = 0.75, Yuksek = 0.5, Orta = 0.25 };
+        var normModel = new NormalizationReference
         {
-            RecoveryGapPred = new Models.NormRange { Min = recoveryMin, Max = recoveryMax },
-            SlopeDeg = new Models.NormRange { Min = slopeMin, Max = slopeMax },
-            RoadDistanceKm = new Models.NormRange { Min = roadMin, Max = roadMax },
+            RecoveryGapPred = new NormRange { Min = recoveryMin, Max = recoveryMax },
+            SlopeDeg = new NormRange { Min = slopeMin, Max = slopeMax },
+            RoadDistanceKm = new NormRange { Min = roadMin, Max = roadMax },
         };
 
         var inv = CultureInfo.InvariantCulture;
@@ -174,6 +174,16 @@ public class SyntheticFireFixture
         var dict = JsonSerializer.Deserialize<Dictionary<string, object?>>(File.ReadAllText(path))!;
         mutate(dict);
         File.WriteAllText(path, JsonSerializer.Serialize(dict, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    /// <summary>manifest.json'u okuyup değiştirip geri yazar — ör. metadata ile BİRLİKTE
+    /// değiştirilmesi gereken alanlar (`priority_weights` gibi) için, aksi halde
+    /// PRIORITY_WEIGHTS_MISMATCH devreye girip asıl test edilmek istenen kontrolü maskeler.</summary>
+    public void MutateManifest(Action<Dictionary<string, object?>> mutate)
+    {
+        var dict = JsonSerializer.Deserialize<Dictionary<string, object?>>(File.ReadAllText(ManifestPath))!;
+        mutate(dict);
+        File.WriteAllText(ManifestPath, JsonSerializer.Serialize(dict, new JsonSerializerOptions { WriteIndented = true }));
     }
 
     /// <summary>CSV'nin belirli bir satırını (1-tabanlı, header hariç) elle değiştirir.</summary>

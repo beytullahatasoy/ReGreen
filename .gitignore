@@ -1,5 +1,8 @@
 .vscode/
 
+# Claude Code kişisel izin/ayar dosyası (kullanıcıya özel, repoya girmemeli)
+.claude/settings.local.json
+
 # .NET
 backend/**/bin/
 backend/**/obj/

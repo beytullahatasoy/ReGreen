@@ -1,5 +1,5 @@
 using ImportTool.Geo;
-using ImportTool.Priority;
+using ReGreen.Core.Priority;
 using ImportTool.Validation;
 using ReGreen.Data.Entities;
 

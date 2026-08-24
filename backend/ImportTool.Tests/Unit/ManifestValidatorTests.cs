@@ -1,5 +1,6 @@
 using ImportTool.Models;
 using ImportTool.Validation;
+using ReGreen.Core.Priority;
 using Xunit;
 
 namespace ImportTool.Tests.Unit;
@@ -76,6 +77,20 @@ public class ManifestValidatorTests
     public void Validate_NegativeWeight_Fatal()
     {
         var m = ValidManifest() with { PriorityWeights = new PriorityWeights { Recovery = -0.1, Erosion = 0.3, Access = 0.2 } };
+        var error = ManifestValidator.Validate(m);
+        Assert.Equal("WEIGHTS_INVALID", error?.Code);
+    }
+
+    [Fact]
+    public void Validate_WeightSumOverflowsToInfinity_Fatal()
+    {
+        // Her bileşen tek başına sonlu (1e308 < double.MaxValue) ama toplamları taşıp
+        // double.PositiveInfinity'ye yuvarlanıyor — sadece "toplam <= 0" kontrolü bunu
+        // YAKALAMAZ (Infinity <= 0 false'tur), IsFinite(toplam) da gerekli.
+        var m = ValidManifest() with
+        {
+            PriorityWeights = new PriorityWeights { Recovery = 1e308, Erosion = 1e308, Access = 1.0 },
+        };
         var error = ManifestValidator.Validate(m);
         Assert.Equal("WEIGHTS_INVALID", error?.Code);
     }

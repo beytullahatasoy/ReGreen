@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using ReGreen.Core.Priority;
 
 namespace ImportTool.Models;
 
@@ -50,18 +51,4 @@ public record class StatusCounts
     [JsonPropertyName("no_data")] public int NoData { get; set; }
 
     public int Total => Predicted + LowSeverity + NoData;
-}
-
-public record class PriorityWeights
-{
-    [JsonPropertyName("recovery")] public required double Recovery { get; set; }
-    [JsonPropertyName("erosion")] public required double Erosion { get; set; }
-    [JsonPropertyName("access")] public required double Access { get; set; }
-}
-
-public record class PriorityThresholds
-{
-    [JsonPropertyName("COK_YUKSEK")] public required double CokYuksek { get; set; }
-    [JsonPropertyName("YUKSEK")] public required double Yuksek { get; set; }
-    [JsonPropertyName("ORTA")] public required double Orta { get; set; }
 }

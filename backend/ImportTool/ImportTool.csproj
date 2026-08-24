@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\ReGreen.Core\ReGreen.Core.csproj" />
     <ProjectReference Include="..\ReGreen.Data\ReGreen.Data.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,5 @@
 using ImportTool.Models;
-using ImportTool.Priority;
+using ReGreen.Core.Priority;
 using ImportTool.Validation;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
