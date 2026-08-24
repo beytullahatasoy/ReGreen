@@ -38,17 +38,24 @@
     Ortalama/min/max hesaplanacak, gercekten olculen istek sayisi.
 
 .EXAMPLE
-    dotnet run --project backend/ReGreen.Api &
+    # Birinci terminal:
+    dotnet run --project backend/ReGreen.Api
+
+    # İkinci terminal:
     ./backend/scripts/perf-check.ps1 -BaseUrl http://localhost:5066
 
 .EXAMPLE
     ./backend/scripts/perf-check.ps1 -FireId AKD_2021_01 -Query "min_lon=31.4&min_lat=36.9&max_lon=31.5&max_lat=37.0"
 #>
 param(
+    [ValidateNotNullOrEmpty()]
     [string]$BaseUrl = "http://localhost:5066",
+    [ValidateNotNullOrEmpty()]
     [string]$FireId = "AKD_2021_01",
     [string]$Query = "",
+    [ValidateRange(0, 2147483647)]
     [int]$WarmupRequests = 3,
+    [ValidateRange(1, 2147483647)]
     [int]$MeasuredRequests = 10
 )
 

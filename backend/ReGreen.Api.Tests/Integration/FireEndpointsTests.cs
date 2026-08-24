@@ -434,11 +434,13 @@ public class FireEndpointsTests(DatabaseFixture fixture) : IAsyncLifetime
         var compressedRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/fires/{SeedHelper.FireId}/cells");
         compressedRequest.Headers.TryAddWithoutValidation("Accept-Encoding", "gzip");
         var compressedResponse = await client.SendAsync(compressedRequest);
+        Assert.Equal(HttpStatusCode.OK, compressedResponse.StatusCode);
         var compressedBytes = (await compressedResponse.Content.ReadAsByteArrayAsync()).Length;
 
         var identityRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/fires/{SeedHelper.FireId}/cells");
         identityRequest.Headers.TryAddWithoutValidation("Accept-Encoding", "identity");
         var identityResponse = await client.SendAsync(identityRequest);
+        Assert.Equal(HttpStatusCode.OK, identityResponse.StatusCode);
         var identityBytes = (await identityResponse.Content.ReadAsByteArrayAsync()).Length;
 
         Assert.Contains("gzip", compressedResponse.Content.Headers.ContentEncoding);
