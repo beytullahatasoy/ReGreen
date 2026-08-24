@@ -49,6 +49,7 @@ app.UseHttpsRedirection();
 app.UseCors("Default");
 
 app.MapFireEndpoints();
+app.MapHealthEndpoints();
 
 app.Run();
 

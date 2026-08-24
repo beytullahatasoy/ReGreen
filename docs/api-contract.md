@@ -187,7 +187,20 @@ Tüm hatalar aynı gövde şeklinde döner, `code` alanı programatik ayrım iç
 
 ---
 
-## 6. Bağlantı ve ortam
+## 6. Sağlık kontrolü (health check)
+
+Auth/veri sözleşmesi dışında, ops/monitoring için:
+
+| Endpoint | Ne kontrol eder | Başarılı | Başarısız |
+| --- | --- | --- | --- |
+| `GET /health/live` | Süreç ayakta mı (DB'ye HİÇ dokunmaz) | `200 { "status": "healthy" }` | — (süreç çökmüşse zaten yanıt vermez) |
+| `GET /health/ready` | Süreç ayakta VE DB'ye bağlanabiliyor mu | `200 { "status": "healthy" }` | `503 { "status": "unhealthy" }` |
+
+`/live` "restart gerekir mi" sorusuna, `/ready` "trafik alabilir mi" sorusuna cevap verir — DB geçici olarak kesildiğinde `/live` yine `200` döner (uygulama sağlıklı, sadece DB'ye erişemiyor), `/ready` `503` döner.
+
+---
+
+## 7. Bağlantı ve ortam
 
 - Bağlantı dizesi önceliği: `REGREEN_CONNECTION_STRING` env var → `appsettings.json`'daki `ConnectionStrings:Default` → localdb geliştirme fallback'i (ImportTool ile aynı konvansiyon).
 - Migration API başlangıcında OTOMATİK çalıştırılmaz — şema `dotnet ef database update --project backend/ReGreen.Data` ile elle uygulanır.
@@ -196,7 +209,7 @@ Tüm hatalar aynı gövde şeklinde döner, `code` alanı programatik ayrım iç
 
 ---
 
-## 7. Referans
+## 8. Referans
 
 - [`docs/data-contract.md`](./data-contract.md) — alan adı/tip/anlam (tek doğru kaynak).
 - [`docs/db-schema.md`](./db-schema.md) — DB şeması, CHECK/composite FK kısıtları.
