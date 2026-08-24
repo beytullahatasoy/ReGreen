@@ -21,7 +21,7 @@ Faz 1/2 çekirdek backend tamamlandı ve test edildi:
 - Güncel sample data paketi: 53 yangın, 37.163 hücre
 - Import akışı: dry-run, doğrulama, yangın bazlı transaction, idempotency ve JSON rapor
 - API: 3 GET endpoint'i, filtreleme, bounding-box ve isteğe bağlı ağırlıklarla anlık öncelik hesabı
-- Testler: 116 toplam (66 API + 50 ImportTool), gerçek LocalDB entegrasyon testleri dahil
+- Testler: 117 toplam (67 API + 50 ImportTool), gerçek LocalDB entegrasyon testleri dahil
 - Release build: sıfır uyarı ve sıfır hata
 
 HTTP sözleşmesi için [`../docs/api-contract.md`](../docs/api-contract.md), veri
@@ -46,6 +46,11 @@ makinesinde bir kere kurar (SQL Server LocalDB kurulu olmalı, Windows'ta Visual
 Studio/SSMS ile birlikte genelde zaten kuruludur):
 
 ```powershell
+# 0) `dotnet ef` aracını kur — repo kökünde .config/dotnet-tools.json manifest
+#    dosyası var, bu komut global bir kuruluma İHTİYAÇ DUYMADAN doğru sürümü indirir.
+#    Tek seferlik; sonraki `dotnet ef` çağrıları için gerekmez.
+dotnet tool restore
+
 # 1) Şemayı oluştur
 dotnet ef database update --project backend/ReGreen.Data
 
