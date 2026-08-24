@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Http.Json;
+using ReGreen.Api.Dtos;
 using Xunit;
 
 namespace ReGreen.Api.Tests.Integration;
@@ -23,6 +25,9 @@ public class HealthEndpointsTests(DatabaseFixture fixture)
         var response = await client.GetAsync("/health/live");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
+        var body = await response.Content.ReadFromJsonAsync<HealthResponseDto>();
+        Assert.Equal("healthy", body?.Status);
     }
 
     [Fact]
@@ -34,6 +39,9 @@ public class HealthEndpointsTests(DatabaseFixture fixture)
         var response = await client.GetAsync("/health/ready");
 
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
+        var body = await response.Content.ReadFromJsonAsync<HealthResponseDto>();
+        Assert.Equal("unhealthy", body?.Status);
     }
 
     [LocalDbFact]
@@ -45,5 +53,8 @@ public class HealthEndpointsTests(DatabaseFixture fixture)
         var response = await client.GetAsync("/health/ready");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
+        var body = await response.Content.ReadFromJsonAsync<HealthResponseDto>();
+        Assert.Equal("healthy", body?.Status);
     }
 }

@@ -200,7 +200,24 @@ Auth/veri sözleşmesi dışında, ops/monitoring için:
 
 ---
 
-## 7. Bağlantı ve ortam
+## 7. Performans ve sıkıştırma
+
+`/cells`, en büyük yangında (`AKD_2021_01`, 9048 hücre) sıkıştırılmamış ~4 MB JSON döner. Response compression (Brotli/Gzip, `CompressionLevel.Fastest`) açık — auth/gizli veri olmadığı için BREACH/CRIME riski yok, HTTPS için de güvenle etkin.
+
+Sayı **iddia değil, ölçüm**: `backend/scripts/perf-check.ps1` — kendi makinende `dotnet run --project backend/ReGreen.Api` çalışırken çalıştırıp tekrar üretebilirsin (curl.exe kullanır, Windows 10 1803+/11'de hazır gelir — Windows PowerShell 5.1'in `Invoke-WebRequest`/`HttpClient`'i büyük gövdelerde onlarca kat yavaş/yanıltıcı ölçüm verdiği için BİLEREK kullanılmaz, script'in başındaki not'ta ölçülerek belgelendi).
+
+Bu ortamda ölçülen (10 istek ortalaması, 3 ısınma isteği sonrası, `dotnet run --configuration Release`):
+
+| Senaryo | Gecikme (ort/min/max) | Sıkıştırılmamış | Sıkıştırılmış | Kazanç |
+| --- | --- | --- | --- | --- |
+| `AKD_2021_01/cells` (tam, 9048 hücre) | 66 / 57 / 80 ms | 4.028.958 bayt | 1.044.330 bayt | %74 |
+| Aynı + bounding box (1495 hücre) | 22 / 19 / 27 ms | 665.360 bayt | 175.332 bayt | %74 |
+
+Sıkıştırma yanıt boyutunu küçültür ama frontend'in **9048 hücreyi işleme maliyetini ortadan kaldırmaz** — harita viewport'una göre bounding box kullanmak (yukarıdaki ikinci satır) hâlâ önerilir, ikisi birbirini tamamlıyor.
+
+---
+
+## 8. Bağlantı ve ortam
 
 - Bağlantı dizesi önceliği: `REGREEN_CONNECTION_STRING` env var → `appsettings.json`'daki `ConnectionStrings:Default` → localdb geliştirme fallback'i (ImportTool ile aynı konvansiyon).
 - Migration API başlangıcında OTOMATİK çalıştırılmaz — şema `dotnet ef database update --project backend/ReGreen.Data` ile elle uygulanır.
@@ -209,7 +226,7 @@ Auth/veri sözleşmesi dışında, ops/monitoring için:
 
 ---
 
-## 8. Referans
+## 9. Referans
 
 - [`docs/data-contract.md`](./data-contract.md) — alan adı/tip/anlam (tek doğru kaynak).
 - [`docs/db-schema.md`](./db-schema.md) — DB şeması, CHECK/composite FK kısıtları.

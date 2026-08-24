@@ -1,3 +1,5 @@
+using System.IO.Compression;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using ReGreen.Api.Endpoints;
 using ReGreen.Api.ExceptionHandling;
@@ -6,6 +8,23 @@ using ReGreen.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
+// /cells en büyük yangında (~9048 hücre) sıkıştırılmamış ~4 MB JSON döner — sıkıştırma
+// bunu kalıcı olarak küçültür (model/frontend değişse de geçerliliğini korur). BREACH/CRIME
+// riski burada YOK: API'de auth/secret yok, response gövdesine yansıyan gizli bir değer
+// bulunmuyor (salt-okunur, herkese açık yangın verisi) — HTTPS için de güvenle açılabilir.
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/problem+json"]);
+});
+// Brotli'nin varsayılan seviyesi (Optimal) ~4 MB'lık dinamik JSON'da saniyeler sürüyor —
+// ölçüldü: response compression ile /cells gecikmesi ~100ms'den ~4200ms'ye çıktı. Fastest,
+// boyut kazancının büyük kısmını korurken gecikmeyi normale döndürüyor (bkz. backend/scripts/perf-check.ps1).
+builder.Services.Configure<BrotliCompressionProviderOptions>(o => o.Level = CompressionLevel.Fastest);
+builder.Services.Configure<GzipCompressionProviderOptions>(o => o.Level = CompressionLevel.Fastest);
 
 // Bağlantı dizesi önceliği (ImportTool ile tutarlı — bkz. ImportTool/Orchestrator.cs):
 // REGREEN_CONNECTION_STRING env var -> appsettings ConnectionStrings:Default -> localdb fallback.
@@ -46,6 +65,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseResponseCompression();
 app.UseCors("Default");
 
 app.MapFireEndpoints();

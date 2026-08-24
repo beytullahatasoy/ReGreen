@@ -21,7 +21,7 @@ Faz 1/2 çekirdek backend tamamlandı ve test edildi:
 - Güncel sample data paketi: 53 yangın, 37.163 hücre
 - Import akışı: dry-run, doğrulama, yangın bazlı transaction, idempotency ve JSON rapor
 - API: 3 GET endpoint'i, filtreleme, bounding-box ve isteğe bağlı ağırlıklarla anlık öncelik hesabı
-- Testler: 113 toplam (63 API + 50 ImportTool), gerçek LocalDB entegrasyon testleri dahil
+- Testler: 116 toplam (66 API + 50 ImportTool), gerçek LocalDB entegrasyon testleri dahil
 - Release build: sıfır uyarı ve sıfır hata
 
 HTTP sözleşmesi için [`../docs/api-contract.md`](../docs/api-contract.md), veri
@@ -39,7 +39,24 @@ dotnet run --project backend/ReGreen.Api
 API geliştirme ortamında varsayılan olarak `http://localhost:5066` adresinde
 çalışır. OpenAPI belgesi `/openapi/v1.json` yolundadır.
 
-Import paketini DB'ye yazmadan doğrulamak için:
+### Yerel veritabanını sıfırdan kurma
+
+API'nin LocalDB verisi **repository'yle birlikte gelmez** — her geliştirici kendi
+makinesinde bir kere kurar (SQL Server LocalDB kurulu olmalı, Windows'ta Visual
+Studio/SSMS ile birlikte genelde zaten kuruludur):
+
+```powershell
+# 1) Şemayı oluştur
+dotnet ef database update --project backend/ReGreen.Data
+
+# 2) Gerçek örnek paketi (53 yangın, 37.163 hücre) içe aktar
+dotnet run --project backend/ImportTool -- sample-data/backend-data/manifest.json
+```
+
+Bu iki adımdan sonra `backend/ReGreen.Api` varsayılan bağlantı dizesiyle
+(`(localdb)\MSSQLLocalDB` / `ReGreen` veritabanı) çalışır, `GET /api/fires` 53
+kayıt döner. Import paketini DB'ye yazmadan sadece doğrulamak için `--dry-run`
+ekle:
 
 ```powershell
 dotnet run --project backend/ImportTool -- sample-data/backend-data/manifest.json --dry-run
