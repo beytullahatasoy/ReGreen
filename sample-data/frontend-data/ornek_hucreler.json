@@ -3,8 +3,8 @@
   "_kaynak": "AKD_2021_01",
   "normalization_reference": {
     "recovery_gap_pred": {
-      "min": 0.1243,
-      "max": 0.5417
+      "min": 0.1239,
+      "max": 0.5386
     },
     "slope_deg": {
       "min": 0.05127889,
@@ -28,23 +28,23 @@
   "hucreler": {
     "predicted": {
       "fire_id": "AKD_2021_01",
-      "cell_id": "AKD_2021_01_032026",
-      "lat": 36.89909,
-      "lon": 31.57598,
-      "tree_cover": 1.0,
+      "cell_id": "AKD_2021_01_025260",
+      "lat": 36.95841,
+      "lon": 31.45413,
+      "tree_cover": 0.9399605,
       "tree_cover_annual": 1.0,
-      "burn_severity_dnbr": 0.75222576,
-      "slope_deg": 37.271362,
-      "elevation_m": 318.0186,
-      "road_distance_km": 0.55603516,
-      "ndvi_before": 0.7000745,
-      "ndvi_after": 0.25082406,
-      "ndvi_drop": 0.44925043,
-      "severity_class": "yuksek",
+      "burn_severity_dnbr": 0.65989536,
+      "slope_deg": 35.42305,
+      "elevation_m": 490.93933,
+      "road_distance_km": 0.217935,
+      "ndvi_before": 0.64101964,
+      "ndvi_after": 0.18566036,
+      "ndvi_drop": 0.45535928,
+      "severity_class": "orta-yuksek",
       "land_cover": "Agaclik",
       "prediction_status": "predicted",
-      "recovery_gap_pred": 0.4826,
-      "priority_score": 0.8129,
+      "recovery_gap_pred": 0.4968,
+      "priority_score": 0.8454,
       "priority_class": "COK_YUKSEK"
     },
     "low_severity": {

@@ -8,10 +8,39 @@
 | Toplam hücre | 37.163 |
 | Hücre boyutu | 250 × 250 m (6,25 ha) |
 | Koordinat sistemi | EPSG:4326 |
-| Model sürümü | `rf_v1` |
+| Model sürümü | `ridge_v2` |
 | Şema sürümü | `1.1` |
 
 Keşfedilen 55 yangının 2'sinde yanık hücre kalmadığı için 53 tane var.
+
+---
+
+## Model performansı
+
+Bütün sayılar **out-of-fold**: model o yangını hiç görmeden tahmin etti
+(LeaveOneGroupOut, 27 mekânsal grup).
+
+| Metrik | Değer |
+|---|---|
+| Grup içi Spearman (ortalama) | **+0,686** |
+| Grup içi Spearman (medyan) | +0,744 |
+| Pozitif grup | **27/27** |
+| En kötü grup | +0,140 |
+| En iyi grup | +0,879 |
+| top-%20 isabet | **%52,8** |
+| — dNBR (saha yöntemi) tabanı | %38,8 |
+| — rastgele seçim | %20,0 |
+| İkili karşılaştırma doğruluğu | **%75,8** |
+
+**İkili karşılaştırma** en anlaşılır olanı: aynı yangından iki hücre verildiğinde
+hangisinin 2 yıl sonra daha kötü durumda olacağını %75,8 doğrulukla biliyor.
+Sahadaki yöntem %62,4, yazı-tura %50.
+
+Aynı sayılar `manifest.json` içinde `model_performance` altında da var —
+arayüzde göstermek isterseniz oradan okuyun, elle kopyalamayın.
+
+Modelin nasıl seçildiği, denenip elenen 20+ yöntem ve neden burada durulduğu:
+**`MODEL_GUNLUGU.md`**
 
 ---
 

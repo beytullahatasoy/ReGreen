@@ -1,0 +1,992 @@
+[
+  {
+    "yil": 2021,
+    "tarih": "2021-07-29",
+    "lat": 36.9109,
+    "lon": 31.4779,
+    "alan_ha": 57716,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.79,
+    "bbox": [
+      31.1493,
+      36.6343,
+      31.8357,
+      37.1807
+    ],
+    "id": "AKD_2021_01",
+    "il": "Antalya",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-02",
+    "lat": 37.0453,
+    "lon": 27.7737,
+    "alan_ha": 18125,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.93,
+    "bbox": [
+      27.5875,
+      36.9175,
+      27.9775,
+      37.1875
+    ],
+    "id": "EGE_2021_01",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-05",
+    "lat": 37.3503,
+    "lon": 28.3942,
+    "alan_ha": 15367,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.96,
+    "bbox": [
+      28.2325,
+      37.1875,
+      28.5475,
+      37.5775
+    ],
+    "id": "EGE_2021_02",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-01",
+    "lat": 36.764,
+    "lon": 31.9845,
+    "alan_ha": 13402,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.98,
+    "bbox": [
+      31.8187,
+      36.6437,
+      32.1463,
+      36.8763
+    ],
+    "id": "AKD_2021_02",
+    "il": "Antalya",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-07-30",
+    "lat": 36.771,
+    "lon": 28.1944,
+    "alan_ha": 12432,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.97,
+    "bbox": [
+      28.0735,
+      36.6485,
+      28.3465,
+      36.8965
+    ],
+    "id": "EGE_2021_03",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-04",
+    "lat": 36.998,
+    "lon": 28.8221,
+    "alan_ha": 10045,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.96,
+    "bbox": [
+      28.6743,
+      36.8843,
+      28.9707,
+      37.1107
+    ],
+    "id": "EGE_2021_04",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-07-29",
+    "lat": 36.1907,
+    "lon": 33.2683,
+    "alan_ha": 9751,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.89,
+    "bbox": [
+      33.1525,
+      36.0825,
+      33.3825,
+      36.3025
+    ],
+    "id": "AKD_2021_03",
+    "il": "Mersin",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-16",
+    "lat": 38.7624,
+    "lon": 28.1252,
+    "alan_ha": 6208,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.72,
+    "bbox": [
+      28.0375,
+      38.6475,
+      28.2225,
+      38.8775
+    ],
+    "id": "EGE_2024_01",
+    "il": "Manisa",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2023,
+    "tarih": "2023-08-22",
+    "lat": 40.1209,
+    "lon": 26.5048,
+    "alan_ha": 6017,
+    "bolge": "Marmara",
+    "ormanlik_oran": 0.69,
+    "bbox": [
+      26.3775,
+      40.0125,
+      26.6225,
+      40.2325
+    ],
+    "id": "MAR_2023_01",
+    "il": "Çanakkale",
+    "bolge_eski": "Marmara"
+  },
+  {
+    "yil": 2022,
+    "tarih": "2022-06-22",
+    "lat": 36.8596,
+    "lon": 28.1326,
+    "alan_ha": 4982,
+    "bolge": "Ege",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      28.0125,
+      36.7775,
+      28.2425,
+      36.9275
+    ],
+    "id": "EGE_2022_01",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2020,
+    "tarih": "2020-09-05",
+    "lat": 36.236,
+    "lon": 36.0218,
+    "alan_ha": 4597,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.53,
+    "bbox": [
+      35.9225,
+      36.1375,
+      36.1375,
+      36.3325
+    ],
+    "id": "AKD_2020_01",
+    "il": "Hatay",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-07-29",
+    "lat": 37.2269,
+    "lon": 36.2185,
+    "alan_ha": 3971,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.74,
+    "bbox": [
+      36.1425,
+      37.1125,
+      36.3025,
+      37.3375
+    ],
+    "id": "AKD_2021_04",
+    "il": "Osmaniye",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-07-29",
+    "lat": 37.3389,
+    "lon": 35.4799,
+    "alan_ha": 3768,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.69,
+    "bbox": [
+      35.3775,
+      37.2625,
+      35.6175,
+      37.4125
+    ],
+    "id": "AKD_2021_05",
+    "il": "Adana",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-16",
+    "lat": 38.5123,
+    "lon": 27.1369,
+    "alan_ha": 3296,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.65,
+    "bbox": [
+      27.0275,
+      38.4375,
+      27.2375,
+      38.5825
+    ],
+    "id": "EGE_2024_02",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-07-30",
+    "lat": 36.2342,
+    "lon": 33.6649,
+    "alan_ha": 3173,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.76,
+    "bbox": [
+      33.5775,
+      36.1425,
+      33.7625,
+      36.3075
+    ],
+    "id": "AKD_2021_06",
+    "il": "Mersin",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-16",
+    "lat": 40.3534,
+    "lon": 30.928,
+    "alan_ha": 3045,
+    "bolge": "Karadeniz",
+    "ormanlik_oran": 0.95,
+    "bbox": [
+      30.8325,
+      40.2775,
+      31.0225,
+      40.4275
+    ],
+    "id": "KAR_2024_01",
+    "il": "Bolu",
+    "bolge_eski": "Karadeniz"
+  },
+  {
+    "yil": 2022,
+    "tarih": "2022-09-07",
+    "lat": 36.1965,
+    "lon": 33.5862,
+    "alan_ha": 2700,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.96,
+    "bbox": [
+      33.4975,
+      36.1275,
+      33.6775,
+      36.2625
+    ],
+    "id": "AKD_2022_01",
+    "il": "Mersin",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-17",
+    "lat": 37.5616,
+    "lon": 28.3295,
+    "alan_ha": 2283,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.88,
+    "bbox": [
+      28.2575,
+      37.4625,
+      28.4125,
+      37.6525
+    ],
+    "id": "EGE_2024_03",
+    "il": "Aydın",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-15",
+    "lat": 40.271,
+    "lon": 26.3217,
+    "alan_ha": 1985,
+    "bolge": "Marmara",
+    "ormanlik_oran": 0.94,
+    "bbox": [
+      26.2325,
+      40.1925,
+      26.4225,
+      40.3425
+    ],
+    "id": "MAR_2024_01",
+    "il": "Çanakkale",
+    "bolge_eski": "Marmara"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-07",
+    "lat": 37.4714,
+    "lon": 28.03,
+    "alan_ha": 1942,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.76,
+    "bbox": [
+      27.9475,
+      37.4025,
+      28.1125,
+      37.5375
+    ],
+    "id": "EGE_2021_05",
+    "il": "Aydın",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2017,
+    "tarih": "2017-07-02",
+    "lat": 38.1353,
+    "lon": 27.0528,
+    "alan_ha": 1754,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.58,
+    "bbox": [
+      26.9825,
+      38.0575,
+      27.1325,
+      38.2075
+    ],
+    "id": "EGE_2017_01",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2019,
+    "tarih": "2019-07-11",
+    "lat": 36.7908,
+    "lon": 28.9229,
+    "alan_ha": 1414,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.49,
+    "bbox": [
+      28.8525,
+      36.7225,
+      28.9975,
+      36.8525
+    ],
+    "id": "EGE_2019_01",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2023,
+    "tarih": "2023-07-27",
+    "lat": 39.0506,
+    "lon": 27.2794,
+    "alan_ha": 1251,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.98,
+    "bbox": [
+      27.2025,
+      38.9875,
+      27.3675,
+      39.1075
+    ],
+    "id": "EGE_2023_01",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-03",
+    "lat": 38.159,
+    "lon": 28.8748,
+    "alan_ha": 1193,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.63,
+    "bbox": [
+      28.8075,
+      38.0925,
+      28.9475,
+      38.2225
+    ],
+    "id": "EGE_2021_06",
+    "il": "Denizli",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2017,
+    "tarih": "2017-07-27",
+    "lat": 38.3,
+    "lon": 27.7957,
+    "alan_ha": 1167,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.73,
+    "bbox": [
+      27.7225,
+      38.2275,
+      27.8725,
+      38.3725
+    ],
+    "id": "EGE_2017_02",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2023,
+    "tarih": "2023-07-16",
+    "lat": 36.2958,
+    "lon": 33.5206,
+    "alan_ha": 1098,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.89,
+    "bbox": [
+      33.4575,
+      36.2275,
+      33.5875,
+      36.3575
+    ],
+    "id": "AKD_2023_01",
+    "il": "Mersin",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-06-18",
+    "lat": 38.6973,
+    "lon": 29.1253,
+    "alan_ha": 1039,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.98,
+    "bbox": [
+      29.0525,
+      38.6375,
+      29.2025,
+      38.7525
+    ],
+    "id": "IAN_2024_01",
+    "il": "Uşak",
+    "bolge_eski": "Ic Anadolu"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-10-19",
+    "lat": 37.0461,
+    "lon": 28.1744,
+    "alan_ha": 989,
+    "bolge": "Ege",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      28.1025,
+      36.9875,
+      28.2475,
+      37.1025
+    ],
+    "id": "EGE_2024_04",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-04",
+    "lat": 37.7315,
+    "lon": 28.5243,
+    "alan_ha": 882,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.89,
+    "bbox": [
+      28.4625,
+      37.6625,
+      28.5925,
+      37.8025
+    ],
+    "id": "EGE_2021_07",
+    "il": "Aydın",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2017,
+    "tarih": "2017-07-01",
+    "lat": 36.2071,
+    "lon": 32.7182,
+    "alan_ha": 874,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.57,
+    "bbox": [
+      32.6575,
+      36.1375,
+      32.7875,
+      36.2675
+    ],
+    "id": "AKD_2017_01",
+    "il": "Mersin",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2023,
+    "tarih": "2023-07-17",
+    "lat": 36.4818,
+    "lon": 36.166,
+    "alan_ha": 747,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      36.1075,
+      36.4175,
+      36.2275,
+      36.5475
+    ],
+    "id": "AKD_2023_02",
+    "il": "Hatay",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2022,
+    "tarih": "2022-07-13",
+    "lat": 36.7048,
+    "lon": 27.5714,
+    "alan_ha": 695,
+    "bolge": "Ege",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      27.5075,
+      36.6375,
+      27.6375,
+      36.7625
+    ],
+    "id": "EGE_2022_02",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-07-28",
+    "lat": 37.5786,
+    "lon": 35.6319,
+    "alan_ha": 662,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      35.5675,
+      37.5175,
+      35.7075,
+      37.6325
+    ],
+    "id": "AKD_2021_07",
+    "il": "Adana",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2022,
+    "tarih": "2022-09-21",
+    "lat": 36.8455,
+    "lon": 28.3433,
+    "alan_ha": 619,
+    "bolge": "Ege",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      28.2775,
+      36.7875,
+      28.4175,
+      36.8975
+    ],
+    "id": "EGE_2022_03",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-11",
+    "lat": 37.3383,
+    "lon": 30.7847,
+    "alan_ha": 615,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      30.7225,
+      37.2775,
+      30.8475,
+      37.3925
+    ],
+    "id": "AKD_2021_08",
+    "il": "Burdur",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-27",
+    "lat": 39.2116,
+    "lon": 39.1114,
+    "alan_ha": 552,
+    "bolge": "Dogu Anadolu",
+    "ormanlik_oran": 0.52,
+    "bbox": [
+      39.0575,
+      39.1475,
+      39.1725,
+      39.2725
+    ],
+    "id": "DAN_2021_01",
+    "il": "Tunceli",
+    "bolge_eski": "Dogu Anadolu"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-07-29",
+    "lat": 37.6211,
+    "lon": 35.6273,
+    "alan_ha": 539,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.95,
+    "bbox": [
+      35.5725,
+      37.5625,
+      35.6925,
+      37.6775
+    ],
+    "id": "IAN_2021_01",
+    "il": "Adana",
+    "bolge_eski": "Ic Anadolu"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-02",
+    "lat": 37.458,
+    "lon": 30.8994,
+    "alan_ha": 516,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 0.95,
+    "bbox": [
+      30.8425,
+      37.3975,
+      30.9625,
+      37.5125
+    ],
+    "id": "AKD_2021_09",
+    "il": "Isparta",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2020,
+    "tarih": "2020-08-02",
+    "lat": 38.0132,
+    "lon": 27.1606,
+    "alan_ha": 512,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.57,
+    "bbox": [
+      27.0975,
+      37.9375,
+      27.2275,
+      38.0825
+    ],
+    "id": "EGE_2020_01",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2017,
+    "tarih": "2017-09-07",
+    "lat": 37.0812,
+    "lon": 28.073,
+    "alan_ha": 494,
+    "bolge": "Ege",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      28.0075,
+      37.0225,
+      28.1375,
+      37.1325
+    ],
+    "id": "EGE_2017_03",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-06-30",
+    "lat": 37.9138,
+    "lon": 27.2905,
+    "alan_ha": 488,
+    "bolge": "Ege",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      27.2375,
+      37.8475,
+      27.3475,
+      37.9725
+    ],
+    "id": "EGE_2024_05",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-02",
+    "lat": 36.5017,
+    "lon": 29.2909,
+    "alan_ha": 473,
+    "bolge": "Ege",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      29.2375,
+      36.4425,
+      29.3525,
+      36.5575
+    ],
+    "id": "AKD_2021_10",
+    "il": "Muğla",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-10-18",
+    "lat": 36.8909,
+    "lon": 28.9875,
+    "alan_ha": 470,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.95,
+    "bbox": [
+      28.9275,
+      36.8325,
+      29.0525,
+      36.9425
+    ],
+    "id": "EGE_2024_06",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2019,
+    "tarih": "2019-08-19",
+    "lat": 37.3501,
+    "lon": 27.8525,
+    "alan_ha": 467,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.79,
+    "bbox": [
+      27.7925,
+      37.2875,
+      27.9125,
+      37.4025
+    ],
+    "id": "EGE_2019_02",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-06-20",
+    "lat": 39.6304,
+    "lon": 28.8551,
+    "alan_ha": 453,
+    "bolge": "Marmara",
+    "ormanlik_oran": 0.58,
+    "bbox": [
+      28.7925,
+      39.5725,
+      28.9225,
+      39.6825
+    ],
+    "id": "MAR_2024_02",
+    "il": "Bursa",
+    "bolge_eski": "Marmara"
+  },
+  {
+    "yil": 2019,
+    "tarih": "2019-08-19",
+    "lat": 37.0722,
+    "lon": 27.7087,
+    "alan_ha": 420,
+    "bolge": "Ege",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      27.6575,
+      37.0125,
+      27.7675,
+      37.1275
+    ],
+    "id": "EGE_2019_03",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-17",
+    "lat": 38.0969,
+    "lon": 27.6637,
+    "alan_ha": 414,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.94,
+    "bbox": [
+      27.6075,
+      38.0375,
+      27.7275,
+      38.1525
+    ],
+    "id": "EGE_2024_07",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-17",
+    "lat": 38.201,
+    "lon": 27.5749,
+    "alan_ha": 413,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.76,
+    "bbox": [
+      27.5175,
+      38.1425,
+      27.6375,
+      38.2525
+    ],
+    "id": "EGE_2024_08",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-16",
+    "lat": 37.3966,
+    "lon": 27.2694,
+    "alan_ha": 393,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.62,
+    "bbox": [
+      27.2175,
+      37.3375,
+      27.3275,
+      37.4525
+    ],
+    "id": "EGE_2024_09",
+    "il": "Aydın",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-07-29",
+    "lat": 36.2798,
+    "lon": 33.7962,
+    "alan_ha": 374,
+    "bolge": "Akdeniz",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      33.7325,
+      36.2275,
+      33.8625,
+      36.3275
+    ],
+    "id": "AKD_2021_11",
+    "il": "Mersin",
+    "bolge_eski": "Akdeniz"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-26",
+    "lat": 37.1852,
+    "lon": 44.3232,
+    "alan_ha": 370,
+    "bolge": "Dogu Anadolu",
+    "ormanlik_oran": 0.47,
+    "bbox": [
+      44.2525,
+      37.1275,
+      44.3875,
+      37.2375
+    ],
+    "id": "GDA_2021_01",
+    "il": "Hakkâri",
+    "bolge_eski": "Guneydogu"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-16",
+    "lat": 37.2229,
+    "lon": 27.8011,
+    "alan_ha": 345,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.86,
+    "bbox": [
+      27.7475,
+      37.1625,
+      27.8575,
+      37.2775
+    ],
+    "id": "EGE_2024_10",
+    "il": "Muğla",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2024,
+    "tarih": "2024-08-18",
+    "lat": 38.1375,
+    "lon": 27.0839,
+    "alan_ha": 341,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.93,
+    "bbox": [
+      27.0325,
+      38.0775,
+      27.1425,
+      38.1925
+    ],
+    "id": "EGE_2024_11",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  },
+  {
+    "yil": 2023,
+    "tarih": "2023-08-23",
+    "lat": 39.1786,
+    "lon": 30.6025,
+    "alan_ha": 336,
+    "bolge": "Ic Anadolu",
+    "ormanlik_oran": 1.0,
+    "bbox": [
+      30.5475,
+      39.1225,
+      30.6675,
+      39.2275
+    ],
+    "id": "IAN_2023_01",
+    "il": "Eskişehir",
+    "bolge_eski": "Ic Anadolu"
+  },
+  {
+    "yil": 2021,
+    "tarih": "2021-08-14",
+    "lat": 38.4556,
+    "lon": 26.4979,
+    "alan_ha": 315,
+    "bolge": "Ege",
+    "ormanlik_oran": 0.69,
+    "bbox": [
+      26.4425,
+      38.3975,
+      26.5575,
+      38.5075
+    ],
+    "id": "EGE_2021_08",
+    "il": "İzmir",
+    "bolge_eski": "Ege"
+  }
+]

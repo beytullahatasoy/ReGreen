@@ -9,8 +9,8 @@
   "burned_area_ha": 4737.5,
   "crs": "EPSG:4326",
   "schema_version": "1.1",
-  "model_version": "rf_v1",
-  "generated_at": "2026-08-19T17:22:55+00:00",
+  "model_version": "ridge_v2",
+  "generated_at": "2026-08-23T16:13:19+00:00",
   "quality_flag": "ok",
   "quality_note": null,
   "in_training_set": true,
@@ -31,8 +31,8 @@
   },
   "normalization_reference": {
     "recovery_gap_pred": {
-      "min": 0.1791,
-      "max": 0.4015
+      "min": 0.1842,
+      "max": 0.3621
     },
     "slope_deg": {
       "min": 1.1812711,

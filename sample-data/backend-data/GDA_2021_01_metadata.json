@@ -9,8 +9,8 @@
   "burned_area_ha": 2043.8,
   "crs": "EPSG:4326",
   "schema_version": "1.1",
-  "model_version": "rf_v1",
-  "generated_at": "2026-08-19T17:22:55+00:00",
+  "model_version": "ridge_v2",
+  "generated_at": "2026-08-23T16:13:19+00:00",
   "quality_flag": "check",
   "quality_note": "etiketli hucre az (8); alan uyusmuyor (MODIS 370 ha, biz 2,043 ha)",
   "in_training_set": false,
@@ -31,8 +31,8 @@
   },
   "normalization_reference": {
     "recovery_gap_pred": {
-      "min": 0.257,
-      "max": 0.36
+      "min": 0.2178,
+      "max": 0.3577
     },
     "slope_deg": {
       "min": 19.441761,
