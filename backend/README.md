@@ -21,7 +21,7 @@ Faz 1/2 çekirdek backend tamamlandı ve test edildi:
 - Güncel sample data paketi: 53 yangın, 37.163 hücre
 - Import akışı: dry-run, doğrulama, yangın bazlı transaction, idempotency ve JSON rapor
 - API: 3 GET endpoint'i, filtreleme, bounding-box ve isteğe bağlı ağırlıklarla anlık öncelik hesabı
-- Testler: 117 toplam (67 API + 50 ImportTool), gerçek LocalDB entegrasyon testleri dahil
+- Testler: 119 toplam (68 API + 51 ImportTool), gerçek LocalDB entegrasyon testleri dahil
 - Release build: sıfır uyarı ve sıfır hata
 
 HTTP sözleşmesi için [`../docs/api-contract.md`](../docs/api-contract.md), veri

@@ -254,11 +254,11 @@ Fatal hata yangın döngüsünden önce oluşsa bile, yazılabiliyorsa aynı şe
 
 ## 8. Test Kapsamı (`backend/ImportTool.Tests`)
 
-xUnit, 50 test (39 DB gerektirmeyen test + 11 LocalDB entegrasyon testi) —
+xUnit, 51 test (40 DB gerektirmeyen test + 11 LocalDB entegrasyon testi) —
 `dotnet test backend/ReGreen.sln` ile çalıştırılır. Entegrasyon testleri
 varsayılan olarak atlanır; çalıştırmak için `REGREEN_RUN_LOCALDB_TESTS=1`
-ayarlanır. API testleriyle birlikte backend çözümünde toplam 117 test vardır
-(67 API + 50 ImportTool).
+ayarlanır. API testleriyle birlikte backend çözümünde toplam 119 test vardır
+(68 API + 51 ImportTool).
 
 **Unit testler** (DB gerektirmez):
 - `PriorityCalculatorTests` — `oncelik.py` portunun doğruluğu, **gerçek `sample-data` satırlarından** alınan değerlerle (uydurma değil): `AKD_2021_05_000160` ve `ornek_hucreler.json`'daki `AKD_2021_01_032026` örnekleri

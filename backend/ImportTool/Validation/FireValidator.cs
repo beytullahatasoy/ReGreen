@@ -264,7 +264,12 @@ public class FireValidator(string manifestDir, Manifest manifest, Dictionary<str
             return FireValidationResult.Failed("PRIORITY_THRESHOLDS_MISMATCH",
                 "manifest.priority_thresholds ile metadata.priority_thresholds farklı — hangisi kullanılacak belirsiz.");
 
-        // §3.3.4 — normalization_reference min<=max
+        // §3.3.4 — normalization_reference min/max null olamaz, sonlu olmalı, min<=max.
+        // ReGreen.Core.Priority.NormRange.Min/Max BİLEREK nullable (oncelik.py'nin teorik
+        // "hiç predicted hücre yoksa null" durumunu JSON'dan okuyabilmek için — bkz. o tipin
+        // XML doc'u) ama backend bu durumu import zamanında REDDEDER, sessizce 0'a çevirip
+        // ModelRuns'a yazmaz (önceden FireImporter'da `?? 0` vardı — DB kolonları zaten
+        // NOT NULL olduğu için "gerçek 0" ile "referans yok" ayrımı kayboluyordu).
         var norm = meta.NormalizationReference;
         foreach (var (name, range) in new[]
                  {
@@ -273,11 +278,13 @@ public class FireValidator(string manifestDir, Manifest manifest, Dictionary<str
                      ("road_distance_km", norm.RoadDistanceKm),
                  })
         {
-            if (range.Min is { } min && !double.IsFinite(min)
-                || range.Max is { } max && !double.IsFinite(max))
+            if (range.Min is null || range.Max is null)
+                return FireValidationResult.Failed("NORM_RANGE_NULL",
+                    $"normalization_reference.{name}: min/max null olamaz (backend DB'de NOT NULL kolon olarak saklar).");
+            if (!double.IsFinite(range.Min.Value) || !double.IsFinite(range.Max.Value))
                 return FireValidationResult.Failed("NON_FINITE_NUMBER",
                     $"normalization_reference.{name} NaN/Infinity içeremez.");
-            if (range.Min is not null && range.Max is not null && range.Min > range.Max)
+            if (range.Min > range.Max)
                 return FireValidationResult.Failed("NORM_RANGE_INVALID", $"normalization_reference.{name}: min > max");
         }
 

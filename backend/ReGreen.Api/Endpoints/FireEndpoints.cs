@@ -169,12 +169,18 @@ public static class FireEndpoints
             normalizedWeights.Recovery, normalizedWeights.Erosion, normalizedWeights.Access);
 
         // normalization_reference SABİT (§8.3) — sadece ağırlık değişir, bu ikisi ModelRun'dan gelir.
+        // İç hesap (ComputeScore) Core'un nullable NormRange'ini kullanır; response'a giden
+        // NormalizationReferenceDto ise API'nin non-nullable wire tipidir (bkz. CellDtos.cs).
         var normReference = new NormalizationReference
         {
             RecoveryGapPred = new NormRange { Min = modelRun.NormRecoveryGapMin, Max = modelRun.NormRecoveryGapMax },
             SlopeDeg = new NormRange { Min = modelRun.NormSlopeMin, Max = modelRun.NormSlopeMax },
             RoadDistanceKm = new NormRange { Min = modelRun.NormRoadDistMin, Max = modelRun.NormRoadDistMax },
         };
+        var normReferenceDto = new NormalizationReferenceDto(
+            new NormRangeDto(modelRun.NormRecoveryGapMin, modelRun.NormRecoveryGapMax),
+            new NormRangeDto(modelRun.NormSlopeMin, modelRun.NormSlopeMax),
+            new NormRangeDto(modelRun.NormRoadDistMin, modelRun.NormRoadDistMax));
         var thresholds = new PriorityThresholds
         {
             CokYuksek = modelRun.ThresholdVeryHigh,
@@ -211,8 +217,8 @@ public static class FireEndpoints
             items = items.Where(c => c.PriorityClass == priority_class).ToList();
 
         var response = new CellsResponseDto(
-            fireId, modelRun.Id, modelRun.GeneratedAt, "EPSG:4326", fire.CellSizeM,
-            appliedWeights, items.Count, items);
+            fireId, modelRun.Id, modelRun.ModelVersion, modelRun.GeneratedAt, "EPSG:4326", fire.CellSizeM,
+            appliedWeights, normReferenceDto, thresholds, items.Count, items);
 
         return Results.Ok(response);
     }

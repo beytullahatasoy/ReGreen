@@ -72,4 +72,50 @@ public class OpenApiTests
         foreach (var name in expected)
             Assert.Contains(name, parameters);
     }
+
+    [Fact]
+    public async Task CellsResponseSchema_ContainsModelExplanationFields()
+    {
+        using var doc = await FetchOpenApiDocumentAsync();
+
+        var schemas = doc.RootElement.GetProperty("components").GetProperty("schemas");
+        var cellsSchema = schemas.GetProperty("CellsResponseDto");
+        var properties = cellsSchema.GetProperty("properties");
+
+        string[] expectedRootProperties =
+        [
+            "model_version", "normalization_reference", "priority_thresholds",
+        ];
+        foreach (var name in expectedRootProperties)
+            Assert.True(properties.TryGetProperty(name, out _), $"CellsResponseDto.{name} OpenAPI şemasında yok.");
+
+        var required = cellsSchema.GetProperty("required")
+            .EnumerateArray()
+            .Select(p => p.GetString())
+            .ToHashSet();
+        foreach (var name in expectedRootProperties)
+            Assert.Contains(name, required);
+
+        var normalizationSchema = ResolveReferencedSchema(
+            schemas, properties.GetProperty("normalization_reference"));
+        var normalizationProperties = normalizationSchema.GetProperty("properties");
+        foreach (var name in new[] { "recovery_gap_pred", "slope_deg", "road_distance_km" })
+            Assert.True(normalizationProperties.TryGetProperty(name, out _), $"normalization_reference.{name} eksik.");
+
+        var rangeSchema = ResolveReferencedSchema(
+            schemas, normalizationProperties.GetProperty("recovery_gap_pred"));
+        var rangeRequired = rangeSchema.GetProperty("required")
+            .EnumerateArray()
+            .Select(p => p.GetString())
+            .ToHashSet();
+        Assert.Contains("min", rangeRequired);
+        Assert.Contains("max", rangeRequired);
+    }
+
+    private static JsonElement ResolveReferencedSchema(JsonElement schemas, JsonElement propertySchema)
+    {
+        var reference = propertySchema.GetProperty("$ref").GetString();
+        Assert.False(string.IsNullOrWhiteSpace(reference));
+        return schemas.GetProperty(reference!.Split('/').Last());
+    }
 }

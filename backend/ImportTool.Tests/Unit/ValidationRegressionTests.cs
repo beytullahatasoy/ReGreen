@@ -78,6 +78,29 @@ public class ValidationRegressionTests
     }
 
     [Fact]
+    public void FireValidator_NullNormalizationRange_IsRejected()
+    {
+        // GPT review bulgusu: ReGreen.Core.Priority.NormRange.Min/Max nullable (oncelik.py'nin
+        // teorik "hiç predicted hücre yoksa null" durumunu okuyabilmek için) ama DB kolonları
+        // NOT NULL — eskiden FireImporter null'ı sessizce 0'a çeviriyordu. Artık import zamanında
+        // reddedilmeli, sessizce 0'a düşmemeli.
+        var fx = new SyntheticFireFixture();
+        fx.MutateMetadata(d => d["normalization_reference"] = new
+        {
+            recovery_gap_pred = new { min = (double?)null, max = 0.5 },
+            slope_deg = new { min = 1.0, max = 20.0 },
+            road_distance_km = new { min = 0.05, max = 2.0 },
+        });
+        try
+        {
+            var manifest = LoadManifest(fx);
+            var result = new FireValidator(fx.Dir, manifest, []).Validate(manifest.Fires[0]);
+            Assert.Equal("NORM_RANGE_NULL", result.ErrorCode);
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [Fact]
     public void GeometryComparison_IgnoresRingStartAndDirection()
     {
         var reader = new NetTopologySuite.IO.GeoJsonReader();

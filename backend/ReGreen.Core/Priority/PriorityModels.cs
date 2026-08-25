@@ -26,7 +26,11 @@ public record class NormalizationReference
 /// <summary>
 /// Min/Max BİLEREK nullable fakat JSON'da zorunlu: oncelik.py'nin referans_cikar() fonksiyonu,
 /// bir yangında hiç `predicted` hücre yoksa {"min": null, "max": null} üretir (bu 53
-/// yangının hiçbirinde görülmedi ama referans uygulama bunu açıkça destekliyor).
+/// yangının hiçbirinde görülmedi ama referans uygulama bunu açıkça destekliyor). Nullable
+/// olması SADECE bu JSON şeklini ayrıştırabilmek için — ImportTool'un `FireValidator`'ı
+/// (§3.3.4) null gelen bir aralığı import zamanında REDDEDER, DB'ye asla ulaşmaz (DB
+/// kolonları NOT NULL). `ReGreen.Api`'nin wire tipi (`NormalizationReferenceDto`) da bu
+/// yüzden non-nullable — bkz. docs/data-contract.md §12 1.6.
 /// </summary>
 public record class NormRange
 {

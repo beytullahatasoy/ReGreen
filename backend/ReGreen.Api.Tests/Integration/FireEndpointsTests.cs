@@ -210,10 +210,22 @@ public class FireEndpointsTests(DatabaseFixture fixture) : IAsyncLifetime
         var response = await client.GetFromJsonAsync<CellsResponseDto>($"/api/fires/{SeedHelper.FireId}/cells");
 
         Assert.Equal(modelRun.Id, response!.ModelRunId);
+        Assert.Equal(modelRun.ModelVersion, response.ModelVersion);
         Assert.Equal("EPSG:4326", response.Crs);
         Assert.Equal(250, response.CellSizeM);
         Assert.Equal(4, response.Count);
         Assert.Equal(4, response.Items.Count);
+
+        Assert.Equal(0.10, response.NormalizationReference.RecoveryGapPred.Min);
+        Assert.Equal(0.50, response.NormalizationReference.RecoveryGapPred.Max);
+        Assert.Equal(1.0, response.NormalizationReference.SlopeDeg.Min);
+        Assert.Equal(20.0, response.NormalizationReference.SlopeDeg.Max);
+        Assert.Equal(0.05, response.NormalizationReference.RoadDistanceKm.Min);
+        Assert.Equal(2.0, response.NormalizationReference.RoadDistanceKm.Max);
+
+        Assert.Equal(modelRun.ThresholdVeryHigh, response.PriorityThresholds.CokYuksek);
+        Assert.Equal(modelRun.ThresholdHigh, response.PriorityThresholds.Yuksek);
+        Assert.Equal(modelRun.ThresholdMedium, response.PriorityThresholds.Orta);
 
         await using var db = DatabaseFixture.CreateContext();
         foreach (var item in response.Items)
@@ -245,6 +257,14 @@ public class FireEndpointsTests(DatabaseFixture fixture) : IAsyncLifetime
         };
         var customWeights = new PriorityWeights { Recovery = 0.8, Erosion = 0.1, Access = 0.1 };
         var thresholds = new PriorityThresholds { CokYuksek = 0.75, Yuksek = 0.50, Orta = 0.25 };
+
+        // normalization_reference ağırlık değişse de SABİT kalır (§4.5, docs/api-contract.md).
+        Assert.Equal(norm.RecoveryGapPred.Min, response.NormalizationReference.RecoveryGapPred.Min);
+        Assert.Equal(norm.RecoveryGapPred.Max, response.NormalizationReference.RecoveryGapPred.Max);
+        Assert.Equal(norm.SlopeDeg.Min, response.NormalizationReference.SlopeDeg.Min);
+        Assert.Equal(norm.SlopeDeg.Max, response.NormalizationReference.SlopeDeg.Max);
+        Assert.Equal(norm.RoadDistanceKm.Min, response.NormalizationReference.RoadDistanceKm.Min);
+        Assert.Equal(norm.RoadDistanceKm.Max, response.NormalizationReference.RoadDistanceKm.Max);
 
         var c1 = response.Items.Single(c => c.CellId == "C1");
         var expectedC1Score = PriorityCalculator.ComputeScore(0.30, 10.0, 1.0, norm, customWeights);

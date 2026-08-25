@@ -122,38 +122,41 @@ Arayüzde göstermek isterseniz **oradan okuyun, elle kopyalamayın**.
 Modelin nasıl seçildiği, denenip elenen 20'den fazla yöntem ve neden burada
 durulduğu: **`MODEL_GUNLUGU.md`** (iki klasörde de var).
 
-## Backend'den bir istek: `normalization_reference`
+## Backend API durumu: `normalization_reference` tamamlandı
 
-`GET /api/fires/{fireId}/cells` cevabı (`CellsResponseDto`) şu an
-`normalization_reference` döndürmüyor.
+`GET /api/fires/{fireId}/cells` cevabı (`CellsResponseDto`) artık
+`normalization_reference`, `model_version` ve `priority_thresholds` alanlarını
+döndürüyor.
 
 Frontend, hücre panelinde öncelik skorunun **üç bileşene** ayrılmış halini
 göstermek istiyor — sistemin "karar destek" iddiasının görünür olduğu yer burası:
 
 ```
-İyileşme açığı    ████████████████░░░░  %53   (0,429)
-Erozyon riski     ████████░░░░░░░░░░░░  %27   (0,222)
+İyileşme açığı    ████████████████░░░░  %53   (0,423)
+Erozyon riski     ████████░░░░░░░░░░░░  %27   (0,221)
 Ulaşılabilirlik   ██████░░░░░░░░░░░░░░  %20   (0,162)
-                                        toplam 0,813
+                                        toplam 0,8064
 ```
 
 Bu kırılım için her bileşenin normalize edilmiş değeri gerekiyor, o da
 `normalization_reference` olmadan hesaplanamıyor. Toplam skor gösterilebiliyor
 ama **neden o skor olduğu gösterilemiyor.**
 
-İstenen ek — üç alan, cevabın kökünde (hücre başına değil, yangın başına sabit):
+Gerçek API örneği (`AKD_2021_01`, `ridge_v2`) — üç alan cevabın kökünde,
+hücre başına değil yangın başına sabittir:
 
 ```json
 "normalization_reference": {
-  "recovery_gap_pred": { "min": 0.1243, "max": 0.5417 },
+  "recovery_gap_pred": { "min": 0.1239, "max": 0.5386 },
   "slope_deg":         { "min": 0.0513, "max": 50.4633 },
   "road_distance_km":  { "min": 0.0032, "max": 2.9278 }
 }
 ```
 
-Değerler **zaten DB'de** — `FireImporter` bunları `NormRecoveryGapMin/Max`,
-`NormSlopeMin/Max`, `NormRoadMin/Max` olarak yazıyor. Yeni hesap yok, sadece
-cevaba eklenmesi gerekiyor.
+Değerler DB'den okunur — `FireImporter` bunları `NormRecoveryGapMin/Max`,
+`NormSlopeMin/Max`, `NormRoadMin/Max` olarak yazar; API yeni bir referans
+hesaplamaz. Frontend API kullanırken ağırlıklar için response'taki
+`applied_weights` alanını esas almalıdır.
 
 > Ağırlık parametreleriyle (`?recovery=&erosion=&access=`) sunucu tarafında
 > yeniden hesaplama zaten doğru çalışıyor ve iyi bir tasarım — normalizasyon
@@ -176,9 +179,9 @@ Bu klasördeki `alan_eslesme.json`, Türkçe açıklamalar ve iç isim ↔ API i
 eşleşmeleri için yardımcı kaynaktır. Bir uyuşmazlık görülürse
 `docs/data-contract.md` esas alınmalıdır.
 
-> ⚠️ **`ridge_v2` ile güncellenmesi gereken yer:** sözleşmenin §3 başlığı
-> *"Model Girdisi — 6 Öznitelik (Random Forest'a girer)"*. Artık **7 öznitelik**
-> (`ndvi_drop` eklendi) ve model **Ridge**. `ndvi_drop` sütunu zaten teslimde
-> vardı, sadece gösterim sayılıyordu — **CSV şeması değişmedi**, sadece o
-> sütunun modele girip girmediği değişti. §3 ve §6.4'teki gözlenen aralıklar
-> da yeni modelle biraz kayar.
+> ✅ **`ridge_v2` güncellemesi yapıldı** (`docs/data-contract.md` v1.6): §3 başlığı
+> *"7 Öznitelik (Ridge Regression'a girer)"* oldu, `ndvi_drop` §3'e taşındı,
+> §6.4'teki gözlenen aralıklar (`recovery_gap_pred`, `priority_score`) yeni
+> modelle yeniden tarandı. `ndvi_drop` sütunu zaten teslimde vardı, sadece
+> gösterim sayılıyordu — **CSV şeması değişmedi**, sadece o sütunun modele
+> girip girmediği değişti.

@@ -121,9 +121,9 @@ kırmızı-sarı skalasına sokulmasın.
 ## Değer aralıkları
 
 ```
-recovery_gap_pred : 0.119 - 0.576      (bu pakette ölçülen gerçek aralık)
-priority_score    : 0.000 - 0.968
-priority_class    : DUSUK 20.379 · YUKSEK 8.518 · ORTA 7.837 · COK_YUKSEK 407
+recovery_gap_pred : 0.110 - 0.6546     (bu pakette ölçülen gerçek aralık, ridge_v2)
+priority_score    : 0.000 - 0.9754
+priority_class    : DUSUK 20.284 · ORTA 8.377 · YUKSEK 8.095 · COK_YUKSEK 385 · null 22 (no_data)
 ```
 
 **`recovery_gap_pred` YÜKSEK = KÖTÜ** (eski hâline dönememiş). Ters çevirip
