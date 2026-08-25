@@ -140,12 +140,15 @@ public class FireImporter(AppDbContext db, bool dryRun)
                 SchemaVersion = meta.SchemaVersion,
                 InTrainingSet = meta.InTrainingSet,
                 OutOfFoldCells = meta.OutOfFoldCells,
-                NormRecoveryGapMin = meta.NormalizationReference.RecoveryGapPred.Min ?? 0,
-                NormRecoveryGapMax = meta.NormalizationReference.RecoveryGapPred.Max ?? 0,
-                NormSlopeMin = meta.NormalizationReference.SlopeDeg.Min ?? 0,
-                NormSlopeMax = meta.NormalizationReference.SlopeDeg.Max ?? 0,
-                NormRoadDistMin = meta.NormalizationReference.RoadDistanceKm.Min ?? 0,
-                NormRoadDistMax = meta.NormalizationReference.RoadDistanceKm.Max ?? 0,
+                // FireValidator §3.3.4 min/max null'ı zaten reddettiği için burada güvenle
+                // .Value kullanılır — sessiz `?? 0` fallback'i "gerçek 0" ile "referans yok"u
+                // ayırt edilemez hale getiriyordu.
+                NormRecoveryGapMin = meta.NormalizationReference.RecoveryGapPred.Min!.Value,
+                NormRecoveryGapMax = meta.NormalizationReference.RecoveryGapPred.Max!.Value,
+                NormSlopeMin = meta.NormalizationReference.SlopeDeg.Min!.Value,
+                NormSlopeMax = meta.NormalizationReference.SlopeDeg.Max!.Value,
+                NormRoadDistMin = meta.NormalizationReference.RoadDistanceKm.Min!.Value,
+                NormRoadDistMax = meta.NormalizationReference.RoadDistanceKm.Max!.Value,
                 DefaultWeightRecovery = meta.PriorityWeights.Recovery,
                 DefaultWeightErosion = meta.PriorityWeights.Erosion,
                 DefaultWeightAccess = meta.PriorityWeights.Access,

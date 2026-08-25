@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ReGreen.Data;
 
 namespace ReGreen.Api.Tests.Integration;
@@ -16,6 +17,15 @@ public class ApiFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Test host, Windows Event Log'a yazma izni olmayan geliştirici/CI
+        // ortamlarında da çalışabilmeli. Uygulamanın production logging ayarını
+        // değiştirmeden yalnızca test host provider'larını taşınabilir tutar.
+        builder.ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.AddConsole();
+        });
+
         builder.ConfigureServices(services =>
         {
             var descriptor = services.SingleOrDefault(

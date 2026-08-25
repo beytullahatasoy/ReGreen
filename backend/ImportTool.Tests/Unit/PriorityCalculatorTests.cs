@@ -5,7 +5,13 @@ namespace ImportTool.Tests.Unit;
 
 /// <summary>
 /// oncelik.py referans davranışına karşı. Değerler sample-data/backend-data'daki GERÇEK
-/// satırlardan alınmıştır (AKD_2021_05_000160, AKD_2021_05_metadata.json) — uydurma değil.
+/// satırlardan alınmıştır (AKD_2021_05_000160, AKD_2021_01_032026 — ilgili metadata.json'ların
+/// normalization_reference'ları ile birlikte) — uydurma değil. `model_version = ridge_v2`
+/// paketiyle YENİDEN ölçüldü (bkz. docs/data-contract.md §12 1.6); `rf_v1` döneminde bu
+/// hücrelerin skorları farklıydı (0.2511/0.8129) çünkü hem `recovery_gap_pred` hem
+/// `normalization_reference.recovery_gap_pred` model çıktısıdır, model değişince değişir —
+/// `slope_deg`/`road_distance_km` ve onların normalizasyon aralığı hücre-sabiti olduğu için
+/// AYNI kaldı (bkz. §3, §6.4).
 /// </summary>
 public class PriorityCalculatorTests
 {
@@ -13,7 +19,7 @@ public class PriorityCalculatorTests
 
     private static readonly NormalizationReference Akd202105Norm = new()
     {
-        RecoveryGapPred = new NormRange { Min = 0.1796, Max = 0.4305 },
+        RecoveryGapPred = new NormRange { Min = 0.1228, Max = 0.4554 },
         SlopeDeg = new NormRange { Min = 0.5991507, Max = 16.264103 },
         RoadDistanceKm = new NormRange { Min = 0.02827684, Max = 1.9335308 },
     };
@@ -21,31 +27,31 @@ public class PriorityCalculatorTests
     [Fact]
     public void ComputeScore_MatchesRealCsvRow_AKD_2021_05_000160()
     {
-        // AKD_2021_05_hucreler.csv, satır AKD_2021_05_000160: priority_score=0.2511, priority_class=ORTA
+        // AKD_2021_05_hucreler.csv (ridge_v2), satır AKD_2021_05_000160: priority_score=0.3312, priority_class=ORTA
         var score = PriorityCalculator.ComputeScore(
-            recoveryGapPred: 0.1914, slopeDeg: 5.2742534, roadDistanceKm: 0.6179377,
+            recoveryGapPred: 0.1917, slopeDeg: 5.2742534, roadDistanceKm: 0.6179377,
             Akd202105Norm, DefaultWeights);
 
-        Assert.Equal(0.2511, score, precision: 4);
+        Assert.Equal(0.3312, score, precision: 4);
         Assert.Equal(PriorityCalculator.Orta, PriorityCalculator.Classify(score, DefaultThresholds()));
     }
 
     [Fact]
     public void ComputeScore_MatchesRealCsvRow_AKD_2021_01_032026_HighestPriority()
     {
-        // ornek_hucreler.json'daki dogrulanmis ornek: skor 0,8129, sinif COK_YUKSEK
+        // AKD_2021_01_hucreler.csv (ridge_v2), satır AKD_2021_01_032026: priority_score=0.8064, sinif COK_YUKSEK
         var norm = new NormalizationReference
         {
-            RecoveryGapPred = new NormRange { Min = 0.1243, Max = 0.5417 },
+            RecoveryGapPred = new NormRange { Min = 0.1239, Max = 0.5386 },
             SlopeDeg = new NormRange { Min = 0.05127889, Max = 50.46333 },
             RoadDistanceKm = new NormRange { Min = 0.0031909307, Max = 2.9277885 },
         };
 
         var score = PriorityCalculator.ComputeScore(
-            recoveryGapPred: 0.4826, slopeDeg: 37.271362, roadDistanceKm: 0.55603516,
+            recoveryGapPred: 0.4745, slopeDeg: 37.271362, roadDistanceKm: 0.55603516,
             norm, DefaultWeights);
 
-        Assert.Equal(0.8129, score, precision: 4);
+        Assert.Equal(0.8064, score, precision: 4);
         Assert.Equal(PriorityCalculator.CokYuksek, PriorityCalculator.Classify(score, DefaultThresholds()));
     }
 

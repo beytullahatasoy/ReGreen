@@ -6,7 +6,7 @@
   "cell_size_m": 250,
   "crs": "EPSG:4326",
   "fire_count": 3,
-  "total_cells": 37163,
+  "total_cells": 10529,
   "training_rows": 16074,
   "training_groups": 27,
   "features": [

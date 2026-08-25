@@ -53,65 +53,57 @@ Erozyon riski     ████████░░░░░░░░░░░░  
 Ulaşılabilirlik   ██████░░░░░░░░░░░░░░  %20   (0,162)
 ```
 
-### ⚠️ Veri iki yoldan gelebilir — hesap değişiyor
+### Veri iki yoldan gelebilir — kaynak alanı değişiyor, formül değişmiyor
 
 **Yol 1 — Bu klasördeki dosyalar (mock/geliştirme)**
 `{fire_id}_metadata.json` içinde `normalization_reference` var, aşağıdaki
 formülle kırılımı kendin hesaplayabilirsin.
 
 **Yol 2 — Backend API (`GET /api/fires/{fireId}/cells`)**
-API `normalization_reference` **döndürmüyor** (bkz. `ReGreen.Api/Dtos/CellDtos.cs`,
-`CellsResponseDto`). Yani API'den gelen veriyle bu kırılımı hesaplayamazsın.
-
-API'nin yaptığı şey farklı: ağırlıkları query parametresi olarak alıp
+API artık `normalization_reference`, `model_version` ve `priority_thresholds`
+alanlarını cevabın kökünde döndürüyor. Ağırlıkları query parametresi olarak alıp
 (`?recovery=0.6&erosion=0.2&access=0.2`) `priority_score` ve `priority_class`'ı
 **sunucu tarafında yeniden hesaplıyor** ve `applied_weights` alanını döndürüyor.
-Bu iyi bir tasarım — normalizasyon referansı sabit kalıyor, sadece ağırlık
-değişiyor.
-
-**Ama "neden bu öncelik" panelinde üç bileşeni ayrı ayrı gösterebilmek için
-`normalization_reference` gerekiyor.** İki çözüm var:
-
-1. Backend `CellsResponseDto`'ya `normalization_reference` eklesin
-   (üç alan: `recovery_gap_pred`, `slope_deg`, `road_distance_km` için min/max).
-   Zaten DB'de `ModelRuns`/`Fires` tarafında duruyor, sadece cevaba eklenmesi
-   gerekiyor. **Önerilen çözüm bu.**
-2. Ya da bileşen kırılımı gösterilmez, sadece toplam skor gösterilir.
-   Ürünün en değerli kısmını kaybettirir, tercih edilmez.
-
-> Bu, Buğra ile Beytullah arasında konuşulacak bir madde. Zeynep'in
-> paneli tasarlarken 1. seçeneğe göre ilerlemesi doğru olur.
+Normalizasyon referansı sabit kalır, yalnızca ağırlık değişir. API kullanırken
+`metadata.priority_weights` değil, response'taki `applied_weights` kullanılmalıdır;
+aksi halde özel ağırlıklarla hesaplanan katkılar toplam skoru açıklamaz.
 
 ### Hesabı (formül sabit)
 
 ```js
-const ref = metadata.normalization_reference
-const w   = metadata.priority_weights
+// API: source = cellsResponse; mock dosya: source = metadata
+const source = cellsResponse ?? metadata
+const ref = source.normalization_reference
+const w   = cellsResponse ? cellsResponse.applied_weights : metadata.priority_weights
+
+const clamp01 = x => Math.min(1, Math.max(0, x))
 
 const n = (v, k) => {
   const {min, max} = ref[k]
-  return max > min ? (v - min) / (max - min) : 0
+  return max - min < 1e-9 ? 0.5 : clamp01((v - min) / (max - min))
 }
 
 const iyilesme = w.recovery * n(cell.recovery_gap_pred, 'recovery_gap_pred')
 const erozyon  = w.erosion  * n(cell.slope_deg,         'slope_deg')
 const ulasim   = w.access   * (1 - n(cell.road_distance_km, 'road_distance_km'))
 
-// iyilesme + erozyon + ulasim === cell.priority_score
+const contributionTotal = iyilesme + erozyon + ulasim
+// API/dosya skoru 4 ondalığa yuvarlanır; strict === kullanma.
+const scoreMatches = Math.abs(contributionTotal - cell.priority_score) < 1e-4
 ```
 
-**Doğrulanmış örnek** (AKD_2021_01_032026):
+**Doğrulanmış örnek** (AKD_2021_01_032026, `ridge_v2`):
 
 | Bileşen | Ham değer | Normalize | Ağırlık | Katkı |
 |---|---|---|---|---|
-| İyileşme açığı | 0,4826 | 0,858 | ×0,50 | **0,429** |
-| Erozyon (eğim) | 37,27° | 0,738 | ×0,30 | **0,222** |
+| İyileşme açığı | 0,4745 | 0,845 | ×0,50 | **0,423** |
+| Erozyon (eğim) | 37,27° | 0,738 | ×0,30 | **0,221** |
 | Ulaşılabilirlik | 0,556 km | 0,189 | ×0,20 *(ters)* | **0,162** |
-| | | | **Toplam** | **0,8129** |
+| | | | **Toplam** | **0,8064** |
 
-Dosyadaki `priority_score` = 0,8129. Birebir tutuyor.
+Dosyadaki `priority_score` = 0,8064. Birebir tutuyor. (`rf_v1` döneminde bu hücrenin `recovery_gap_pred`'i 0,4826, skoru 0,8129 idi — model çıktısı olduğu için ridge_v2 ile değişti; `slope_deg`/`road_distance_km` ve onların normalizasyon aralığı hücre-sabiti olduğu için AYNI kaldı.)
 
-> ⚠️ **`normalization_reference`'ı metadata'dan oku, kendin hesaplama.**
+> ⚠️ **`normalization_reference`'ı API response'tan veya mock metadata'dan oku, kendin hesaplama.**
 > Kullanıcı haritada bir bölgeyi filtrelerse ve sen min/max'ı görünen
 > hücrelerden hesaplarsan skorlar değişir, sıralama bozulur.
 
@@ -220,7 +212,7 @@ CSV'deki 19 sütunun tamamı:
 | `ndvi_before` | ondalık | −1–1 | değişim |
 | `ndvi_after` | ondalık | −1–1 | değişim |
 | `ndvi_drop` | ondalık | — | değişim |
-| `severity_class` | metin | dusuk/orta/yuksek | ölçümler |
+| `severity_class` | metin | **4 değer:** dusuk/orta-dusuk/orta-yuksek/yuksek (bkz. `docs/data-contract.md` §4 — burada 3 değerli yazması eskiydi) | ölçümler |
 | `land_cover` | metin | Ağaçlık / Otlak-çalılık / Tarım / … | ölçümler |
 | `prediction_status` | metin | predicted / low_severity / no_data | **panel seçimi** |
 | `recovery_gap_pred` | ondalık | ~0,1–0,6 · NaN olabilir | ölçümler + neden |

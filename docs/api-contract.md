@@ -123,10 +123,17 @@ Geçersiz değer → `400 INVALID_QUERY_PARAMETER`.
 {
   "fire_id": "AKD_2021_05",
   "model_run_id": 42,
-  "generated_at": "2026-08-19T17:22:55+00:00",
+  "model_version": "ridge_v2",
+  "generated_at": "2026-08-23T16:13:19+00:00",
   "crs": "EPSG:4326",
   "cell_size_m": 250,
   "applied_weights": { "recovery": 0.5, "erosion": 0.3, "access": 0.2 },
+  "normalization_reference": {
+    "recovery_gap_pred": { "min": 0.1228, "max": 0.4554 },
+    "slope_deg": { "min": 0.5991507, "max": 16.264103 },
+    "road_distance_km": { "min": 0.02827684, "max": 1.9335308 }
+  },
+  "priority_thresholds": { "COK_YUKSEK": 0.75, "YUKSEK": 0.5, "ORTA": 0.25 },
   "count": 1428,
   "items": [
     {
@@ -145,8 +152,8 @@ Geçersiz değer → `400 INVALID_QUERY_PARAMETER`.
       "severity_class": "orta-dusuk",
       "land_cover": "Tarim",
       "prediction_status": "predicted",
-      "recovery_gap_pred": 0.1914,
-      "priority_score": 0.2511,
+      "recovery_gap_pred": 0.1917,
+      "priority_score": 0.3312,
       "priority_class": "ORTA"
     }
   ]
@@ -155,7 +162,10 @@ Geçersiz değer → `400 INVALID_QUERY_PARAMETER`.
 
 - `cell_size_m`, **`Fires.CellSizeM`'den okunur** (bu paket için hep `250`, sabit kodlanmamıştır).
 - `crs` sabit `"EPSG:4326"` (DB'de ayrı alan yok, import katmanı garanti eder).
+- `model_version` — `ModelRun.ModelVersion` (ör. `"ridge_v2"`). `model_run_id`'nin insan-okunur karşılığı; frontend UI'da hangi model teslimatının aktif olduğunu göstermek için.
 - `applied_weights` HER ZAMAN dolu — kullanıcı ağırlığı ya da ModelRun'ın normalize edilmiş varsayılanı.
+- `normalization_reference` yangın başına SABİT — `ModelRun`'dan gelir (`NormRecoveryGapMin/Max`, `NormSlopeMin/Max`, `NormRoadDistMin/Max`), ağırlık parametreleri (§4.2) değişse de değişmez. Frontend'in öncelik skorunu 3 bileşene (iyileşme açığı / erozyon / ulaşılabilirlik) ayırarak göstermesi için gerekli. **`min`/`max` HER ZAMAN sayı, asla `null` değil** — `ReGreen.Core.Priority.NormRange` (metadata.json ayrıştırması ve dahili yeniden-hesaplama için) bilerek nullable, ama import zamanında (`FireValidator` §3.3.4) null gelen bir `normalization_reference` reddedilir, DB'ye hiç ulaşmaz. Bu alan API'ye özel non-nullable `NormalizationReferenceDto` ile döner.
+- `priority_thresholds` yangın başına SABİT — `ModelRun.ThresholdVeryHigh/High/Medium`'dan gelir (§6.3 ile aynı `COK_YUKSEK`/`YUKSEK`/`ORTA` anahtarları). Frontend `priority_class` renklendirmesini API üzerinden yapıyorsa `{fire_id}_metadata.json`'a ayrıca erişmesine gerek kalmaz.
 - `count = items.Length`. Bu sürümde pagination YOK. İleride eklenirse `count` anlamı değişmez, ayrı bir `total_count` alanı eklenir.
 
 ---
