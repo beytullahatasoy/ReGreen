@@ -1,6 +1,6 @@
 {
   "_aciklama": "Ic isimler (Turkce, veri seti) <-> API isimleri (Ingilizce, backend/frontend) arasindaki TEK DOGRU KAYNAK. Iki taraf da bu dosyayi okur; elle kopyalanmaz ki isimler birbirinden kaymasin.",
-  "_surum": "1.1",
+  "_surum": "1.2",
   "_hucre_boyutu_m": 250,
   "_koordinat_sistemi": {
     "saklama": "EPSG:4326 (enlem/boylam, hucre MERKEZI)",
@@ -17,19 +17,19 @@
     "yangin_tarihi": "fire_date"
   },
   "oznitelikler": {
-    "_not": "Modelin kullandigi 6 oznitelik. Sirasi onemli degil, isimler onemli.",
+    "_not": "Modelin kullandigi 7 oznitelik. Sirasi onemli degil, isimler onemli. ndvi_dusus 21.08.2026'da eklendi: grup ici Spearman +0.573 -> +0.659, top-%20 isabet %45.9 -> %52.8. CSV semasi degismedi (ndvi_drop sutunu zaten teslimde vardi, sadece gosterim sayiliyordu).",
     "agac_orani": "tree_cover",
     "agac_orani_y": "tree_cover_annual",
     "dnbr": "burn_severity_dnbr",
     "egim_derece": "slope_deg",
     "yukselti_m": "elevation_m",
+    "ndvi_dusus": "ndvi_drop",
     "yol_mesafe_km": "road_distance_km"
   },
   "gosterim": {
-    "_not": "Modele GIRMEZ ama arayuzde degerli. Hepsi tahmin aninda mevcut (yangin oncesi/sonrasi goruntuden gelir). UYARI: ndvi_oncesi hedefin bileseni oldugu icin MODELE VERILMEZ; sadece gosterim.",
+    "_not": "Modele GIRMEZ ama arayuzde degerli. Hepsi tahmin aninda mevcut (yangin oncesi/sonrasi goruntuden gelir). UYARI: ndvi_oncesi hedefin bileseni oldugu icin MODELE VERILMEZ; sadece gosterim. Olculdu: tek basina grup ici rho +0.679, modelle +0.675 - yani modelin katkisi -0.004. Taftolojik, oznitelik yapilmaz.",
     "ndvi_oncesi": "ndvi_before",
     "ndvi_sonrasi": "ndvi_after",
-    "ndvi_dusus": "ndvi_drop",
     "siddet_sinifi": "severity_class",
     "arazi_tipi_y": "land_cover"
   },
@@ -75,9 +75,11 @@
   },
   "cikarilan": {
     "_not": "Ilk veri sozlesmesinde vardi, OLCULDU ve katkisi cikmadi. API'ye koymayin.",
-    "su_mesafe_km": "27 gruptan 13'unde ayni yonde (p=1.00). Yazi-tura.",
-    "yerlesim_mesafe_km": "Geri konarak olculdu: R2 -0.017, siralama +0.009. Katki yok.",
-    "baki_derece": "Buyukluk yok, gurultu sinirinda."
+    "su_mesafe_km": "Olculdu: +0.006. Gurultu.",
+    "yerlesim_mesafe_km": "Olculdu: -0.011. Gurultu, yol_mesafe_km ile ortusuyor.",
+    "baki_derece": "Olculdu: ham derece +0.006, sin/cos donusumu -0.005. Ikisi de gurultu araliginda.",
+    "yagis_uzun_ort_mm": "Olculdu: -0.110, ZARARLI. Yangin icindeki degisimi 0.076 yani neredeyse sabit; grup ici metrikte bilgi tasimaz, sadece gurultu ekler.",
+    "ndvi_oncesi": "Taftolojik - hedefin bileseni. Detay 'gosterim._not' icinde."
   },
   "oncelik_kurallari": {
     "_not": "Referans uygulama: oncelik.py. Backend ayni hesabi yeni agirliklarla tekrar yapar.",
@@ -98,5 +100,6 @@
   "deger_araliklari": {
     "recovery_gap_pred": "pratikte 0.05-0.65 (olculdu: tahmin min 0.117 maks 0.576). Dogrulama: -0.5 <= x <= 1.5 disini reddet. predicted disinda hep null.",
     "priority_score": "0.0 - 1.0"
-  }
+  },
+  "_surum_notu": "1.2 (21.08.2026): ndvi_dusus gosterimden oznitelige tasindi. CSV sutunlari DEGISMEDI - schema_version 1.1 olarak kaliyor, backend tarafinda kod degisikligi gerekmiyor. Model yeniden egitildiginde sadece recovery_gap_pred / priority_score DEGERLERI ve model_version degisecek."
 }

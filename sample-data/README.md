@@ -6,7 +6,7 @@ dosyalara göre geliştirme yapar.
 | | |
 |---|---|
 | Şema sürümü | `1.1` |
-| Model sürümü | `rf_v1` |
+| Model sürümü | `ridge_v2` |
 | Hücre boyutu | 250 m × 250 m (6,25 ha) |
 | Koordinat sistemi | EPSG:4326 (WGS84) |
 
@@ -92,8 +92,8 @@ gösterme — harita ters çıkar. Renk skalası: yüksek değer = kırmızı.
 
 ## Sürüm politikası
 
-`schema_version` **1.1** ve değişmeyecek. Model geliştirilmeye devam ediyor;
-yeni model geldiğinde:
+`schema_version` **1.1** ve değişmeyecek. Model 21.08.2026'da `rf_v1` -> `ridge_v2`
+güncellendi; **sütunlar değişmedi**, sadece değerler. Yeni model geldiğinde de:
 
 - ✅ Değişecek: `recovery_gap_pred` / `priority_score` **değerleri**, `model_version`
 - ❌ Değişmeyecek: sütun isimleri, sütun sayısı, dosya yapısı, formatlar
@@ -104,11 +104,81 @@ Yani dosyaları değiştirmek yeterli olacak, kod değişikliği gerekmeyecek.
 
 ---
 
+## Model performansı
+
+Bütün sayılar **out-of-fold**: model o yangını hiç görmeden tahmin etti
+(LeaveOneGroupOut, 27 mekânsal grup).
+
+| Metrik | Değer |
+|---|---|
+| Grup içi Spearman | **+0,686** |
+| Pozitif grup | **27/27** |
+| top-%20 isabet | **%52,8** (dNBR tabanı %38,8 · rastgele %20) |
+| İkili karşılaştırma doğruluğu | **%75,8** (dNBR %62,4 · yazı-tura %50) |
+
+Aynı sayılar `backend-data/manifest.json` içinde `model_performance` altında.
+Arayüzde göstermek isterseniz **oradan okuyun, elle kopyalamayın**.
+
+Modelin nasıl seçildiği, denenip elenen 20'den fazla yöntem ve neden burada
+durulduğu: **`MODEL_GUNLUGU.md`** (iki klasörde de var).
+
+## Backend'den bir istek: `normalization_reference`
+
+`GET /api/fires/{fireId}/cells` cevabı (`CellsResponseDto`) şu an
+`normalization_reference` döndürmüyor.
+
+Frontend, hücre panelinde öncelik skorunun **üç bileşene** ayrılmış halini
+göstermek istiyor — sistemin "karar destek" iddiasının görünür olduğu yer burası:
+
+```
+İyileşme açığı    ████████████████░░░░  %53   (0,429)
+Erozyon riski     ████████░░░░░░░░░░░░  %27   (0,222)
+Ulaşılabilirlik   ██████░░░░░░░░░░░░░░  %20   (0,162)
+                                        toplam 0,813
+```
+
+Bu kırılım için her bileşenin normalize edilmiş değeri gerekiyor, o da
+`normalization_reference` olmadan hesaplanamıyor. Toplam skor gösterilebiliyor
+ama **neden o skor olduğu gösterilemiyor.**
+
+İstenen ek — üç alan, cevabın kökünde (hücre başına değil, yangın başına sabit):
+
+```json
+"normalization_reference": {
+  "recovery_gap_pred": { "min": 0.1243, "max": 0.5417 },
+  "slope_deg":         { "min": 0.0513, "max": 50.4633 },
+  "road_distance_km":  { "min": 0.0032, "max": 2.9278 }
+}
+```
+
+Değerler **zaten DB'de** — `FireImporter` bunları `NormRecoveryGapMin/Max`,
+`NormSlopeMin/Max`, `NormRoadMin/Max` olarak yazıyor. Yeni hesap yok, sadece
+cevaba eklenmesi gerekiyor.
+
+> Ağırlık parametreleriyle (`?recovery=&erosion=&access=`) sunucu tarafında
+> yeniden hesaplama zaten doğru çalışıyor ve iyi bir tasarım — normalizasyon
+> referansı sabit kalıyor, sadece ağırlık değişiyor. Bu istek onun yerine
+> geçmiyor, üstüne ekleniyor.
+
+Detay: `frontend-data/HUCRE_PANELI.md` → "Bölüm B · NEDEN bu öncelik?"
+
+---
+
+---
+
 ## `docs/data-contract.md` ile ilişkisi
 
-⚠️ `docs/data-contract.md` bu paketten **önce** yazılmış taslak bir dokümandır
-ve alan isimleri buradakiyle uyuşmuyor (`grid_id` ↔ `cell_id`,
-`recovery_score` ↔ `recovery_gap_pred` gibi).
+`docs/data-contract.md` güncel 53 yangınlık paket ve 37.163 hücrenin tamamı
+taranarak güncellenmiştir. Alan adı, tip, null davranışı, enum ve doğrulama
+kuralları için **tek bağlayıcı kaynak bu dokümandır**.
 
-**Bağlayıcı olan bu klasördeki `alan_eslesme.json` dosyasıdır.**
-`data-contract.md` güncellenecek.
+Bu klasördeki `alan_eslesme.json`, Türkçe açıklamalar ve iç isim ↔ API ismi
+eşleşmeleri için yardımcı kaynaktır. Bir uyuşmazlık görülürse
+`docs/data-contract.md` esas alınmalıdır.
+
+> ⚠️ **`ridge_v2` ile güncellenmesi gereken yer:** sözleşmenin §3 başlığı
+> *"Model Girdisi — 6 Öznitelik (Random Forest'a girer)"*. Artık **7 öznitelik**
+> (`ndvi_drop` eklendi) ve model **Ridge**. `ndvi_drop` sütunu zaten teslimde
+> vardı, sadece gösterim sayılıyordu — **CSV şeması değişmedi**, sadece o
+> sütunun modele girip girmediği değişti. §3 ve §6.4'teki gözlenen aralıklar
+> da yeni modelle biraz kayar.

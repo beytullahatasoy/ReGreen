@@ -1,7 +1,7 @@
 {
   "project": "ReGreen / FireRecover",
-  "generated_at": "2026-08-19T17:22:55+00:00",
-  "model_version": "rf_v1",
+  "generated_at": "2026-08-23T16:13:19+00:00",
+  "model_version": "ridge_v2",
   "schema_version": "1.1",
   "cell_size_m": 250,
   "crs": "EPSG:4326",
@@ -9,6 +9,28 @@
   "total_cells": 37163,
   "training_rows": 16074,
   "training_groups": 27,
+  "features": [
+    "agac_orani",
+    "agac_orani_y",
+    "dnbr",
+    "egim_derece",
+    "yukselti_m",
+    "ndvi_dusus",
+    "yol_mesafe_km"
+  ],
+  "model_performance": {
+    "metric_note": "Butun degerler out-of-fold: model o yangini hic gormeden tahmin etti. LeaveOneGroupOut, mekansal grup.",
+    "group_count": 27,
+    "within_fire_spearman_mean": 0.686,
+    "within_fire_spearman_median": 0.7438,
+    "positive_groups": 27,
+    "worst_group": 0.1401,
+    "best_group": 0.8788,
+    "top20_hit_rate": 0.5281,
+    "top20_hit_rate_dnbr_baseline": 0.3879,
+    "top20_hit_rate_random": 0.2,
+    "pairwise_accuracy": 0.7583
+  },
   "priority_weights": {
     "recovery": 0.5,
     "erosion": 0.3,
