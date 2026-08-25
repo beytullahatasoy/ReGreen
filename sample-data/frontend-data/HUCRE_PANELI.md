@@ -53,7 +53,36 @@ Erozyon riski     ████████░░░░░░░░░░░░  
 Ulaşılabilirlik   ██████░░░░░░░░░░░░░░  %20   (0,162)
 ```
 
-### Hesabı (frontend'de yapılacak, formül sabit)
+### ⚠️ Veri iki yoldan gelebilir — hesap değişiyor
+
+**Yol 1 — Bu klasördeki dosyalar (mock/geliştirme)**
+`{fire_id}_metadata.json` içinde `normalization_reference` var, aşağıdaki
+formülle kırılımı kendin hesaplayabilirsin.
+
+**Yol 2 — Backend API (`GET /api/fires/{fireId}/cells`)**
+API `normalization_reference` **döndürmüyor** (bkz. `ReGreen.Api/Dtos/CellDtos.cs`,
+`CellsResponseDto`). Yani API'den gelen veriyle bu kırılımı hesaplayamazsın.
+
+API'nin yaptığı şey farklı: ağırlıkları query parametresi olarak alıp
+(`?recovery=0.6&erosion=0.2&access=0.2`) `priority_score` ve `priority_class`'ı
+**sunucu tarafında yeniden hesaplıyor** ve `applied_weights` alanını döndürüyor.
+Bu iyi bir tasarım — normalizasyon referansı sabit kalıyor, sadece ağırlık
+değişiyor.
+
+**Ama "neden bu öncelik" panelinde üç bileşeni ayrı ayrı gösterebilmek için
+`normalization_reference` gerekiyor.** İki çözüm var:
+
+1. Backend `CellsResponseDto`'ya `normalization_reference` eklesin
+   (üç alan: `recovery_gap_pred`, `slope_deg`, `road_distance_km` için min/max).
+   Zaten DB'de `ModelRuns`/`Fires` tarafında duruyor, sadece cevaba eklenmesi
+   gerekiyor. **Önerilen çözüm bu.**
+2. Ya da bileşen kırılımı gösterilmez, sadece toplam skor gösterilir.
+   Ürünün en değerli kısmını kaybettirir, tercih edilmez.
+
+> Bu, Buğra ile Beytullah arasında konuşulacak bir madde. Zeynep'in
+> paneli tasarlarken 1. seçeneğe göre ilerlemesi doğru olur.
+
+### Hesabı (formül sabit)
 
 ```js
 const ref = metadata.normalization_reference
