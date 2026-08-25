@@ -29,7 +29,7 @@ npm run dev
 
 - `VITE_SERVICE_MODE=mock`: Backend olmadan temel mock servis
 - `VITE_SERVICE_MODE=http`: Gerçek ReGreen API
-- `VITE_API_BASE_URL`: API origin'i; örneğin `http://localhost:5000`
+- `VITE_API_BASE_URL`: API origin'i; yerel backend için `http://localhost:5066`
 
 UI bileşenleri veri kaynağına doğrudan erişmez. Tüm erişim `FireService`
 arayüzü üzerinden `MockFireService` veya `HttpFireService` ile yapılır.
