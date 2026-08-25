@@ -154,7 +154,11 @@ function reducedMotion(): boolean {
 function colorExpression(layer: MapLayer): ExpressionSpecification {
   if (layer === "status") return ["match", ["get", "prediction_status"], "predicted", "#347557", "low_severity", "#c49a3b", "no_data", "#7b827e", "#7b827e"];
   if (layer === "severity") return ["match", ["get", "severity_class"], "yuksek", "#a63c2f", "orta-yuksek", "#d66d3f", "orta-dusuk", "#d7a949", "dusuk", "#7f9d75", "#7b827e"];
-  return ["case", ["==", ["get", "prediction_status"], "no_data"], "#7b827e", ["match", ["get", "priority_class"], "COK_YUKSEK", "#b42318", "YUKSEK", "#d75b20", "ORTA", "#c58a12", "DUSUK", "#438360", "#7b827e"]];
+  return ["case",
+    ["==", ["get", "prediction_status"], "no_data"], "#7b827e",
+    ["==", ["get", "prediction_status"], "low_severity"], "#c49a3b",
+    ["match", ["get", "priority_class"], "COK_YUKSEK", "#b42318", "YUKSEK", "#d75b20", "ORTA", "#c58a12", "DUSUK", "#438360", "#7b827e"],
+  ];
 }
 
 function boundsFor(feature: Feature): maplibregl.LngLatBounds {

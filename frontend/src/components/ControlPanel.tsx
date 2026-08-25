@@ -17,6 +17,7 @@ interface Props {
 }
 
 export function ControlPanel(props: Props) {
+  const firesByProvince = groupFiresByProvince(props.fires);
   const updateWeight = (key: keyof PriorityWeights, value: number) => {
     if (props.weights) props.onWeightChange({ ...props.weights, [key]: value });
   };
@@ -25,7 +26,9 @@ export function ControlPanel(props: Props) {
       <div className="control-panel__identity"><p className="eyebrow">ReGreen</p><h1>Post-Fire<br />Recovery</h1></div>
       <section className="control-section"><h2 className="control-section__title">01 · Fire Area</h2>
         <select className="field-select" value={props.selectedFireId} onChange={(event) => props.onFireChange(event.target.value)} aria-label="Fire area">
-          {props.fires.map((fire) => <option value={fire.fire_id} key={fire.fire_id}>{fire.province} · {fire.fire_id}</option>)}
+          {firesByProvince.map(([province, fires]) => <optgroup label={province} key={province}>
+            {fires.map((fire) => <option value={fire.fire_id} key={fire.fire_id}>{fire.fire_id} · {fire.fire_date}</option>)}
+          </optgroup>)}
         </select>
         {props.selectedFire && <div className="fire-meta"><span>Province</span><strong>{props.selectedFire.province}</strong><span>Region</span><strong>{props.selectedFire.region}</strong><span>Date</span><strong>{props.selectedFire.fire_date}</strong></div>}
       </section>
@@ -45,8 +48,14 @@ export function ControlPanel(props: Props) {
         {props.comparison && <ScenarioImpact comparison={props.comparison} onClear={props.onClearComparison} />}
       </section>
     </div>
-    <div className="technical"><strong>QUALITY</strong> · {props.selectedFire?.quality_flag ?? "—"}<br />{props.isMock ? <><strong>DEMO DATA</strong><br /></> : <><strong>MODEL RUN</strong> · {props.cellsResponse?.model_run_id ?? "—"}<br /></>}<strong>GENERATED</strong> · {props.cellsResponse ? new Date(props.cellsResponse.generated_at).toLocaleDateString() : "—"}</div>
+    <div className="technical"><strong>QUALITY</strong> · {props.selectedFire?.quality_flag ?? "—"}<br />{props.isMock && <><strong>DEMO DATA</strong><br /></>}<strong>MODEL</strong> · {props.cellsResponse?.model_version ?? "—"}<br /><strong>GENERATED</strong> · {props.cellsResponse ? new Date(props.cellsResponse.generated_at).toLocaleDateString() : "—"}</div>
   </aside>;
+}
+
+function groupFiresByProvince(fires: FireSummary[]): Array<[string, FireSummary[]]> {
+  const groups = new Map<string, FireSummary[]>();
+  fires.forEach((fire) => groups.set(fire.province, [...(groups.get(fire.province) ?? []), fire]));
+  return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b, "tr"));
 }
 
 function ScenarioImpact({ comparison, onClear }: { comparison: PriorityScenarioComparison; onClear: () => void }) {

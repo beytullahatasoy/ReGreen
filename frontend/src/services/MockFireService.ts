@@ -1,13 +1,6 @@
 import type { Feature, MultiPolygon, Polygon, Position } from "geojson";
-import akd01Cells from "../../../sample-data/frontend-data/AKD_2021_01_hucreler.csv?raw";
-import akd01Metadata from "../../../sample-data/frontend-data/AKD_2021_01_metadata.json?raw";
-import akd01Perimeter from "../../../sample-data/frontend-data/AKD_2021_01_sinir.geojson?raw";
-import akd05Cells from "../../../sample-data/frontend-data/AKD_2021_05_hucreler.csv?raw";
-import akd05Metadata from "../../../sample-data/frontend-data/AKD_2021_05_metadata.json?raw";
-import akd05Perimeter from "../../../sample-data/frontend-data/AKD_2021_05_sinir.geojson?raw";
-import ege10Cells from "../../../sample-data/frontend-data/EGE_2024_10_hucreler.csv?raw";
-import ege10Metadata from "../../../sample-data/frontend-data/EGE_2024_10_metadata.json?raw";
-import ege10Perimeter from "../../../sample-data/frontend-data/EGE_2024_10_sinir.geojson?raw";
+import { cellLoaders, metadataLoaders, perimeterLoaders } from "virtual:mock-data-loaders";
+import mockFireSummaries from "virtual:mock-fire-summaries";
 import type {
   Cell,
   CellsQuery,
@@ -34,6 +27,7 @@ interface Metadata {
   cell_size_m: number;
   crs: "EPSG:4326";
   generated_at: string;
+  model_version: string;
   quality_flag: "ok" | "check";
   quality_note: string | null;
   has_perimeter: boolean;
@@ -46,17 +40,11 @@ interface Metadata {
   };
 }
 
-interface MockSource { metadata: string; perimeter: string; cells: string }
-
-const sources: MockSource[] = [
-  { metadata: akd01Metadata, perimeter: akd01Perimeter, cells: akd01Cells },
-  { metadata: akd05Metadata, perimeter: akd05Perimeter, cells: akd05Cells },
-  { metadata: ege10Metadata, perimeter: ege10Perimeter, cells: ege10Cells },
-];
+type RawLoader = () => Promise<string>;
 
 const numberOrNull = (value: string): number | null => value === "" ? null : Number(value);
 const normalize = (value: number, range: { min: number; max: number }) =>
-  range.max > range.min ? Math.min(1, Math.max(0, (value - range.min) / (range.max - range.min))) : 0;
+  range.max - range.min >= 1e-9 ? Math.min(1, Math.max(0, (value - range.min) / (range.max - range.min))) : 0.5;
 
 function parseCells(csv: string): Cell[] {
   const [headerLine, ...lines] = csv.trim().split(/\r?\n/);
@@ -104,32 +92,23 @@ function markerFor(feature: Feature<Polygon | MultiPolygon>): { lat: number; lon
 }
 
 export class MockFireService implements FireService {
-  private readonly records = sources.map((source) => ({
-    metadata: JSON.parse(source.metadata) as Metadata,
-    perimeter: JSON.parse(source.perimeter) as Feature<Polygon | MultiPolygon, FirePerimeterProperties>,
-    cells: parseCells(source.cells),
-  }));
+  private readonly metadataCache = new Map<string, Promise<Metadata>>();
+  private readonly perimeterCache = new Map<string, Promise<Feature<Polygon | MultiPolygon, FirePerimeterProperties>>>();
+  private readonly cellsCache = new Map<string, Promise<Cell[]>>();
 
   async getFires(query: FireListQuery = {}): Promise<FireSummary[]> {
-    return this.records
-      .filter(({ metadata }) => !query.quality_flag || metadata.quality_flag === query.quality_flag)
-      .map(({ metadata, perimeter }) => ({
-        fire_id: metadata.fire_id, fire_date: metadata.fire_date, province: metadata.province,
-        region: metadata.region, modis_area_ha: metadata.modis_area_ha,
-        burned_area_ha: metadata.burned_area_ha, cell_count: metadata.cell_count,
-        has_perimeter: metadata.has_perimeter, marker_lat: markerFor(perimeter).lat,
-        marker_lon: markerFor(perimeter).lon, quality_flag: metadata.quality_flag,
-        quality_note: metadata.quality_note,
-      }));
+    return mockFireSummaries.filter((fire) => !query.quality_flag || fire.quality_flag === query.quality_flag);
   }
 
   async getPerimeter(fireId: string): Promise<FirePerimeter> {
-    const record = this.find(fireId);
-    return { fire_id: fireId, marker: markerFor(record.perimeter), perimeter: record.perimeter };
+    this.assertKnownFire(fireId);
+    const perimeter = await this.loadPerimeter(fireId);
+    return { fire_id: fireId, marker: markerFor(perimeter), perimeter };
   }
 
   async getCells(fireId: string, query: CellsQuery = {}): Promise<CellsResponse> {
-    const { metadata, cells } = this.find(fireId);
+    this.assertKnownFire(fireId);
+    const [metadata, cells] = await Promise.all([this.loadMetadata(fireId), this.loadCells(fireId)]);
     const weights = query.weights ?? metadata.priority_weights;
     const total = weights.recovery + weights.erosion + weights.access;
     const applied_weights = {
@@ -150,12 +129,48 @@ export class MockFireService implements FireService {
     if (query.prediction_status) items = items.filter((cell) => cell.prediction_status === query.prediction_status);
     if (query.priority_class) items = items.filter((cell) => cell.priority_class === query.priority_class);
     if (query.bbox) items = items.filter((cell) => cell.lon >= query.bbox!.min_lon && cell.lon <= query.bbox!.max_lon && cell.lat >= query.bbox!.min_lat && cell.lat <= query.bbox!.max_lat);
-    return { fire_id: fireId, model_run_id: 0, generated_at: metadata.generated_at, crs: metadata.crs, cell_size_m: metadata.cell_size_m, applied_weights, count: items.length, items };
+    return {
+      fire_id: fireId,
+      model_run_id: 0,
+      model_version: metadata.model_version,
+      generated_at: metadata.generated_at,
+      crs: metadata.crs,
+      cell_size_m: metadata.cell_size_m,
+      applied_weights,
+      normalization_reference: metadata.normalization_reference,
+      priority_thresholds: metadata.priority_thresholds,
+      count: items.length,
+      items,
+    };
   }
 
-  private find(fireId: string) {
-    const record = this.records.find(({ metadata }) => metadata.fire_id === fireId);
-    if (!record) throw new Error(`Fire not found: ${fireId}`);
-    return record;
+  private assertKnownFire(fireId: string): void {
+    if (!mockFireSummaries.some((fire) => fire.fire_id === fireId)) throw new Error(`Fire not found: ${fireId}`);
   }
+
+  private loadMetadata(fireId: string): Promise<Metadata> {
+    return cached(this.metadataCache, fireId, async () => JSON.parse(await requireLoader(metadataLoaders, fireId)()) as Metadata);
+  }
+
+  private loadPerimeter(fireId: string): Promise<Feature<Polygon | MultiPolygon, FirePerimeterProperties>> {
+    return cached(this.perimeterCache, fireId, async () => JSON.parse(await requireLoader(perimeterLoaders, fireId)()) as Feature<Polygon | MultiPolygon, FirePerimeterProperties>);
+  }
+
+  private loadCells(fireId: string): Promise<Cell[]> {
+    return cached(this.cellsCache, fireId, async () => parseCells(await requireLoader(cellLoaders, fireId)()));
+  }
+}
+
+function requireLoader(loaders: Record<string, RawLoader>, fireId: string): RawLoader {
+  const loader = loaders[fireId];
+  if (!loader) throw new Error(`Mock data file not found for fire: ${fireId}`);
+  return loader;
+}
+
+function cached<T>(cache: Map<string, Promise<T>>, key: string, load: () => Promise<T>): Promise<T> {
+  const existing = cache.get(key);
+  if (existing) return existing;
+  const pending = load();
+  cache.set(key, pending);
+  return pending;
 }

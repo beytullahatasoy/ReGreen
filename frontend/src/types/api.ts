@@ -69,13 +69,33 @@ export interface PriorityWeights {
   access: number;
 }
 
+export interface NormRange {
+  min: number;
+  max: number;
+}
+
+export interface NormalizationReference {
+  recovery_gap_pred: NormRange;
+  slope_deg: NormRange;
+  road_distance_km: NormRange;
+}
+
+export interface PriorityThresholds {
+  COK_YUKSEK: number;
+  YUKSEK: number;
+  ORTA: number;
+}
+
 export interface CellsResponse {
   fire_id: string;
   model_run_id: number;
+  model_version: string;
   generated_at: string;
   crs: "EPSG:4326";
   cell_size_m: number;
   applied_weights: PriorityWeights;
+  normalization_reference: NormalizationReference;
+  priority_thresholds: PriorityThresholds;
   count: number;
   items: Cell[];
 }
