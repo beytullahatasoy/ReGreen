@@ -1,17 +1,21 @@
-# Frontend
+# ReGreen Frontend
 
-ReGreen kullanıcı arayüzleri ve harita çalışmaları bu klasörde yürütülür.
+React, TypeScript ve Vite tabanlı ReGreen kullanıcı arayüzü.
 
-Sorumlu: Zeynep
+## Çalıştırma
 
-## Kapsam
+```bash
+npm install
+npm run dev
+```
 
-- Uzman Paneli
-- Harita ve grid görselleştirme
-- Topluluk arayüzü
-- Kampanya ekranları
-- Kullanıcı deneyimi
+## Veri kaynağı
 
-## Durum
+`.env.example` dosyasını `.env.local` olarak kopyalayın.
 
-Geliştirme aşamasında.
+- `VITE_SERVICE_MODE=mock`: Backend olmadan temel mock servis
+- `VITE_SERVICE_MODE=http`: Gerçek ReGreen API
+- `VITE_API_BASE_URL`: API origin'i; örneğin `http://localhost:5000`
+
+UI bileşenleri veri kaynağına doğrudan erişmez. Tüm erişim `FireService`
+arayüzü üzerinden `MockFireService` veya `HttpFireService` ile yapılır.
