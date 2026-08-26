@@ -299,6 +299,7 @@ def yangin_isle(yangin):
 
 # ------------------------------------------------------------------- ana
 def main():
+    yollar.gerekli(KOK / "yanginlar.json")
     limit = int(sys.argv[1]) if len(sys.argv) > 1 else None
     yanginlar = json.loads((KOK / "yanginlar.json").read_text(encoding="utf-8"))
     if limit:

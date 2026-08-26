@@ -1,0 +1,38 @@
+name: AI Safety CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "ai/**"
+      - ".github/workflows/ai-safety-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "ai/**"
+      - ".github/workflows/ai-safety-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-safety-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  safety-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Compile AI sources
+        run: python -m compileall -q ai
+
+      - name: Run pipeline safety tests
+        run: python -m unittest discover -s ai/tests -v
