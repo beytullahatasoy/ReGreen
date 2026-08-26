@@ -14,7 +14,7 @@ export const predictionStatusLabels: Record<PredictionStatus, string> = {
 };
 
 export function formatDecimal(value: number | null, digits = 2): string {
-  return value === null ? "Not available" : value.toLocaleString(undefined, { maximumFractionDigits: digits });
+  return value === null ? "Missing in source data" : value.toLocaleString(undefined, { maximumFractionDigits: digits });
 }
 
 export function formatDegrees(value: number): string {
@@ -22,7 +22,7 @@ export function formatDegrees(value: number): string {
 }
 
 export function formatMeters(value: number | null): string {
-  return value === null ? "Not available" : `${Math.round(value).toLocaleString()} m`;
+  return value === null ? "Missing in source data" : `${Math.round(value).toLocaleString()} m`;
 }
 
 export function formatKilometers(value: number): string {

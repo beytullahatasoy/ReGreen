@@ -11,7 +11,8 @@ import type { PriorityClassTransition } from "../utils/comparePriorityScenarios"
 
 export function CellDetailPanel({ cell, cellsResponse, priorityTransition, onClose }: { cell: Cell | null; cellsResponse: CellsResponse | null; priorityTransition: PriorityClassTransition | null; onClose: () => void }) {
   const predicted = cell?.prediction_status === "predicted";
-  const priorityClass = cell?.priority_class ? priorityClassLabels[cell.priority_class] : "Not available";
+  const priorityClass = cell?.priority_class ? priorityClassLabels[cell.priority_class] : "Not calculated";
+  const predictionUnavailableReason = cell ? unavailablePredictionReason(cell.prediction_status) : "Not calculated";
   const contributions = cell && predicted && cellsResponse ? priorityContributions(cell, cellsResponse) : null;
 
   return <aside className={`detail-panel ${cell ? "detail-panel--open" : ""}`} aria-hidden={!cell}>
@@ -24,8 +25,8 @@ export function CellDetailPanel({ cell, cellsResponse, priorityTransition, onClo
         {priorityTransition && <div className={`priority-change priority-change--${priorityTransition.direction}`}><strong>Priority changed</strong><span>{priorityClassLabels[priorityTransition.previous]} → {priorityClassLabels[priorityTransition.current]}</span></div>}
 
         <MetricSection title="Priority" rows={[
-          ["Priority Class", predicted ? priorityClass : "Not available"],
-          ["Priority Score", predicted ? formatDecimal(cell.priority_score, 2) : "Not available"],
+          ["Priority Class", predicted ? priorityClass : predictionUnavailableReason],
+          ["Priority Score", predicted ? formatDecimal(cell.priority_score, 2) : predictionUnavailableReason],
         ]} />
         {contributions && <MetricSection title="Why This Priority?" rows={[
           ["Recovery component", formatContribution(contributions.recovery, cell.priority_score), "Based on the model's estimated two-year recovery gap."],
@@ -34,8 +35,8 @@ export function CellDetailPanel({ cell, cellsResponse, priorityTransition, onClo
         ]} />}
         <MetricSection title="Recovery" rows={[
           ["Prediction Status", predictionStatusLabels[cell.prediction_status]],
-          ["Estimated 2-Year Recovery Gap", predicted ? formatDecimal(cell.recovery_gap_pred, 2) : "Not available"],
-          ["Interpretation", predicted ? "Higher means poorer expected recovery" : "Not available"],
+          ["Estimated 2-Year Recovery Gap", predicted ? formatDecimal(cell.recovery_gap_pred, 2) : predictionUnavailableReason],
+          ["Interpretation", predicted ? "Higher means poorer expected recovery" : predictionUnavailableReason],
         ]} />
         <MetricSection title="Fire Impact" rows={[
           ["Burn Severity", humanize(cell.severity_class)],
@@ -45,24 +46,30 @@ export function CellDetailPanel({ cell, cellsResponse, priorityTransition, onClo
           ["Slope", formatDegrees(cell.slope_deg)],
           ["Elevation", formatMeters(cell.elevation_m)],
           ["Road Distance", formatKilometers(cell.road_distance_km)],
-          ["Land Cover", cell.land_cover ?? "Not available"],
+          ["Land Cover", cell.land_cover ?? "Missing in source data"],
         ]} />
         <MetricSection title="Vegetation" rows={[
           ["Pre-fire NDVI", formatDecimal(cell.ndvi_before, 2), "Sentinel-2 pre-fire median NDVI composite, 70 to 3 days before the fire date."],
           ["Post-fire NDVI", formatDecimal(cell.ndvi_after, 2), "Sentinel-2 post-fire median NDVI composite, 20 to 95 days after the fire date."],
           ["NDVI Drop", formatDecimal(cell.ndvi_drop, 2), "Pre-fire NDVI minus post-fire NDVI; one of the seven ridge_v2 model inputs."],
           ["Tree Cover", formatPercent(cell.tree_cover)],
-          ["Annual Tree Cover", cell.tree_cover_annual === null ? "Not available" : formatPercent(cell.tree_cover_annual)],
+          ["Annual Tree Cover", cell.tree_cover_annual === null ? "Missing in source data" : formatPercent(cell.tree_cover_annual)],
         ]} />
         <MetricSection title="Technical Details" rows={[
           ["Cell ID", cell.cell_id],
           ["Latitude", formatDecimal(cell.lat, 5)],
           ["Longitude", formatDecimal(cell.lon, 5)],
-          ["Model Version", cellsResponse?.model_version ?? "Not available"],
+          ["Model Version", cellsResponse?.model_version ?? "Unknown"],
         ]} />
       </div>
     </>}
   </aside>;
+}
+
+function unavailablePredictionReason(status: Cell["prediction_status"]): string {
+  return status === "low_severity"
+    ? "Not calculated — below eligibility threshold"
+    : "Not calculated — insufficient input data";
 }
 
 function MetricSection({ title, rows }: { title: string; rows: Array<[string, string, string?]> }) {

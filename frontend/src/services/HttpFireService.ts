@@ -43,8 +43,22 @@ export class HttpFireService implements FireService {
   }
 
   private async get<T>(url: string): Promise<T> {
-    const response = await this.fetcher(url, { method: "GET", headers: { Accept: "application/json" } });
-    if (!response.ok) throw new ApiError((await response.json()) as ApiProblem);
+    let response: Response;
+    try {
+      response = await this.fetcher(url, { method: "GET", headers: { Accept: "application/json" } });
+    } catch (cause) {
+      throw new Error(`Backend API could not be reached at ${this.baseUrl || "the current origin"}. Start ReGreen.Api and verify the frontend API URL.`, { cause });
+    }
+
+    if (!response.ok) {
+      const contentType = response.headers.get("Content-Type") ?? "";
+      if (contentType.includes("application/problem+json") || contentType.includes("application/json")) {
+        const problem = await response.json() as ApiProblem;
+        throw new ApiError(problem);
+      }
+      throw new Error(`Backend API request failed with HTTP ${response.status} (${response.statusText || "unknown error"}).`);
+    }
+
     return (await response.json()) as T;
   }
 }

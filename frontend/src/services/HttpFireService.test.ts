@@ -68,4 +68,20 @@ describe("HttpFireService", () => {
       problem,
     });
   });
+
+  it("reports a clear setup message when the backend cannot be reached", async () => {
+    const fetcher = vi.fn(async () => { throw new TypeError("Failed to fetch"); });
+    const service = new HttpFireService("http://localhost:5066", fetcher as unknown as typeof fetch);
+
+    await expect(service.getFires()).rejects.toThrow(
+      "Backend API could not be reached at http://localhost:5066. Start ReGreen.Api and verify the frontend API URL.",
+    );
+  });
+
+  it("handles non-JSON HTTP errors without hiding them behind a JSON parse error", async () => {
+    const fetcher = vi.fn(async () => new Response("Not Found", { status: 404, statusText: "Not Found", headers: { "Content-Type": "text/plain" } }));
+    const service = new HttpFireService("http://localhost:5066", fetcher as unknown as typeof fetch);
+
+    await expect(service.getFires()).rejects.toThrow("Backend API request failed with HTTP 404 (Not Found).");
+  });
 });

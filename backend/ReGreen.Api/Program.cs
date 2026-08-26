@@ -64,7 +64,13 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// Yerel geliştirme sözleşmesi bilinçli olarak http://localhost:5066 kullanır. HTTP-only
+// launch profilinde HTTPS portu olmadığı için middleware her istekte yanıltıcı bir uyarı
+// üretiyordu. Production ortamında yönlendirme korunur.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseResponseCompression();
 app.UseCors("Default");
 
