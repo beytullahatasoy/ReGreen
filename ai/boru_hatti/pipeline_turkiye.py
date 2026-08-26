@@ -40,13 +40,17 @@ from scipy.spatial import cKDTree
 
 import firerecover_pipeline as fp
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
+
 # Izgara cozunurlugu. 500 m'de kucuk yanginlar cozulemiyordu: 300 ha'lik bir
 # yangin 12 kare ediyor, filtrelerden sonra 7 kaliyor ve grup olusturamiyor.
 # 250 m'de ayni yangin 48 kare eder. Olcum: uygun yangin 17 -> ~34.
 HUCRE_M = 250
 HUCRE_HA = (HUCRE_M ** 2) / 10_000      # bir hucrenin alani (hektar)
 
-KOK = pathlib.Path(__file__).parent
+KOK = yollar.ARA          # ortak veri koku - ai/yollar.py
 PARCALAR = KOK / f"parcalar_{HUCRE_M}m"
 PARCALAR.mkdir(exist_ok=True)
 YAGIS_ONBELLEK = KOK / "onbellek" / "yagis.json"

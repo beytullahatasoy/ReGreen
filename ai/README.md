@@ -35,17 +35,87 @@ yılda verdiği fiilî cevap.
 | `deneyler/` | 12 ölçüm script'i — denenen ve elenen her şey |
 | `teslim/` | Öncelik formülü, teslim paketi üretimi, ön kontrol |
 
-### Çalıştırma sırası
+---
+
+## Kurulum
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate            # Windows
+source .venv/bin/activate          # Linux / macOS
+pip install -r ai/requirements.txt
+```
+
+Python **3.10.11** ile doğrulandı. Sürümler `requirements.txt`'te sabitli.
+
+## Veri kökü
+
+Bütün scriptler tek bir veri kökünden okuyup oraya yazar. Tanımı
+`ai/yollar.py` içinde, varsayılanı `ai/data/`:
 
 ```
-boru_hatti/yangin_kesif.py      MODIS'ten ≥300 ha yangınları bul
-boru_hatti/pipeline_turkiye.py  her yangın için 250 m ızgara + öznitelikler
-veri/veri_temizle.py            nodata, mükerrer, yeniden yanma, mekânsal grup
-veri/veri_son_hal.py            etiket geçerliliği
-veri/egitim_seti.py             egitim_seti.csv (16.074 satır, 7 öznitelik)
-model/model_egit.py             aile karşılaştırma → ayar → final model
-teslim/teslim_uret.py           53 yangın için teslim paketi
-teslim/teslim_onkontrol.py      backend doğrulayıcı kurallarına karşı kontrol
+ai/data/
+   ham/        boru hattının ürettiği ham ızgara ve parçalar
+   ara/        turkiye_grid.csv, egitim_seti.csv, yanginlar.json
+   cikti/      model dosyaları, ölçüm sonuçları
+   onbellek/   uydu ve yağış önbelleği
+```
+
+Bu klasör **git'e girmez** — `turkiye_grid.csv` tek başına ~106 MB.
+Başka bir yerde tutmak istersen:
+
+```bash
+set REGREEN_AI_DATA=D:\regreen_veri         # Windows
+export REGREEN_AI_DATA=/veri/regreen        # Linux / macOS
+```
+
+Nerede olduğunu görmek için: `python ai/yollar.py`
+
+## Çalıştırma sırası
+
+Komutlar **repo kökünden** çalıştırılır. Her adım bir öncekinin çıktısını
+`ai/data/` üzerinden alır — aradaki dosyaları elle taşımak gerekmez.
+
+```bash
+# 1. Yangın keşfi — MODIS'ten >=300 ha yangınları bul
+python ai/boru_hatti/yangin_kesif.py          # -> ara/yanginlar.json
+
+# 2. Öznitelik çıkarımı — her yangın için 250 m ızgara  (SAATLER surer)
+python ai/boru_hatti/pipeline_turkiye.py      # -> ara/turkiye_grid.csv, ham/parcalar_250m/
+
+# 3. Temizlik — nodata, mükerrer, yeniden yanma, mekansal grup
+python ai/veri/veri_temizle.py                # -> ara/turkiye_grid.csv (temiz)
+python ai/veri/veri_son_hal.py                # -> etiket gecerliligi
+
+# 4. Eğitim seti — 16.074 satır, 7 öznitelik, 27 grup
+python ai/veri/egitim_seti.py                 # -> ara/egitim_seti.csv
+
+# 5. Model — aile karşılaştırma -> ayar -> final   (~6 dk, 16 cekirdek)
+python ai/model/model_egit.py                 # -> cikti/regreen_model.joblib
+
+# 6. Teslim paketi — 53 yangın
+python ai/teslim/teslim_uret.py               # -> sample-data/backend-data/
+
+# 7. Ön kontrol — backend doğrulayıcı kurallarına karşı
+python ai/teslim/teslim_onkontrol.py
+```
+
+> **Hazır veriyle başlamak:** 1-3. adımlar uydu verisi çekiyor, saatler
+> sürer. Elinde üretilmiş `egitim_seti.csv` varsa `ai/data/ara/` altına
+> koyup doğrudan 5. adımdan devam edebilirsin.
+
+Eksik girdi olursa scriptler hangi dosyanın nerede beklendiğini ve hangi
+adımın onu ürettiğini yazan bir hata verir — sessizce patlamaz.
+
+### Ölçümleri tekrar üretmek
+
+`ai/deneyler/` altındaki script'ler `ara/egitim_seti.csv` okuyup sonuçları
+`cikti/` altına yazar. Hepsi bağımsız çalışır:
+
+```bash
+python ai/deneyler/deney_2_oznitelik.py       # aday oznitelik taramasi
+python ai/deneyler/deney_6_dogrulama.py       # ic ice secim, yanlilik olcumu
+python ai/deneyler/deney_10_tavan.py          # tavan analizi
 ```
 
 ---

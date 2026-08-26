@@ -21,6 +21,7 @@ Kural: hepsini olc, hepsini raporla. En iyisini secip "kazandik" DEME -
 deney 6'da secim yanliliginin +0,016 oldugunu gorduk. Bir sey one
 cikarsa ic ice CV ile ayrica dogrulanacak.
 """
+import pathlib
 import sys, time, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -35,6 +36,10 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 from lightgbm import LGBMRegressor, LGBMRanker, LGBMClassifier
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 OZ = ["agac_orani", "agac_orani_y", "dnbr", "egim_derece",
       "yukselti_m", "ndvi_dusus", "yol_mesafe_km"]
@@ -71,7 +76,7 @@ def olc(y, p, g):
 
 
 # ------------------------------------------------------------------ veri
-d = pd.read_csv("egitim_seti.csv").reset_index(drop=True)
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv").reset_index(drop=True)
 y = d[HEDEF].to_numpy()
 g = d[GRUP].to_numpy()
 yang = d[YANGIN].to_numpy()
@@ -201,7 +206,7 @@ ekle("ElasticNet", lambda: kos_duz(
 ekle("Ridge <- sira, monoton yok", lambda: kos_duz(RIDGE, Xd, YS))
 
 son = pd.DataFrame(DENEY).sort_values("rho", ascending=False)
-son.to_csv("sonuc_deney8.csv", index=False)
+son.to_csv(yollar.CIKTI / "sonuc_deney8.csv", index=False)
 taban = son[son.ad.str.contains("TABAN")]["rho"].iloc[0]
 taban20 = son[son.ad.str.contains("TABAN")]["top20"].iloc[0]
 

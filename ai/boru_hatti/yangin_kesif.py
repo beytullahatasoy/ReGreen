@@ -22,6 +22,7 @@ Ara ciktilar onbellege alinir (onbellek/ klasoru); ikinci calistirma cok daha
 hizli olur. Onbellegi silmek icin klasoru silin.
 """
 
+import sys
 import json
 import os
 import pathlib
@@ -41,6 +42,10 @@ from rasterio.transform import from_origin
 from rasterio.warp import reproject
 from scipy import ndimage
 from shapely.geometry import shape
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 # ----------------------------------------------------------------- konfig
 YILLAR = list(range(2017, 2025))   # Sentinel-2 2017'de basliyor.
@@ -63,7 +68,7 @@ MAKS_TARIM = 0.35                  # bu orandan cok tarimsa anız yakmadir
 # ESA WorldCover sinif kodlari
 AGAC, CALI, OT, TARIM, YERLESIM, CIPLAK, SU = 10, 20, 30, 40, 50, 60, 80
 
-KOK = pathlib.Path(__file__).parent
+KOK = yollar.ARA          # ortak veri koku - ai/yollar.py
 ONBELLEK = KOK / "onbellek"
 ONBELLEK.mkdir(exist_ok=True)
 

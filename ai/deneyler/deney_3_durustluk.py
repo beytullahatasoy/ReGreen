@@ -17,6 +17,7 @@ elimizde, ndvi_yil2 degil. Ama iki soruyu cevaplamak sart:
 Sinama: ham oznitelikleri MODELSIZ siralayici olarak kullanip
 modelle karsilastiriyoruz.
 """
+import pathlib
 import sys, glob, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -25,6 +26,10 @@ sys.stdout.reconfigure(encoding="utf-8")
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import LeaveOneGroupOut
 from scipy.stats import spearmanr
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 TEMEL = ["agac_orani", "agac_orani_y", "dnbr",
          "egim_derece", "yukselti_m", "yol_mesafe_km"]
@@ -69,7 +74,7 @@ def yaz(ad, o, taban=None):
 
 
 # -------------------------------------------------------------------- veri
-d = pd.read_csv("egitim_seti.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 ham = pd.concat([pd.read_csv(f) for f in sorted(glob.glob("parcalar_250m/*.csv"))],
                 ignore_index=True).drop_duplicates("hucre_id").set_index("hucre_id")
 for c in ["ndvi_oncesi", "ndvi_sonrasi", "ndvi_dusus"]:

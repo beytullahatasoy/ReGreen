@@ -4,12 +4,29 @@
 Kurallar birebir backend/ImportTool/Validation/FireValidator.cs ve
 ManifestValidator.cs'ten alindi. Amac: import calistirildiginda patlamasin.
 """
-import sys, json, glob, pathlib, warnings
+import sys, json, glob, pathlib, warnings, argparse
 import numpy as np, pandas as pd
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 warnings.filterwarnings("ignore")
 sys.stdout.reconfigure(encoding="utf-8")
 
-KOK = pathlib.Path(r"C:\Users\obugr\OneDrive\Masaüstü\ReGreen\sample-data\backend-data")
+_ap = argparse.ArgumentParser(
+    description="Teslim paketini backend dogrulayici kurallarina karsi kontrol eder.")
+_ap.add_argument("paket", nargs="?", default=None,
+                 help="Kontrol edilecek klasor (varsayilan: sample-data/backend-data)")
+_arg = _ap.parse_args()
+
+KOK = pathlib.Path(_arg.paket).resolve() if _arg.paket else yollar.TESLIM
+if not (KOK / "manifest.json").exists():
+    raise SystemExit(
+        "manifest.json bulunamadi: %s\n\n"
+        "Kullanim:\n"
+        "   python ai/teslim/teslim_onkontrol.py                 (varsayilan)\n"
+        "   python ai/teslim/teslim_onkontrol.py <klasor_yolu>   (baska paket)"
+        % KOK)
 SINIFLAR = {"COK_YUKSEK", "YUKSEK", "ORTA", "DUSUK"}
 DURUMLAR = {"predicted", "low_severity", "no_data"}
 

@@ -19,6 +19,7 @@ Sizinti kontrolu: yangin ici istatistikler tahmin aninda hesaplanabilir,
 cunku bir yangini butun olarak isliyoruz. Komsu ortalamalari da oyle.
 Hicbiri gelecek bilgisi degil.
 """
+import pathlib
 import sys, time, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -32,6 +33,10 @@ from sklearn.linear_model import Ridge
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 OZ = ["agac_orani", "agac_orani_y", "dnbr", "egim_derece",
       "yukselti_m", "ndvi_dusus", "yol_mesafe_km"]
@@ -124,7 +129,7 @@ def logo(kur, X, y, g, y_gercek=None):
 
 
 # ------------------------------------------------------------------ veri
-d = pd.read_csv("egitim_seti.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 y = d[HEDEF].to_numpy()
 g = d[GRUP].to_numpy()
 
@@ -201,7 +206,7 @@ for w in [0.3, 0.5, 0.7]:
            o["rho"], o["med"], o["poz"], o["n"], o["kotu"], 100 * o["top20"]))
 
 son = pd.DataFrame(sonuc).sort_values("rho", ascending=False)
-son.to_csv("sonuc_deney5.csv", index=False)
+son.to_csv(yollar.CIKTI / "sonuc_deney5.csv", index=False)
 
 bilgi("\n" + "=" * 84)
 bilgi("EN IYI 8")

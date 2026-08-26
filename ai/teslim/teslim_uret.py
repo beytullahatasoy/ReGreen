@@ -23,6 +23,7 @@ Calistirma:  python teslim_uret.py
 Cikti: teslim/ klasoru + model.joblib
 """
 
+import sys
 import json
 import pathlib
 import shutil
@@ -33,7 +34,16 @@ import joblib
 import numpy as np
 import pandas as pd
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
+
 warnings.filterwarnings("ignore")
+
+# Kardes klasorlerden import edebilmek icin ai/ kokunu ve boru_hatti/'ni
+# sys.path'e ekliyoruz. Bu blok asagidaki importlardan ONCE gelmeli -
+# yoksa firerecover_pipeline / pipeline_turkiye bulunamaz.
+sys.path.insert(0, str(yollar.AI_KOK / "boru_hatti"))
 
 import firerecover_pipeline as fp
 import oncelik
@@ -48,8 +58,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import LeaveOneGroupOut
 
-KOK = pathlib.Path(__file__).parent
-TESLIM = KOK / "teslim"
+KOK = yollar.ARA              # girdiler: turkiye_grid.csv, egitim_seti.csv...
+TESLIM = yollar.TESLIM        # cikti: sample-data/backend-data/
 
 MODEL_SURUM = "ridge_v2"
 SEMA_SURUM = "1.1"          # CSV sutunlari DEGISMEDI
@@ -218,8 +228,7 @@ def main():
     joblib.dump({"model": model, "oznitelikler": IC, "surum": MODEL_SURUM,
                  "egitim_satir": len(eg),
                  "egitim_grup": int(eg["grup_id"].nunique()),
-                 "egitim_tarihi": datetime.now(timezone.utc).isoformat()},
-                KOK / "model.joblib")
+                 "egitim_tarihi": datetime.now(timezone.utc).isoformat()}, yollar.CIKTI / "model.joblib")
     print("      model.joblib yazildi ({:,} satir ile egitildi)".format(len(eg)))
 
     # ------------------------------------- 2) kat disi tahminler (durustluk)
@@ -347,11 +356,19 @@ def main():
     (TESLIM / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    # Bunlar VERI degil KAYNAK dosya - scriptin kendi klasorunde duruyorlar.
+    # Eskiden veri kokunden (KOK) araniyordu; bulunamayinca SESSIZCE atlaniyor,
+    # paket eksik cikiyor ve kimse fark etmiyordu.
+    YANINDA = pathlib.Path(__file__).resolve().parent
     for ek, hedef in (("alan_eslesme.json", "alan_eslesme.json"),
                       ("oncelik.py", "oncelik.py"),
-                      ("teslim_okubeni.md", "OKUBENI.md")):
-        if (KOK / ek).exists():
-            shutil.copy(KOK / ek, TESLIM / hedef)
+                      ("teslim_okubeni.md", "OKUBENI.md"),
+                      ("../MODEL_GUNLUGU.md", "MODEL_GUNLUGU.md")):
+        kaynak = (YANINDA / ek).resolve()
+        if kaynak.exists():
+            shutil.copy(kaynak, TESLIM / hedef)
+        else:
+            print("  UYARI: {} bulunamadi, pakete eklenmedi".format(kaynak))
 
     boyut = sum(f.stat().st_size for f in TESLIM.iterdir()) / 1024 / 1024
     print("\n" + "=" * 76)

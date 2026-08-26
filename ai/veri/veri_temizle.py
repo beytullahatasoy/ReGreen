@@ -30,6 +30,7 @@ Calistirma:  python veri_temizle.py
 Cikti: turkiye_grid.csv (temizlenmis), temizlik_raporu.json
 """
 
+import sys
 import json
 import pathlib
 
@@ -37,8 +38,11 @@ import numpy as np
 import pandas as pd
 from scipy.spatial import cKDTree
 
-KOK = pathlib.Path(__file__).parent
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
+KOK = yollar.ARA          # ortak veri koku - ai/yollar.py
 ESLESME_M = 180          # iki hucre merkezi bu kadar yakinsa ayni yer sayilir
                          # (250 m hucrenin yari kosegeni 177 m)
 AYNI_OLAY_GUN = 30       # bu kadar yakin tarihli + agir cakisan = tek olay

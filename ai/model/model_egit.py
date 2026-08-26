@@ -11,6 +11,7 @@ kesintisiz kosuyor.
 Butun olcumler LeaveOneGroupOut ve GRUP ICI. Gruplar arasi kayma var
 (grup ortalamalari 0,123-0,405), gruplari karistiran metrik yaniltir.
 """
+import pathlib
 import sys, time, json, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -22,9 +23,14 @@ from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegresso
 from sklearn.linear_model import Ridge
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
 from sklearn.inspection import permutation_importance
 from lightgbm import LGBMRegressor
 from xgboost import XGBRegressor
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 OZNITELIK = ["agac_orani", "agac_orani_y", "dnbr", "egim_derece",
              "yukselti_m", "ndvi_dusus", "yol_mesafe_km"]
@@ -39,12 +45,25 @@ def bilgi(*a):
 
 # ------------------------------------------------------------- oznitelik
 def X_hazirla(d, nan="yerel"):
+    """Oznitelik matrisini hazirlar.
+
+    SIZINTI NOTU: burada SADECE satir ici islem yapiyoruz. Eskiden
+    yukselti_m'in eksikleri TUM VERININ medyaniyla dolduruluyordu - bu,
+    LOGO ayriminden once yapildigi icin test grubunun bilgisini egitime
+    sizdiriyordu. Etkisi kucuktu (16.074 satirin 3'u) ama ilke olarak
+    yanlisti.
+
+    Duzeltme: medyan doldurma boru hattina tasindi (SimpleImputer), boylece
+    her katta SADECE o katin egitim verisinden hesaplaniyor.
+
+    agac_orani_y -> agac_orani doldurmasi satir ici; baska satirdan bilgi
+    almiyor, sizinti degil, burada kalabilir.
+    """
     X = d[OZNITELIK].copy()
     if nan == "yerel":
         return X
     bayrak = X["agac_orani_y"].isna().astype("int8")
     X["agac_orani_y"] = X["agac_orani_y"].fillna(X["agac_orani"])
-    X["yukselti_m"] = X["yukselti_m"].fillna(X["yukselti_m"].median())
     if nan == "doldur_bayrak":
         X["agac_orani_y_eksik"] = bayrak
     return X
@@ -106,6 +125,19 @@ BASLIK = "%-26s %7s %7s %7s %8s %8s" % ("model", "rho_ort", "rho_med",
                                         "poz", "en_kotu", "top20")
 
 
+def _agirlikli_fit(m, X, y, w):
+    """sample_weight'i modele gecirir.
+
+    Modeller artik Pipeline icinde (SimpleImputer + tahminci). Pipeline.fit
+    dogrudan sample_weight kabul etmiyor, son adima yonlendirmek gerekiyor:
+    `pipeline.fit(X, y, sonadim__sample_weight=w)`.
+    """
+    if hasattr(m, "steps"):
+        m.fit(X, y, **{"%s__sample_weight" % m.steps[-1][0]: w})
+    else:
+        m.fit(X, y, sample_weight=w)
+
+
 def logo_tahmin(kur, X, y, g, sema="yok"):
     oof = np.full(len(y), np.nan)
     for tr, te in LeaveOneGroupOut().split(X, y, g):
@@ -114,14 +146,14 @@ def logo_tahmin(kur, X, y, g, sema="yok"):
         if w is None:
             m.fit(X.iloc[tr], y[tr])
         else:
-            m.fit(X.iloc[tr], y[tr], sample_weight=w)
+            _agirlikli_fit(m, X.iloc[tr], y[tr], w)
         oof[te] = m.predict(X.iloc[te])
     return oof
 
 
 # ------------------------------------------------------------------ veri
 T0 = time.time()
-d = pd.read_csv("egitim_seti.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 y, g = d[HEDEF].to_numpy(), d[GRUP].to_numpy()
 taban_dnbr = d["dnbr"].to_numpy()
 
@@ -136,9 +168,18 @@ bilgi("  N_DENEME=%d  IC_KAT=%d  TOHUM=%d" % (N_DENEME, IC_KAT, TOHUM))
 
 # -------------------------------------------------------------- ASAMA 1
 def RF(**k):
+    """RandomForest. SimpleImputer boru hattin ICINDE - medyan her katta
+    sadece o katin egitim verisinden hesaplansin diye (sizinti onlemi)."""
     v = dict(n_estimators=400, min_samples_leaf=5, random_state=TOHUM, n_jobs=-1)
     v.update(k)
-    return RandomForestRegressor(**v)
+    return make_pipeline(SimpleImputer(strategy="median"),
+                         RandomForestRegressor(**v))
+
+
+def RIDGE(**k):
+    """Ridge. Imputer + olcekleme boru hattin icinde, ayni sizinti onlemi."""
+    return make_pipeline(SimpleImputer(strategy="median"),
+                         StandardScaler(), Ridge(alpha=k.get("alpha", 1.0)))
 
 
 DENEY = [
@@ -151,8 +192,7 @@ DENEY = [
      lambda: LGBMRegressor(random_state=TOHUM, n_jobs=-1, verbose=-1)),
     ("XGBoost",            "yerel",         "yok",
      lambda: XGBRegressor(random_state=TOHUM, n_jobs=-1, tree_method="hist")),
-    ("Ridge (dogrusal)",   "doldur",        "yok",
-     lambda: make_pipeline(StandardScaler(), Ridge(alpha=1.0))),
+    ("Ridge (dogrusal)",   "doldur",        "yok", RIDGE),
 ]
 
 bilgi("\n" + "=" * 78)
@@ -175,8 +215,8 @@ o_dnbr = ozetle(grup_metrik(y, taban_dnbr, g))
 yaz("dNBR (SAHA TABANI)", o_dnbr)
 
 asama1 = pd.DataFrame(a1).sort_values("rho_ort", ascending=False)
-asama1.to_csv("sonuc_asama1.csv", index=False)
-np.savez("sonuc_oof_asama1.npz", **oof_saklanan)
+asama1.to_csv(yollar.CIKTI / "sonuc_asama1.csv", index=False)
+np.savez(yollar.CIKTI / "sonuc_oof_asama1.npz", **oof_saklanan)
 bilgi("\nSIRALAMA")
 bilgi(asama1[["ad", "rho_ort", "rho_med", "poz", "en_kotu", "top20", "sn"]]
       .to_string(index=False))
@@ -230,7 +270,6 @@ if AILE.startswith("Ridge"):
     # Etkilesim onemli bir soru: "dik yamac + agir yangin" birlikte,
     # ayri ayri toplamlarindan daha mi kotu? Duz Ridge bunu goremez.
     from sklearn.preprocessing import PolynomialFeatures
-    from sklearn.impute import SimpleImputer
     NAN = "doldur_bayrak"
 
     def kur(alpha=1.0, etkilesim=False, derece=2):
@@ -298,7 +337,7 @@ for i, (tr, te) in enumerate(LeaveOneGroupOut().split(X, y, g), 1):
           (i, d[GRUP].nunique(), g[te][0][:14], s, (time.time() - t2) / 60))
 
 ayar = pd.DataFrame(secilen)
-ayar.to_csv("sonuc_asama2_parametreler.csv", index=False)
+ayar.to_csv(yollar.CIKTI / "sonuc_asama2_parametreler.csv", index=False)
 
 o_ayar = ozetle(grup_metrik(y, oof_ayarli, g, taban_dnbr))
 o_taban = ozetle(grup_metrik(y, oof_saklanan[asama1.iloc[0]["ad"]], g, taban_dnbr))
@@ -344,12 +383,16 @@ if isinstance(en_p, dict) and "not" not in en_p:
         bilgi("     %-20s %s" % (k, v))
 
 # oznitelik onemi
-if hasattr(final, "feature_importances_"):
-    onem = pd.Series(final.feature_importances_, index=Xf.columns)
-    yontem = "dahili"
-elif hasattr(final, "__getitem__") and hasattr(final[-1], "coef_"):
-    onem = pd.Series(np.abs(final[-1].coef_), index=Xf.columns)
-    yontem = "katsayi"
+# Modeller artik Pipeline icinde sarili (SimpleImputer + ...), o yuzden
+# once son adima bakiyoruz. HistGB'nin feature_importances_ ozelligi yok,
+# o permutasyona dusuyor.
+_son = final[-1] if hasattr(final, "__getitem__") else final
+if hasattr(_son, "feature_importances_"):
+    onem = pd.Series(_son.feature_importances_, index=Xf.columns)
+    yontem = "dahili (impurity)"
+elif hasattr(_son, "coef_"):
+    onem = pd.Series(np.abs(_son.coef_), index=Xf.columns)
+    yontem = "katsayi buyuklugu"
 else:
     pi = permutation_importance(final, Xf, y, n_repeats=10,
                                 random_state=TOHUM, n_jobs=-1)
@@ -369,9 +412,9 @@ joblib.dump({"model": final, "oznitelik": list(Xf.columns), "nan": final_nan,
              "olcum": {k: float(v) for k, v in son.items()}},
             "regreen_model.joblib")
 d[[GRUP, "yangin_id", "hucre_id", HEDEF]].assign(oof_tahmin=final_oof) \
-    .to_csv("sonuc_oof_tahminler.csv", index=False)
-grup_metrik(y, final_oof, g, taban_dnbr).to_csv("sonuc_grup_skorlari.csv", index=False)
-onem.to_csv("sonuc_oznitelik_onemi.csv")
+    .to_csv(yollar.CIKTI / "sonuc_oof_tahminler.csv", index=False)
+grup_metrik(y, final_oof, g, taban_dnbr).to_csv(yollar.CIKTI / "sonuc_grup_skorlari.csv", index=False)
+onem.to_csv(yollar.CIKTI / "sonuc_oznitelik_onemi.csv")
 
 bilgi("\n" + "=" * 78)
 bilgi("SONUC")

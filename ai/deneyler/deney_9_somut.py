@@ -11,16 +11,21 @@ Ayni tahminleri su sorulara cevap olacak sekilde olcuyoruz:
   3) O %20'yi secince toplam hasarin yuzde kacini kapsiyoruz?
   4) Gercekte en kotu olan hucreyi kacinci sirada tahmin ediyoruz?
 """
+import pathlib
 import sys, warnings
 import numpy as np, pandas as pd
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 warnings.filterwarnings("ignore")
 sys.stdout.reconfigure(encoding="utf-8")
 rng = np.random.default_rng(0)
 
 HEDEF, GRUP = "kalan_acik", "grup_id"
 
-t = pd.read_csv("sonuc_oof_tahminler.csv")
-d = pd.read_csv("egitim_seti.csv")
+t = pd.read_csv(yollar.CIKTI / "sonuc_oof_tahminler.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 t["dnbr"] = d["dnbr"]
 y_ad, p_ad = HEDEF, "oof_tahmin"
 

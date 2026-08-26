@@ -11,6 +11,7 @@ Burada hepsini tek tek olcuyoruz.
 Onemli kural: sadece YANGINDAN 2 HAFTA SONRA elde olabilecek seyler
 aday olabilir. Gelecek bilgisi (2 yillik yagis gibi) sizintidir.
 """
+import pathlib
 import sys, glob, time, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -19,6 +20,10 @@ sys.stdout.reconfigure(encoding="utf-8")
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import LeaveOneGroupOut
 from scipy.stats import spearmanr
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 TEMEL = ["agac_orani", "agac_orani_y", "dnbr",
          "egim_derece", "yukselti_m", "yol_mesafe_km"]
@@ -62,7 +67,7 @@ def kos(d, sutunlar):
 
 # -------------------------------------------------------------------- veri
 print("veri birlestiriliyor...")
-d = pd.read_csv("egitim_seti.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 
 ham = pd.concat([pd.read_csv(f) for f in sorted(glob.glob("parcalar_250m/*.csv"))],
                 ignore_index=True)
@@ -138,5 +143,5 @@ for ad, sut, durum in ADAY:
           (ad, o["rho_ort"], fark, o["poz"], o["n_grup"],
            o["en_kotu"], 100 * o["top20"], durum))
 
-pd.DataFrame(sonuc).to_csv("deney_2_oznitelik.csv", index=False)
+pd.DataFrame(sonuc).to_csv(yollar.CIKTI / "deney_2_oznitelik.csv", index=False)
 print("\n-> deney_2_oznitelik.csv")

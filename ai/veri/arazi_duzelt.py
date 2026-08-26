@@ -26,6 +26,7 @@ Cikti: parcalar_250m/*.csv dosyalarina agac_orani_y ve arazi_kodu_y eklenir,
        turkiye_grid.csv yeniden birlestirilir.
 """
 
+import sys
 import json
 import pathlib
 import time
@@ -40,8 +41,11 @@ import firerecover_pipeline as fp
 import pipeline_turkiye as pt
 from rasterio.enums import Resampling
 
-KOK = pathlib.Path(__file__).parent
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
+KOK = yollar.ARA          # ortak veri koku - ai/yollar.py
 # Impact Observatory sinif kodlari
 IO = {1: "Su", 2: "Agaclik", 4: "Sulak alan", 5: "Tarim", 7: "Yerlesim",
       8: "Ciplak", 9: "Kar/buz", 10: "Bulut", 11: "Otlak/calilik"}

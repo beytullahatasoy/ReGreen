@@ -30,14 +30,18 @@ Calistirma:  python egitim_seti.py
 Cikti: egitim_seti.csv, egitim_seti_meta.json
 """
 
+import sys
 import json
 import pathlib
 
 import numpy as np
 import pandas as pd
 
-KOK = pathlib.Path(__file__).parent
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
+KOK = yollar.ARA          # ortak veri koku - ai/yollar.py
 # TAVAN - grup basina hucre siniri. VARSAYILAN: yok.
 #
 # Onceden 400'du. Amaci tek grubun veriyi ezmesini onlemekti (en buyuk grup
@@ -135,13 +139,25 @@ ELENEN = {
         "'Once cok bitki vardi, o yuzden acik buyuk' bir tahmin degil aritmetik. "
         "Ayrica ndvi_dusus ile birlikte konunca en kotu grup +0.174 -> -0.030 "
         "duserek 27/27 tutarliligi bozuyor.",
-    "baki_derece": "Ham derece +0.006, sin/cos donusumuyle -0.005. Ikisi de "
-                   "gurultu araliginda. Dairesel olma sorunu degilmis, "
-                   "gercekten sinyal yok.",
-    "yagis_uzun_ort_mm": "Zararli: -0.110. Sebep olculdu - yangin ICINDEKI "
-                         "degisimi 0.076, yani neredeyse sabit. Metrik grup "
-                         "ici oldugu icin sabit sutun bilgi tasimaz, sadece "
-                         "modele ezberlenecek gurultu verir.",
+    # DIKKAT: baki_derece ve yagis_uzun_ort_mm bu sozlukte IKI KEZ
+    # tanimlanmisti (6 oznitelikli donemde bir kez, 7 oznitelikli kurulumda
+    # tekrar). Python ikinci tanimi kabul edip ilkini sessizce eziyordu -
+    # yani ilk turun olcum kaydi kayboluyordu. Ikisi tek anahtarda birlestirildi.
+    "baki_derece": "IKI KEZ olculdu, ikisinde de gurultu cikti.\n"
+                   "      1) Ilk tur (6 oznitelik): rho=-0.061. Isaret tutarli "
+                   "ama buyukluk yok. Geri konarak olculdu: R2 +0.014, "
+                   "rho +0.000 - gurultu sinirinda.\n"
+                   "      2) Ikinci tur (7 oznitelik): ham derece +0.006, "
+                   "sin/cos donusumuyle -0.005. Dairesel olma sorunu "
+                   "degilmis, gercekten sinyal yok.",
+    "yagis_uzun_ort_mm": "IKI SEBEPLE elendi.\n"
+                         "      1) Agac oraninin vekili: rho=+0.466 ama yagisli "
+                         "yerde daha cok orman var, tasidigi bilgi zaten "
+                         "agac_orani icinde.\n"
+                         "      2) Zararli: -0.110. Yangin ICINDEKI degisimi "
+                         "0.076, yani neredeyse sabit. Metrik grup ici oldugu "
+                         "icin sabit sutun bilgi tasimaz, sadece modele "
+                         "ezberlenecek gurultu verir.",
     "yagis_sonrasi_2yil_mm / yagis_anomali":
         "SIZINTI - yangindan sonraki 2 yilin yagisi tahmin aninda bilinmiyor. "
         "Olculdu ve zaten zarar veriyor (-0.085 / -0.030), ama esas sebep "
@@ -151,12 +167,9 @@ ELENEN = {
                           "R2 -0.017, grup ici rho +0.009. Katki yok.",
     "su_mesafe_km": "13/27, p=1.00. Yazi-tura. Geri konarak olculdu: "
                     "R2 -0.044, rho +0.006.",
-    "baki_derece": "rho=-0.061. Isaret tutarli ama buyukluk yok. Geri konarak "
-                   "olculdu: R2 +0.014, rho +0.000 - gurultu sinirinda.",
-    "yagis_anomali": "Yangin duzeyinde test edildi (n=35): rho=+0.087, p=0.62. "
-                     "Agac orani sabitlenince de +0.095. Hicbir sey katmiyor.",
-    "yagis_uzun_ort_mm": "rho=+0.466 ama agac oraninin vekili: yagisli yerde "
-                         "daha cok orman var.",
+    "yagis_anomali_yangin_duzeyi":
+        "Yangin duzeyinde test edildi (n=35): rho=+0.087, p=0.62. "
+        "Agac orani sabitlenince de +0.095. Hicbir sey katmiyor.",
     "modis_alan_ha": "Yangin basina sabit. Grid'de bilgi tasimaz.",
     "bolge": "Ayni bolge icinde yagis 4 kat degisebiliyor (Rize 2.077 mm, "
              "Corum 511 mm). Kategorik bolge kotu bir vekil. Haritada filtre "

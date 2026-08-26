@@ -22,6 +22,7 @@ Ayrica karsilastirma icin:
   - HIC secim yapmayan sabit taban (Ridge A)
   - Deney 5'in yanli sayisi (ayni kod, secim disarida)
 """
+import pathlib
 import sys, time, itertools, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -35,6 +36,10 @@ from sklearn.linear_model import Ridge
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 OZ = ["agac_orani", "agac_orani_y", "dnbr", "egim_derece",
       "yukselti_m", "ndvi_dusus", "yol_mesafe_km"]
@@ -83,7 +88,7 @@ def grup_ici_sira(p, g):
 
 
 # ------------------------------------------------------------ ozellikler
-d = pd.read_csv("egitim_seti.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 y = d[HEDEF].to_numpy()
 g = d[GRUP].to_numpy()
 
@@ -224,7 +229,7 @@ for i, (tr, te) in enumerate(LeaveOneGroupOut().split(TAM, y, g), 1):
 
 o_durust = olc(y, oof_durust, g)
 sec = pd.DataFrame(secimler)
-sec.to_csv("sonuc_dogrulama_secimler.csv", index=False)
+sec.to_csv(yollar.CIKTI / "sonuc_dogrulama_secimler.csv", index=False)
 
 # ------------------------------------------------------------------ rapor
 bilgi("\n" + "=" * 82)
@@ -255,7 +260,7 @@ bilgi("  agirlik        : " + ", ".join("%.2f=%d" % (k, v) for k, v in
 
 pd.DataFrame([{"olcum": a, **o} for a, o in
               [("sabit", o_sabit), ("yanli", o_yanli), ("durust", o_durust)]]) \
-    .to_csv("sonuc_dogrulama.csv", index=False)
-np.save("sonuc_oof_durust.npy", oof_durust)
+    .to_csv(yollar.CIKTI / "sonuc_dogrulama.csv", index=False)
+np.save(yollar.CIKTI / "sonuc_oof_durust.npy", oof_durust)
 bilgi("\n  sure %.1f dk -> sonuc_dogrulama.csv, sonuc_dogrulama_secimler.csv"
       % ((time.time() - t0) / 60))
