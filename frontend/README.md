@@ -19,9 +19,20 @@ Geliştirme aşamasında.
 ## Çalıştırma
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
+
+## Doğrulama
+
+```bash
+npm run typecheck
+npm test
+npm run build
+```
+
+Servis regresyon testleri gerçek API istek üretimini, ProblemDetails hata dönüşünü,
+mock ağırlık doğrulamasını ve güncel 53 yangınlık `ridge_v2` paketini kapsar.
 
 ## Veri kaynağı
 
@@ -36,7 +47,8 @@ arayüzü üzerinden `MockFireService` veya `HttpFireService` ile yapılır.
 
 ## Backend API
 
-Backend hazır ve çalışıyor — model/veri tarafı henüz kesinleşmemiş olsa da API sözleşmesi sabit, geliştirmeye şimdiden başlanabilir.
+Backend ve `ridge_v2` veri paketi hazırdır; API sözleşmesi sabit olduğu için gerçek
+API veya mock veri kaynağıyla geliştirme yapılabilir.
 
 - **Sözleşme:** [`docs/api-contract.md`](../docs/api-contract.md) — 3 endpoint, tüm query parametreleri, hata kodları, DTO örnekleri.
 - **Kurulum (ilk kez, ~5 dakika):** API'nin verisi (53 yangın/37.163 hücre) repository'yle birlikte GELMEZ — LocalDB kurulu bir Windows makinesinde kendi kopyanı kurman gerekiyor. Adımlar [`backend/README.md`](../backend/README.md#yerel-veritabanını-sıfırdan-kurma)'de ("Yerel veritabanını sıfırdan kurma"): `dotnet ef database update` + `dotnet run --project backend/ImportTool -- sample-data/backend-data/manifest.json`. Bunlardan sonra `dotnet run --project backend/ReGreen.Api` ile API ayağa kalkar, varsayılan `http://localhost:5066` (bkz. `backend/ReGreen.Api/Properties/launchSettings.json`). `/openapi/v1.json`'dan makine-okunur şema da alınabilir (sadece Development ortamında).

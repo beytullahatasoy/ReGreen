@@ -14,6 +14,7 @@ import type {
   PriorityClass,
   SeverityClass,
 } from "../types";
+import { ApiError } from "./ApiError";
 import type { FireService } from "./FireService";
 
 interface Metadata {
@@ -108,6 +109,7 @@ export class MockFireService implements FireService {
 
   async getCells(fireId: string, query: CellsQuery = {}): Promise<CellsResponse> {
     this.assertKnownFire(fireId);
+    if (query.weights) validatePriorityWeights(query.weights);
     const [metadata, cells] = await Promise.all([this.loadMetadata(fireId), this.loadCells(fireId)]);
     const weights = query.weights ?? metadata.priority_weights;
     const total = weights.recovery + weights.erosion + weights.access;
@@ -158,6 +160,20 @@ export class MockFireService implements FireService {
 
   private loadCells(fireId: string): Promise<Cell[]> {
     return cached(this.cellsCache, fireId, async () => parseCells(await requireLoader(cellLoaders, fireId)()));
+  }
+}
+
+function validatePriorityWeights(weights: { recovery: number; erosion: number; access: number }): void {
+  const values = [weights.recovery, weights.erosion, weights.access];
+  const total = values.reduce((sum, value) => sum + value, 0);
+  if (values.some((value) => !Number.isFinite(value) || value < 0) || !Number.isFinite(total) || total <= 0) {
+    throw new ApiError({
+      type: "https://regreen/errors/invalid-priority-weights",
+      title: "Invalid priority weights",
+      status: 400,
+      code: "INVALID_PRIORITY_WEIGHTS",
+      detail: "recovery, erosion and access must be finite, non-negative, and sum to a positive number.",
+    });
   }
 }
 
