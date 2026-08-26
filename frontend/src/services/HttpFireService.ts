@@ -5,7 +5,7 @@ import type { FireService } from "./FireService";
 export class HttpFireService implements FireService {
   private readonly baseUrl: string;
 
-  constructor(baseUrl: string, private readonly fetcher: typeof fetch = fetch) {
+  constructor(baseUrl: string, private readonly fetcher: typeof fetch = (...args) => fetch(...args)) {
     this.baseUrl = baseUrl.replace(/\/$/, "");
   }
 
