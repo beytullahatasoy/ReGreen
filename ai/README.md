@@ -100,6 +100,17 @@ python ai/teslim/teslim_uret.py               # -> sample-data/backend-data/
 python ai/teslim/teslim_onkontrol.py
 ```
 
+Teslim üreticisi mevcut `sample-data/backend-data/` paketini doğrudan
+değiştirmez. Yeni paketi staging klasöründe üretip ön kontrolden geçirir;
+değiştirme sırasında hata olursa önceki paketi `.eski` yedeğinden geri yükler.
+
+Yol ve paket değiştirme güvenlik testleri yalnızca Python standart
+kütüphanesini kullanır:
+
+```bash
+python -m unittest discover -s ai/tests -v
+```
+
 > **Hazır veriyle başlamak:** 1-3. adımlar uydu verisi çekiyor, saatler
 > sürer. Elinde üretilmiş `egitim_seti.csv` varsa `ai/data/ara/` altına
 > koyup doğrudan 5. adımdan devam edebilirsin.

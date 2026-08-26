@@ -16,6 +16,7 @@ yapiyor, dosyanin en ustunde cagrilmali.
 """
 import os
 import pathlib
+import shutil
 import sys
 
 # ai/ klasorunun kendisi
@@ -56,6 +57,10 @@ def yol_ekle():
         k = str(d)
         if k not in sys.path:
             sys.path.insert(0, k)
+    # Her giris noktasi bu ortak bootstrap fonksiyonunu cagiriyor. Veri
+    # dizinlerini burada hazirlamak, temiz bir makinede moduller daha main()
+    # baslamadan alt klasor olusturmaya calistiginda hata vermesini onler.
+    hazirla()
     return AI_KOK
 
 
@@ -94,6 +99,45 @@ def gerekli(*yollar):
         "   export REGREEN_AI_DATA=/veri/regreen     (Linux/macOS)",
     ]
     raise SystemExit("\n".join(satir))
+
+
+def dizini_guvenle_degistir(yeni, hedef):
+    """Hazirlanmis bir dizini mevcut hedefin yerine rollback ile koyar.
+
+    Dizinler ayni ust klasorde olmalidir; boylece tasima ayni dosya sistemi
+    icinde rename olarak gerceklesir. Mevcut hedef once ``.eski`` adiyla
+    yedeklenir. Yeni dizinin tasinmasi basarisiz olursa eski hedef geri
+    yuklenir. Basarili olursa yedek temizlenir.
+    """
+    yeni = pathlib.Path(yeni).resolve()
+    hedef = pathlib.Path(hedef).resolve()
+    if yeni.parent != hedef.parent:
+        raise ValueError("Yeni ve hedef dizin ayni ust klasorde olmali")
+    if not yeni.is_dir():
+        raise FileNotFoundError("Yeni paket dizini bulunamadi: %s" % yeni)
+
+    yedek = hedef.with_name(hedef.name + ".eski")
+
+    # Onceki bir kesintiden yalnizca yedek kaldiysa calisan paketi geri getir.
+    if yedek.exists() and not hedef.exists():
+        yedek.rename(hedef)
+    elif yedek.exists():
+        shutil.rmtree(yedek)
+
+    eski_tasindi = False
+    if hedef.exists():
+        hedef.rename(yedek)
+        eski_tasindi = True
+
+    try:
+        yeni.rename(hedef)
+    except BaseException:
+        if eski_tasindi and yedek.exists() and not hedef.exists():
+            yedek.rename(hedef)
+        raise
+
+    if yedek.exists():
+        shutil.rmtree(yedek)
 
 
 if __name__ == "__main__":

@@ -35,14 +35,13 @@ DURUMLARA GORE
     no_data       -> skor None, sinif None   (gercekten bilmiyoruz)
 """
 
-import sys
-import pathlib
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
-import yollar
-yollar.yol_ekle()
+# NOT: bu dosya baska bir I/O ya da kardes-modul importu yapmiyor, bu yuzden
+# yollar.py'ye ihtiyaci yok. Bilerek boyle - teslim_uret.py bunu STANDALONE
+# olarak sample-data/backend-data/oncelik.py'ye kopyalar (yollar.py ORAYA
+# KOPYALANMAZ); bir yollar bagimliligi eklenirse o kopya calismaz hale gelir.
 
 # Varsayilan agirliklar. Arayuzdeki kaydiricilarin baslangic degeri.
 VARSAYILAN_AGIRLIK = {

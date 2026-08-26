@@ -153,6 +153,7 @@ def logo_tahmin(kur, X, y, g, sema="yok"):
 
 # ------------------------------------------------------------------ veri
 T0 = time.time()
+yollar.gerekli(yollar.ARA / "egitim_seti.csv")
 d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 y, g = d[HEDEF].to_numpy(), d[GRUP].to_numpy()
 taban_dnbr = d["dnbr"].to_numpy()
@@ -410,7 +411,7 @@ son = ozetle(grup_metrik(y, final_oof, g, taban_dnbr))
 joblib.dump({"model": final, "oznitelik": list(Xf.columns), "nan": final_nan,
              "parametre": en_p, "hedef": HEDEF, "aile": AILE,
              "olcum": {k: float(v) for k, v in son.items()}},
-            "regreen_model.joblib")
+            yollar.CIKTI / "regreen_model.joblib")
 d[[GRUP, "yangin_id", "hucre_id", HEDEF]].assign(oof_tahmin=final_oof) \
     .to_csv(yollar.CIKTI / "sonuc_oof_tahminler.csv", index=False)
 grup_metrik(y, final_oof, g, taban_dnbr).to_csv(yollar.CIKTI / "sonuc_grup_skorlari.csv", index=False)

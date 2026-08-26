@@ -27,6 +27,7 @@ PENCERE_SONU = 765            # yangin + 765 gun = yil2 penceresinin sonu
 MIN_ETIKETLI = 30             # bu kadar etiketli hucresi olmayan yangin,
                               # GroupKFold'da bir kat olusturamaz
 
+yollar.gerekli(yollar.ARA / "turkiye_grid.csv")
 df = pd.read_csv(yollar.ARA / "turkiye_grid.csv", low_memory=False)
 
 # yeniden calistirilabilir olmasi icin onceki bayraklari at
@@ -51,8 +52,8 @@ ozet["egitime_uygun"] = (ozet["etiketli"] >= MIN_ETIKETLI) & ozet["tam"] & \
                         (~ozet["uyari"].str.contains("alan uyusmuyor"))
 
 df = df.merge(ozet[["yangin_id", "egitime_uygun"]], on="yangin_id", how="left")
-df.to_csv("turkiye_grid.csv", index=False, encoding="utf-8-sig")
-ozet.to_csv("yangin_ozeti.csv", index=False, encoding="utf-8-sig")
+df.to_csv(yollar.ARA / "turkiye_grid.csv", index=False, encoding="utf-8-sig")
+ozet.to_csv(yollar.ARA / "yangin_ozeti.csv", index=False, encoding="utf-8-sig")
 
 # --- rapor -------------------------------------------------------------
 eg = df[df["etiket_gecerli"]]

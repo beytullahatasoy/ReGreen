@@ -92,6 +92,7 @@ def arazi_yillik(grid, yil):
 
 
 def main():
+    yollar.gerekli(KOK / "yanginlar.json", KOK / "turkiye_grid.csv")
     yanginlar = {y["id"]: y for y in
                  json.loads((KOK / "yanginlar.json").read_text(encoding="utf-8"))}
     parcalar = sorted((KOK / f"parcalar_{pt.HUCRE_M}m").glob("*.csv"))

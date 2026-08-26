@@ -79,6 +79,7 @@ class Birlestir:
 
 
 def main():
+    yollar.gerekli(KOK / "turkiye_grid.csv")
     df = pd.read_csv(KOK / "turkiye_grid.csv", low_memory=False)
     rapor = {"baslangic_satir": len(df)}
     print("=" * 78)

@@ -43,6 +43,8 @@ def baslik(t):
 
 
 def main():
+    yollar.gerekli(KOK / "turkiye_grid.csv", KOK / "egitim_seti.csv",
+                   KOK / "egitim_seti_meta.json", KOK / "yangin_ozeti.csv")
     print("=" * 78)
     print("SON DENETIM")
     print("=" * 78)

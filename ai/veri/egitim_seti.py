@@ -217,6 +217,7 @@ def arazi_ikili(df):
 
 
 def main():
+    yollar.gerekli(KOK / "turkiye_grid.csv")
     ham = pd.read_csv(KOK / "turkiye_grid.csv", low_memory=False)
     print("=" * 78)
     print("EGITIM SETI URETIMI")

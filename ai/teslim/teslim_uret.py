@@ -3,7 +3,7 @@
 Backend'e TAM TESLIM paketi uretir
 ==================================
 
-Ornek paket degil - 55 yanginin tamami, gercek model ciktisiyla.
+Ornek paket degil - 53 yanginin tamami, gercek model ciktisiyla.
 
 DURUSTLUK NOTU
 --------------
@@ -19,14 +19,15 @@ Egitimde kullanilan yanginlara dogrudan model tahmini vermek IYIMSER olur
 Boylece backend'in gordugu sayilar sahada gorecegi sayilarla ayni
 zorlukta.
 
-Calistirma:  python teslim_uret.py
-Cikti: teslim/ klasoru + model.joblib
+Calistirma:  python ai/teslim/teslim_uret.py
+Cikti: sample-data/backend-data/ + ai/data/cikti/model.joblib
 """
 
 import sys
 import json
 import pathlib
 import shutil
+import subprocess
 import warnings
 from datetime import datetime, timezone
 
@@ -204,6 +205,17 @@ def temiz(v):
 
 
 def main():
+    # GUVENLIK: eskiden mevcut TESLIM (sample-data/backend-data/) once
+    # silinir, girdiler SONRA okunurdu - girdiler eksikse calisan paket
+    # kaybolup script FileNotFoundError ile yariminda cokuyordu. Once
+    # girdileri dogrula, sonra GECICI bir klasore uret, en sonda atomik
+    # olarak degistir - hicbir asamada calisan paket riske girmez.
+    yollar.gerekli(KOK / "turkiye_grid.csv", KOK / "egitim_seti.csv",
+                   KOK / "yangin_ozeti.csv", KOK / "yanginlar.json")
+
+    global TESLIM
+    nihai_hedef = TESLIM
+    TESLIM = nihai_hedef.with_name(nihai_hedef.name + ".yeni")
     if TESLIM.exists():
         shutil.rmtree(TESLIM)
     TESLIM.mkdir()
@@ -389,7 +401,19 @@ def main():
     print("  durum dagilimi: " + "  ".join(
         "{} {:,} (%{:.0f})".format(d, n, n / manifest["total_cells"] * 100)
         for d, n in sorted(t.items())))
-    print("\n  -> teslim/ klasoru hazir")
+
+    # Uretilen staging paketini, mevcut calisan pakete dokunmadan once ayni
+    # teslim dogrulayicisiyla denetle. Kontrol basarisizsa subprocess hata
+    # verir ve nihai_hedef oldugu gibi kalir.
+    print("\n[5/5] staging paket dogrulaniyor")
+    kontrol = pathlib.Path(__file__).resolve().parent / "teslim_onkontrol.py"
+    subprocess.run([sys.executable, str(kontrol), str(TESLIM)], check=True)
+
+    # Mevcut paketi once .eski olarak yedekle; yeni dizinin rename'i hata
+    # verirse yollar.dizini_guvenle_degistir eski paketi geri yukler.
+    yollar.dizini_guvenle_degistir(TESLIM, nihai_hedef)
+    TESLIM = nihai_hedef
+    print("\n  -> {} hazir".format(nihai_hedef))
 
 
 if __name__ == "__main__":

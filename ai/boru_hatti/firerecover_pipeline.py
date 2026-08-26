@@ -557,7 +557,7 @@ def main():
         return
 
     tam = pd.concat(tablolar, ignore_index=True)
-    tam.to_csv("firerecover_grid.csv", index=False, encoding="utf-8-sig")
+    tam.to_csv(yollar.ARA / "firerecover_grid.csv", index=False, encoding="utf-8-sig")
 
     # --- ozet ---------------------------------------------------------
     print("\n" + "=" * 74)

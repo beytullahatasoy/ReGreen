@@ -88,6 +88,7 @@ def il_bul(lat, lon, onbellek):
 
 
 def main():
+    yollar.gerekli(KOK / "yanginlar.json")
     yanginlar = json.loads((KOK / "yanginlar.json").read_text(encoding="utf-8"))
     onbellek = (json.loads(ONBELLEK.read_text(encoding="utf-8"))
                 if ONBELLEK.exists() else {})

@@ -53,6 +53,7 @@ def grup_ici_spearman(pr, y, gruplar, en_az=20):
 
 
 def main():
+    yollar.gerekli(KOK / "egitim_seti.csv", KOK / "egitim_seti_meta.json")
     d = pd.read_csv(KOK / "egitim_seti.csv", encoding="utf-8-sig")
     meta = json.loads((KOK / "egitim_seti_meta.json").read_text(encoding="utf-8"))
     OZ = meta["oznitelikler"]
