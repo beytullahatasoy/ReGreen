@@ -10,6 +10,7 @@ A) "Kopya ceken model neden 1.00 vermiyor?"
 B) "En kucuk kac hektarlik yangini alabiliyoruz, neden altina inemiyoruz?"
    Esigi dusurmenin bedelini sayilarla gosteriyoruz.
 """
+import pathlib
 import sys, json, glob, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -23,6 +24,10 @@ from sklearn.linear_model import Ridge
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 OZ = ["agac_orani", "agac_orani_y", "dnbr", "egim_derece",
       "yukselti_m", "ndvi_dusus", "yol_mesafe_km"]
@@ -41,7 +46,7 @@ def olc(y, p, g):
     return float(np.mean(r))
 
 
-d = pd.read_csv("egitim_seti.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 y, g = d[HEDEF].to_numpy(), d[GRUP].to_numpy()
 X = d[OZ]
 Xd = X.copy()
@@ -87,7 +92,7 @@ print("\n" + "=" * 80)
 print("B) YANGIN BUYUKLUGU ESIGI")
 print("=" * 80)
 
-yang = json.loads(open("yanginlar.json", encoding="utf-8").read())
+yang = json.loads(open(yollar.ARA / "yanginlar.json", encoding="utf-8").read())
 ya = pd.DataFrame(yang)[["id", "alan_ha", "tarih"]]
 
 ham = pd.concat([pd.read_csv(f)[["yangin_id", "hucre_id", "yanik",
@@ -136,7 +141,7 @@ print(ya.groupby(b).agg(yangin=("id", "size"),
                         egitime_giren=("egitimde", "sum")).to_string())
 
 # grup ici rho ile grup boyutu iliskisi
-sk = pd.read_csv("sonuc_grup_skorlari.csv")
+sk = pd.read_csv(yollar.CIKTI / "sonuc_grup_skorlari.csv")
 print("\n  KUCUK GRUPLARDA MODEL NASIL?")
 for alt, ust in [(0, 60), (60, 150), (150, 500), (500, 1e9)]:
     s = sk[(sk["n"] >= alt) & (sk["n"] < ust)]

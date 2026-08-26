@@ -17,6 +17,7 @@ gurultu az; r=0.80 ise ciddi gurultu var ve tavanimizi o belirliyor.
 Guvenilirlik r ise, o hedefi tahmin eden HICBIR model
 sqrt(r)'nin ustune cikamaz - istatistikte klasik sonuc.
 """
+import pathlib
 import sys, json, time, warnings
 import numpy as np
 warnings.filterwarnings("ignore")
@@ -25,6 +26,10 @@ sys.stdout.reconfigure(encoding="utf-8")
 import firerecover_pipeline as fp
 import pipeline_turkiye as pt
 from scipy.stats import spearmanr, pearsonr
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 TEST = ["EGE_2021_08", "AKD_2023_02"]      # kucuk bbox = hizli
 HUCRE_M = pt.HUCRE_M
@@ -77,7 +82,7 @@ def kompozit(grid, period, gunler_listesi=None, maks_gun=6, atla=0):
 
 
 yanginlar = {y["id"]: y for y in
-             json.loads(open("yanginlar.json", encoding="utf-8").read())}
+             json.loads(open(yollar.ARA / "yanginlar.json", encoding="utf-8").read())}
 
 print("=" * 84)
 print("HEDEF GURULTUSU TESTI")

@@ -29,6 +29,8 @@ Calistirma:
     python firerecover_pipeline.py
 """
 
+import sys
+import pathlib
 import json
 import math
 import time
@@ -49,6 +51,10 @@ from rasterio.warp import reproject, transform_bounds
 from rasterio.warp import transform as warp_transform
 from rasterio.windows import from_bounds
 from scipy.spatial import cKDTree
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 warnings.filterwarnings("ignore")
 
@@ -598,7 +604,7 @@ def main():
         v = ornek[k]
         print(f"    {k:<20} = {v if not isinstance(v, float) else round(v, 4)}")
 
-    with open("firerecover_ozet.json", "w", encoding="utf-8") as f:
+    with open(yollar.ARA / "firerecover_ozet.json", "w", encoding="utf-8") as f:
         json.dump({"hucre_m": HUCRE_M, "toplam_hucre": len(tam),
                    "gecerli_hucre": int(tam["gecerli_hucre"].sum()),
                    "yanik_hucre": int(tam["yanik"].sum()),

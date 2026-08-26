@@ -8,6 +8,7 @@ ustune yeni bir sey katiyor mu, yoksa ayni seyi mi tekrarliyor?
 
 Guncel kurulumla (7 oznitelik, HistGB, LOGO 27 grup) olculuyor.
 """
+import pathlib
 import sys, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -16,6 +17,10 @@ sys.stdout.reconfigure(encoding="utf-8")
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import LeaveOneGroupOut
 from scipy.stats import spearmanr
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 TEMEL = ["agac_orani", "agac_orani_y", "dnbr", "egim_derece",
          "yukselti_m", "ndvi_dusus", "yol_mesafe_km"]
@@ -53,7 +58,7 @@ def kos(d, sut, kategorik=None):
     return olc(y, oof, g)
 
 
-d = pd.read_csv("egitim_seti.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 y, g = d[HEDEF].to_numpy(), d[GRUP].to_numpy()
 
 # ---- arazi sinifi: yangin ICINDE ne kadar degisiyor? --------------------

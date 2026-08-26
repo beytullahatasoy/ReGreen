@@ -10,18 +10,24 @@ Yaptigi iki sey:
 
 Calistirma: python veri_son_hal.py
 """
+import sys
+import pathlib
 import json
 from datetime import datetime, timedelta
 
 import numpy as np
 import pandas as pd
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
+
 BUGUN = datetime.now()
 PENCERE_SONU = 765            # yangin + 765 gun = yil2 penceresinin sonu
 MIN_ETIKETLI = 30             # bu kadar etiketli hucresi olmayan yangin,
                               # GroupKFold'da bir kat olusturamaz
 
-df = pd.read_csv("turkiye_grid.csv", low_memory=False)
+df = pd.read_csv(yollar.ARA / "turkiye_grid.csv", low_memory=False)
 
 # yeniden calistirilabilir olmasi icin onceki bayraklari at
 df = df.drop(columns=[c for c in ("etiket_tam", "egitime_uygun")

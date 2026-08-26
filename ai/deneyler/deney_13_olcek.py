@@ -11,16 +11,21 @@ Soru: hucreleri bloklar halinde toplarsak model daha mi guvenilir olur?
 Istatistiksel beklenti: evet. Bagimsiz hatalar ortalama alinca sonuyor.
 Ama ne kadar? Olcelim.
 """
+import pathlib
 import sys, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
 sys.stdout.reconfigure(encoding="utf-8")
 from scipy.stats import spearmanr
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
+
 HEDEF, GRUP, YANGIN = "kalan_acik", "grup_id", "yangin_id"
 
-t = pd.read_csv("sonuc_oof_tahminler.csv")
-d = pd.read_csv("egitim_seti.csv")
+t = pd.read_csv(yollar.CIKTI / "sonuc_oof_tahminler.csv")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
 t["lat"], t["lon"], t["dnbr"] = d["lat"], d["lon"], d["dnbr"]
 
 DER = 0.00225           # ~250 m enlemde

@@ -16,7 +16,11 @@ import sys
 import numpy as np
 import pandas as pd
 
-KOK = pathlib.Path(__file__).parent
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
+
+KOK = yollar.ARA          # ortak veri koku - ai/yollar.py
 TR_SINIR = (25.5, 35.7, 45.0, 42.4)     # lon_min, lat_min, lon_max, lat_max
 
 gecti, kaldi, uyari = [], [], []

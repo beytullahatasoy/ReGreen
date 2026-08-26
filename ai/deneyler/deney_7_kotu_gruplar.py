@@ -10,6 +10,7 @@ Uc hipotez test ediliyor:
   H3  Bolge egitimde temsil edilmiyor (Marmara'da tek grup var,
       disari cikinca egitimde hic Marmara kalmiyor)
 """
+import pathlib
 import sys, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -17,12 +18,16 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 from scipy.stats import spearmanr
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
+
 OZ = ["agac_orani", "agac_orani_y", "dnbr", "egim_derece",
       "yukselti_m", "ndvi_dusus", "yol_mesafe_km"]
 HEDEF, GRUP = "kalan_acik", "grup_id"
 
-d = pd.read_csv("egitim_seti.csv")
-skor = pd.read_csv("sonuc_grup_skorlari.csv").set_index("grup")
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv")
+skor = pd.read_csv(yollar.CIKTI / "sonuc_grup_skorlari.csv").set_index("grup")
 d["rho_grup"] = d[GRUP].map(skor["rho"])
 
 ozet = (d.groupby(GRUP)
@@ -126,5 +131,5 @@ for gid in ozet.index[:3]:
         isaret = "  TERS!" if np.sign(v) != np.sign(tum) and abs(v) > .1 else ""
         print("       %-16s %+0.3f   (tum veride %+0.3f)%s" % (c, v, tum, isaret))
 
-ozet.to_csv("sonuc_grup_tanilama.csv")
+ozet.to_csv(yollar.CIKTI / "sonuc_grup_tanilama.csv")
 print("\n-> sonuc_grup_tanilama.csv")

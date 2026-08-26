@@ -35,8 +35,14 @@ DURUMLARA GORE
     no_data       -> skor None, sinif None   (gercekten bilmiyoruz)
 """
 
+import sys
+import pathlib
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 # Varsayilan agirliklar. Arayuzdeki kaydiricilarin baslangic degeri.
 VARSAYILAN_AGIRLIK = {

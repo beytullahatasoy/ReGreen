@@ -23,6 +23,7 @@ Bu duzeltme egitim verisini degistirmez, sadece dogru anlatmamizi saglar.
 Calistirma:  python bolge_duzelt.py
 """
 
+import sys
 import json
 import pathlib
 import time
@@ -30,7 +31,11 @@ import time
 import pandas as pd
 import requests
 
-KOK = pathlib.Path(__file__).parent
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
+
+KOK = yollar.ARA          # ortak veri koku - ai/yollar.py
 ONBELLEK = KOK / "onbellek" / "il_bolge.json"
 
 UA = {"User-Agent": "FireRecoverAI/0.3 (Huawei ICT Competition student project)"}

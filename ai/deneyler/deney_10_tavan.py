@@ -25,6 +25,7 @@ Aradaki farklar bize nerede kayip verdigimizi soyler:
 Ayrica yeni bir oznitelik deneniyor:
     YANMAMIS ALANA MESAFE - tohum kaynagi yakinligi.
 """
+import pathlib
 import sys, glob, time, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings("ignore")
@@ -38,6 +39,10 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
 
 OZ = ["agac_orani", "agac_orani_y", "dnbr", "egim_derece",
       "yukselti_m", "ndvi_dusus", "yol_mesafe_km"]
@@ -78,7 +83,7 @@ def HGB():
     return HistGradientBoostingRegressor(random_state=TOHUM)
 
 
-d = pd.read_csv("egitim_seti.csv").reset_index(drop=True)
+d = pd.read_csv(yollar.ARA / "egitim_seti.csv").reset_index(drop=True)
 y = d[HEDEF].to_numpy()
 g = d[GRUP].to_numpy()
 
@@ -217,5 +222,5 @@ else:
     bilgi("         Aradaki fark GENELLEME acigi -> daha cok yangin ve daha")
     bilgi("         genellenebilir oznitelikler bu bosluğu kapatabilir.")
 
-s.to_csv("sonuc_tavan.csv")
+s.to_csv(yollar.CIKTI / "sonuc_tavan.csv")
 bilgi("\n-> sonuc_tavan.csv")

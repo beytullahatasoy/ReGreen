@@ -27,3 +27,9 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 *.tsbuildinfo
+
+# AI veri koku - buyuk ara dosyalar (turkiye_grid.csv ~106 MB, parcalar_250m/)
+# Nasil uretildikleri ai/README.md'de. Konum: ai/yollar.py
+ai/data/
+ai/**/__pycache__/
+*.joblib

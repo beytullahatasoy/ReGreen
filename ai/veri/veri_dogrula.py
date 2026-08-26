@@ -11,6 +11,7 @@ olcer.
 Calistirma:  python veri_dogrula.py
 """
 
+import sys
 import json
 import pathlib
 
@@ -21,7 +22,11 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import GroupKFold, KFold
 from sklearn.metrics import r2_score, mean_absolute_error
 
-KOK = pathlib.Path(__file__).parent
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+import yollar
+yollar.yol_ekle()
+
+KOK = yollar.ARA          # ortak veri koku - ai/yollar.py
 TOHUM = 0
 
 
