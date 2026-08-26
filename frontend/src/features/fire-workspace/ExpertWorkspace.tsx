@@ -26,7 +26,7 @@ export function ExpertWorkspace() {
         selectedCell={data.selectedCell} scenarioHighlights={data.scenarioHighlights} scenarioFeedback={data.scenarioFeedback}
         onSelectCell={selectCell} />
       <button className="mobile-panel-toggle" onClick={() => setControlsOpen((open) => !open)} aria-label="Toggle controls">Controls</button>
-      <CellDetailPanel cell={data.selectedCell} priorityTransition={data.selectedCell && data.scenarioComparison ? data.scenarioComparison.transitions.get(data.selectedCell.cell_id) ?? null : null} onClose={() => data.setSelectedCell(null)} />
+      <CellDetailPanel cell={data.selectedCell} cellsResponse={data.cellsResponse} priorityTransition={data.selectedCell && data.scenarioComparison ? data.scenarioComparison.transitions.get(data.selectedCell.cell_id) ?? null : null} onClose={() => data.setSelectedCell(null)} />
     </div>
   </main>;
 }
