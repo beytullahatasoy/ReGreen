@@ -33,7 +33,7 @@ yılda verdiği fiilî cevap.
 | `veri/` | Temizlik, doğrulama, eğitim seti üretimi |
 | `model/` | Model eğitimi (3 aşama) ve Colab defteri |
 | `deneyler/` | 12 ölçüm script'i — denenen ve elenen her şey |
-| `teslim/` | Öncelik formülü, teslim paketi üretimi, ön kontrol |
+| `teslim/` | Öncelik formülü, hüküm katmanı, teslim paketi üretimi, ön kontrol |
 
 ---
 
@@ -98,6 +98,11 @@ python ai/teslim/teslim_uret.py               # -> sample-data/backend-data/
 
 # 7. Ön kontrol — backend doğrulayıcı kurallarına karşı
 python ai/teslim/teslim_onkontrol.py
+
+# 8. Hüküm katmanı — hücre başına düz Türkçe öneri
+python ai/teslim/hukum.py --yaz               # -> *_hukumler.csv + sözlük
+python ai/teslim/yangin_ozeti_uret.py --yaz   # -> yangın özeti + paragraf
+python ai/teslim/hukum_kontrol.py             # 14 kontrol
 ```
 
 > **Hazır veriyle başlamak:** 1-3. adımlar uydu verisi çekiyor, saatler
@@ -228,11 +233,50 @@ okunuyor. Referans uygulama: `teslim/oncelik.py` (backend'deki
 
 ---
 
+## Hüküm katmanı
+
+Öncelik skoru *"ne zaman gidilecek"* sorusunu cevaplıyor. Hüküm katmanı
+ikincisini: **"gidince ne yapılacak".**
+
+```
+KAPSAM_DISI · SAHA_KONTROL · IZLE · EROZYON_ONCE
+DIKIM_ADAYI · ONCELIGE_GORE · GENCLESME_IZLE
+```
+
+Her hücre tam olarak bir hüküm alıyor; üstüne sıfır veya birkaç ek koşul
+biniyor (`ERISIM_ZOR`, `DIK_YAMAC`, `DUSUK_GUVEN` …). Çıktı düz Türkçe iki
+metin: `ozet` (panelin üstü) ve `ayrinti` (detay bölümü).
+
+**Hüküm ağırlıktan bağımsız.** Kullanıcı kaydırıcıyı oynattığında sıra
+değişir, hüküm değişmez — bu yüzden bir kez üretilip dosyaya yazılabiliyor.
+
+Kural tabanlı, dil modeli değil: aynı hücre her zaman aynı cümleyi veriyor
+ve `tetikleyen` alanı hükmü hangi ölçümün doğurduğunu yazıyor
+(`toparlanma=0.22 egim=35.4>=25 <0.35`). Denetlenebilirlik ürün gereği.
+
+Cümle metinleri kodda değil `teslim/cumleler.json` içinde; tür önerisi ise
+`teslim/yetisme_ortami.json` tablosundan okunuyor — **şu an örnek tablo,
+`onaylandi: false`.**
+
+Bir üst ölçekte **yangın özeti** var: bölge seçildiğinde okunacak tek
+paragraf, 53 yangının her biri için. Kaynağı `yangin_ozetleri.json`
+içindeki sayı bloğu — büyüklük, şiddet, hüküm dağılımı, arazi, erişim,
+görünüm ve güven. Paragraf şablondan deterministik üretiliyor; istenirse
+dil modeliyle yeniden yazdırılabilir ama **model yalnızca sayı bloğunu
+görür**, uydurma olgu giremez. Üründe çalışma anında dil modeli yok.
+
+Belirsizlik gizlenmiyor: bölgesinde referansı olmayan 7 yangının
+paragrafında ölçülmüş rakamıyla uyarı var (`+0,140` · bölgesel desteği
+olanlarda `+0,707`).
+
+---
+
 ## Belgeler
 
 | Dosya | Ne |
 |---|---|
 | `MODEL_GUNLUGU.md` | Denenen her şey, her sonuç, her karar ve gerekçesi — 15 bölüm |
+| `../docs/hukum_sozlesmesi.md` | Hüküm katmanı: kodlar, eşikler, entegrasyon |
 | `VERI_SOZLUGU.md` | Alan alan veri sözlüğü, temizlik adımları, kalite notları |
 | `../docs/data-contract.md` | Alan adı / tip / anlam için bağlayıcı sözleşme |
 | `../sample-data/README.md` | Backend ve frontend için veri paketleri |

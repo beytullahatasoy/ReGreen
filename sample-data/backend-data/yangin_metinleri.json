@@ -1,0 +1,325 @@
+{
+  "surum": "1.0",
+  "dil": "tr",
+  "uretim": "sablon (deterministik)",
+  "yanginlar": {
+    "AKD_2017_01": {
+      "paragraf": "Mersin, 1 Temmuz 2017. 1.044 hektarlık alan, 167 hücre. Arazi sert: medyan eğim 19,8°, hücrelerin onda biri 27,9°'nin üstünde, yükselti 434 ile 1.133 metre arasında değişiyor. Eğim burada belirleyici etken: müdahale gereken kare sayısı az olsa da dik yamaçlarda makineli çalışma sınırlı, dikim öncesi toprak stabilizasyonu gündeme gelecek. Modelin iki yıllık iyileşme görünümü 0,350 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 1 hücre doğrudan müdahale adayı, 77 hücre öncelik sırasına göre değerlendirilecek, 26 hücrede doğal gençleşme izlenmesi yeterli. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "dik_arazi",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2020_01": {
+      "paragraf": "Hatay, 5 Eylül 2020. 7.400 hektarlık alan, 1.184 hücre. Yanan yerin %13'ü ormanlık, medyan eğim 10,5°, 39 ile 1.447 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,323 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 117 hücre öncelik sırasına göre değerlendirilecek, 356 hücrede doğal gençleşme izlenmesi yeterli. 2 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_01": {
+      "paragraf": "Antalya, 29 Temmuz 2021. 56.550 hektarlık alan, 9.048 hücre. Yanan yerin %70'i ormanlık, medyan eğim 10,7°, 1 ile 1.604 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,335 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 753 hücre doğrudan müdahale adayı, 233 tanesinde dikimden önce erozyon kontrolü gerekiyor, 3.548 hücre öncelik sırasına göre değerlendirilecek, 550 hücrede doğal gençleşme izlenmesi yeterli. 913 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_02": {
+      "paragraf": "Antalya, 1 Ağustos 2021. 13.488 hektarlık alan, 2.158 hücre. Arazi sert: medyan eğim 21,3°, hücrelerin onda biri 32,3°'nin üstünde, yükselti 184 ile 2.013 metre arasında değişiyor. Eğim burada belirleyici etken: 210 hücrede dikimden önce erozyon kontrolü gerekiyor, çünkü dik yamaçta çıplak toprak ilk sağanakta taşınıyor. Modelin iki yıllık iyileşme görünümü 0,384 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 445 hücre doğrudan müdahale adayı, 509 hücre öncelik sırasına göre değerlendirilecek, 103 hücrede doğal gençleşme izlenmesi yeterli. 17 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "dik_arazi",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_03": {
+      "paragraf": "Mersin, 29 Temmuz 2021. 9.256 hektarlık alan, 1.481 hücre. Yanan yerin %52'si ormanlık, medyan eğim 17,4°, 12 ile 1.135 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %67'sinde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,269 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 124 hücre doğrudan müdahale adayı, 22 tanesinde dikimden önce erozyon kontrolü gerekiyor, 241 hücre öncelik sırasına göre değerlendirilecek. 25 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Alanın %31'i en yakın yola 2 kilometreden uzak; erişim bu yangında belirleyici olacak. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_04": {
+      "paragraf": "Osmaniye, 29 Temmuz 2021. 10.875 hektarlık alan, 1.740 hücre. Yanan yerin %32'si ormanlık, medyan eğim 5,6°, 46 ile 490 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,320 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 64 hücre doğrudan müdahale adayı, 1 tanesinde dikimden önce erozyon kontrolü gerekiyor, 418 hücre öncelik sırasına göre değerlendirilecek, 170 hücrede doğal gençleşme izlenmesi yeterli. 549 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_05": {
+      "paragraf": "Adana, 29 Temmuz 2021. 8.925 hektarlık alan, 1.428 hücre. Yanan yerin %37'si ormanlık, medyan eğim 5,9°, 96 ile 513 metre arasında uzanıyor. Yanan alanın büyük bölümü orman değil: 886 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamının dışında kalıyor. Rehabilitasyon kararı geri kalan 542 hücre üzerinden veriliyor. Modelin iki yıllık iyileşme görünümü 0,310 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 86 hücre doğrudan müdahale adayı, 274 hücre öncelik sırasına göre değerlendirilecek, 27 hücrede doğal gençleşme izlenmesi yeterli. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kapsam_dar",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_06": {
+      "paragraf": "Mersin, 30 Temmuz 2021. 3.312 hektarlık alan, 530 hücre. Yanan yerin %59'u ormanlık, medyan eğim 14,8°, 3 ile 1.023 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %77'sinde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,266 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 12 hücre doğrudan müdahale adayı, 1 tanesinde dikimden önce erozyon kontrolü gerekiyor, 76 hücre öncelik sırasına göre değerlendirilecek. 23 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_07": {
+      "paragraf": "Adana, 28 Temmuz 2021. 519 hektarlık alan, 83 hücre. Yanan yerin %95'i ormanlık, medyan eğim 18,6°, 408 ile 1.081 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 26 hücre doğrudan müdahale adayı, bu da yanan karelerin %31'i demek. Modelin iki yıllık iyileşme görünümü 0,397 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 4 hücrede dikimden önce erozyon kontrolü gerekiyor, 8 hücre öncelik sırasına göre değerlendirilecek. 1 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_08": {
+      "paragraf": "Burdur, 11 Ağustos 2021. 594 hektarlık alan, 95 hücre. Arazi sert: medyan eğim 17,5°, hücrelerin onda biri 24,4°'nin üstünde, yükselti 236 ile 827 metre arasında değişiyor. Eğim burada belirleyici etken: müdahale gereken kare sayısı az olsa da dik yamaçlarda makineli çalışma sınırlı, dikim öncesi toprak stabilizasyonu gündeme gelecek. Modelin iki yıllık iyileşme görünümü 0,411 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 12 hücre doğrudan müdahale adayı, 38 hücre öncelik sırasına göre değerlendirilecek, 5 hücrede doğal gençleşme izlenmesi yeterli. Alanın %20'si en yakın yola 2 kilometreden uzak; erişim bu yangında belirleyici olacak. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "dik_arazi",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_09": {
+      "paragraf": "Isparta, 2 Ağustos 2021. 1.100 hektarlık alan, 176 hücre. Arazi sert: medyan eğim 17,4°, hücrelerin onda biri 29,3°'nin üstünde, yükselti 256 ile 1.118 metre arasında değişiyor. Eğim burada belirleyici etken: müdahale gereken kare sayısı az olsa da dik yamaçlarda makineli çalışma sınırlı, dikim öncesi toprak stabilizasyonu gündeme gelecek. Modelin iki yıllık iyileşme görünümü 0,364 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 27 hücre doğrudan müdahale adayı, 38 hücre öncelik sırasına göre değerlendirilecek, 5 hücrede doğal gençleşme izlenmesi yeterli. 8 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "dik_arazi",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_10": {
+      "paragraf": "Muğla, 2 Ağustos 2021. 588 hektarlık alan, 94 hücre. Yanan yerin %73'ü ormanlık, medyan eğim 9,2°, 46 ile 368 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,330 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 2 hücre doğrudan müdahale adayı, 38 hücre öncelik sırasına göre değerlendirilecek, 9 hücrede doğal gençleşme izlenmesi yeterli. 10 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2021_11": {
+      "paragraf": "Mersin, 29 Temmuz 2021. 719 hektarlık alan, 115 hücre. Yanan yerin %35'i ormanlık, medyan eğim 13,7°, 19 ile 570 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %91'inde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,212 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 1 hücre doğrudan müdahale adayı, 4 hücre öncelik sırasına göre değerlendirilecek. 1 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2022_01": {
+      "paragraf": "Mersin, 7 Eylül 2022. 2.194 hektarlık alan, 351 hücre. Yanan yerin %54'ü ormanlık, medyan eğim 13,9°, 8 ile 701 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %75'inde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,289 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 84 hücre doğrudan müdahale adayı, 10 tanesinde dikimden önce erozyon kontrolü gerekiyor, 1 hücre öncelik sırasına göre değerlendirilecek. 2 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2023_01": {
+      "paragraf": "Mersin, 16 Temmuz 2023. 775 hektarlık alan, 124 hücre. Yanan yerin %13'ü ormanlık, medyan eğim 11,2°, 237 ile 733 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %92'sinde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,238 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 5 hücre doğrudan müdahale adayı, 4 hücre öncelik sırasına göre değerlendirilecek. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "AKD_2023_02": {
+      "paragraf": "Hatay, 17 Temmuz 2023. 1.062 hektarlık alan, 170 hücre. Yanan yerin %39'u ormanlık, medyan eğim 16,4°, 29 ile 1.185 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 69 hücre doğrudan müdahale adayı, bu da yanan karelerin %41'i demek. Modelin iki yıllık iyileşme görünümü 0,369 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 9 hücrede dikimden önce erozyon kontrolü gerekiyor. 5 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "DAN_2021_01": {
+      "paragraf": "Tunceli, 27 Ağustos 2021. 4.438 hektarlık alan, 710 hücre. Yanan yerin %69'u ormanlık, medyan eğim 13,6°, 1.174 ile 2.023 metre arasında uzanıyor. Bu yangını okurken önce şunu bilmek gerekiyor: modelin bu bölgede öğrendiği bir örnek yok, aşağıdaki değerler başka bölgelerden genellenerek üretildi. Modelin iki yıllık iyileşme görünümü 0,376 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 5 hücre doğrudan müdahale adayı, 3 tanesinde dikimden önce erozyon kontrolü gerekiyor, 83 hücre öncelik sırasına göre değerlendirilecek, 26 hücrede doğal gençleşme izlenmesi yeterli. 2 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Alanın %39'u en yakın yola 2 kilometreden uzak; erişim bu yangında belirleyici olacak. Doğu Anadolu bölgesinde eğitim setimizde hiç referans yangını yok — buradaki tahminler tamamen diğer bölgelerden öğrenilenlere dayanıyor. Belirsizlik yüksek, saha doğrulaması gerekli. Bu yangının veri kalitesi bayrağı \"check\" — alan ölçümünde tutarsızlık var, sonuçlar temkinli okunmalı.",
+      "profil": "belirsiz",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2017_01": {
+      "paragraf": "İzmir, 2 Temmuz 2017. 2.438 hektarlık alan, 390 hücre. Yanan yerin %28'i ormanlık, medyan eğim 12,7°, 2 ile 485 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,325 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 1 hücre doğrudan müdahale adayı, 109 hücre öncelik sırasına göre değerlendirilecek, 114 hücrede doğal gençleşme izlenmesi yeterli. 11 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2017_02": {
+      "paragraf": "İzmir, 27 Temmuz 2017. 1.350 hektarlık alan, 216 hücre. Yanan yerin %12'si ormanlık, medyan eğim 14,6°, 324 ile 1.059 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,322 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 9 hücre doğrudan müdahale adayı, 91 hücre öncelik sırasına göre değerlendirilecek, 57 hücrede doğal gençleşme izlenmesi yeterli. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2017_03": {
+      "paragraf": "Muğla, 7 Eylül 2017. 619 hektarlık alan, 99 hücre. Arazi sert: medyan eğim 15,9°, hücrelerin onda biri 24,8°'nin üstünde, yükselti 24 ile 1.091 metre arasında değişiyor. Eğim burada belirleyici etken: müdahale gereken kare sayısı az olsa da dik yamaçlarda makineli çalışma sınırlı, dikim öncesi toprak stabilizasyonu gündeme gelecek. Modelin iki yıllık iyileşme görünümü 0,293 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 2 hücre doğrudan müdahale adayı, 29 hücre öncelik sırasına göre değerlendirilecek, 24 hücrede doğal gençleşme izlenmesi yeterli. 1 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "dik_arazi",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2019_01": {
+      "paragraf": "Muğla, 11 Temmuz 2019. 1.538 hektarlık alan, 246 hücre. Yanan yerin %93'ü ormanlık, medyan eğim 14,0°, 3 ile 543 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,342 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 3 hücre doğrudan müdahale adayı, 134 hücre öncelik sırasına göre değerlendirilecek, 35 hücrede doğal gençleşme izlenmesi yeterli. 4 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2019_02": {
+      "paragraf": "Muğla, 19 Ağustos 2019. 462 hektarlık alan, 74 hücre. Arazi sert: medyan eğim 18,1°, hücrelerin onda biri 27,9°'nin üstünde, yükselti 53 ile 701 metre arasında değişiyor. Eğim burada belirleyici etken: müdahale gereken kare sayısı az olsa da dik yamaçlarda makineli çalışma sınırlı, dikim öncesi toprak stabilizasyonu gündeme gelecek. Modelin iki yıllık iyileşme görünümü 0,345 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 5 hücre doğrudan müdahale adayı, 18 hücre öncelik sırasına göre değerlendirilecek, 9 hücrede doğal gençleşme izlenmesi yeterli. 13 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Alanın %23'ü en yakın yola 2 kilometreden uzak; erişim bu yangında belirleyici olacak. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "dik_arazi",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2019_03": {
+      "paragraf": "Muğla, 19 Ağustos 2019. 575 hektarlık alan, 92 hücre. Yanan yerin %53'ü ormanlık, medyan eğim 9,7°, 59 ile 584 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,341 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 5 hücre doğrudan müdahale adayı, 26 hücre öncelik sırasına göre değerlendirilecek, 15 hücrede doğal gençleşme izlenmesi yeterli. 12 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2020_01": {
+      "paragraf": "İzmir, 2 Ağustos 2020. 788 hektarlık alan, 126 hücre. Yanan yerin %67'si ormanlık, medyan eğim 10,8°, 35 ile 333 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,323 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 3 hücre doğrudan müdahale adayı, 26 hücre öncelik sırasına göre değerlendirilecek, 32 hücrede doğal gençleşme izlenmesi yeterli. 20 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2021_01": {
+      "paragraf": "Muğla, 2 Ağustos 2021. 16.669 hektarlık alan, 2.667 hücre. Yanan yerin %70'i ormanlık, medyan eğim 12,1°, 2 ile 853 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 716 hücre doğrudan müdahale adayı, bu da yanan karelerin %27'si demek. Modelin iki yıllık iyileşme görünümü 0,362 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 39 hücrede dikimden önce erozyon kontrolü gerekiyor, 870 hücre öncelik sırasına göre değerlendirilecek, 355 hücrede doğal gençleşme izlenmesi yeterli. 66 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2021_02": {
+      "paragraf": "Muğla, 5 Ağustos 2021. 13.800 hektarlık alan, 2.208 hücre. Yanan yerin %88'i ormanlık, medyan eğim 12,3°, 548 ile 1.843 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 791 hücre doğrudan müdahale adayı, bu da yanan karelerin %36'sı demek. Modelin iki yıllık iyileşme görünümü 0,386 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 35 hücrede dikimden önce erozyon kontrolü gerekiyor, 624 hücre öncelik sırasına göre değerlendirilecek, 50 hücrede doğal gençleşme izlenmesi yeterli. 53 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Alanın %32'si en yakın yola 2 kilometreden uzak; erişim bu yangında belirleyici olacak. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2021_03": {
+      "paragraf": "Muğla, 30 Temmuz 2021. 11.556 hektarlık alan, 1.849 hücre. Arazi sert: medyan eğim 17,1°, hücrelerin onda biri 26,5°'nin üstünde, yükselti 11 ile 819 metre arasında değişiyor. Eğim burada belirleyici etken: müdahale gereken kare sayısı az olsa da dik yamaçlarda makineli çalışma sınırlı, dikim öncesi toprak stabilizasyonu gündeme gelecek. Modelin iki yıllık iyileşme görünümü 0,368 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 109 hücre doğrudan müdahale adayı, 975 hücre öncelik sırasına göre değerlendirilecek, 219 hücrede doğal gençleşme izlenmesi yeterli. 38 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "dik_arazi",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2021_04": {
+      "paragraf": "Muğla, 4 Ağustos 2021. 8.844 hektarlık alan, 1.415 hücre. Yanan yerin %88'i ormanlık, medyan eğim 22,1°, 3 ile 1.919 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 396 hücre doğrudan müdahale adayı, bu da yanan karelerin %28'i demek. Modelin iki yıllık iyileşme görünümü 0,401 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 152 hücrede dikimden önce erozyon kontrolü gerekiyor, 202 hücre öncelik sırasına göre değerlendirilecek, 10 hücrede doğal gençleşme izlenmesi yeterli. 4 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Alanın %37'si en yakın yola 2 kilometreden uzak; erişim bu yangında belirleyici olacak. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2021_05": {
+      "paragraf": "Aydın, 7 Ağustos 2021. 1.988 hektarlık alan, 318 hücre. Yanan yerin %85'i ormanlık, medyan eğim 15,2°, 71 ile 1.376 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 84 hücre doğrudan müdahale adayı, bu da yanan karelerin %26'sı demek. Modelin iki yıllık iyileşme görünümü 0,372 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 14 hücrede dikimden önce erozyon kontrolü gerekiyor, 71 hücre öncelik sırasına göre değerlendirilecek, 7 hücrede doğal gençleşme izlenmesi yeterli. 15 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2021_06": {
+      "paragraf": "Denizli, 3 Ağustos 2021. 1.150 hektarlık alan, 184 hücre. Yanan yerin %84'ü ormanlık, medyan eğim 9,7°, 487 ile 848 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 50 hücre doğrudan müdahale adayı, bu da yanan karelerin %27'si demek. Modelin iki yıllık iyileşme görünümü 0,287 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 48 hücre öncelik sırasına göre değerlendirilecek. 4 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2021_07": {
+      "paragraf": "Aydın, 4 Ağustos 2021. 994 hektarlık alan, 159 hücre. Yanan yerin %71'i ormanlık, medyan eğim 18,1°, 479 ile 1.663 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 42 hücre doğrudan müdahale adayı, bu da yanan karelerin %26'sı demek. Modelin iki yıllık iyileşme görünümü 0,390 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 3 hücrede dikimden önce erozyon kontrolü gerekiyor, 33 hücre öncelik sırasına göre değerlendirilecek, 1 hücrede doğal gençleşme izlenmesi yeterli. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2021_08": {
+      "paragraf": "İzmir, 14 Ağustos 2021. 419 hektarlık alan, 67 hücre. Arazi sert: medyan eğim 15,9°, hücrelerin onda biri 27,9°'nin üstünde, yükselti 12 ile 445 metre arasında değişiyor. Eğim burada belirleyici etken: müdahale gereken kare sayısı az olsa da dik yamaçlarda makineli çalışma sınırlı, dikim öncesi toprak stabilizasyonu gündeme gelecek. Modelin iki yıllık iyileşme görünümü 0,263 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 25 hücre öncelik sırasına göre değerlendirilecek, 22 hücrede doğal gençleşme izlenmesi yeterli. 4 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "dik_arazi",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2022_01": {
+      "paragraf": "Muğla, 22 Haziran 2022. 4.738 hektarlık alan, 758 hücre. Yanan yerin %59'u ormanlık, medyan eğim 9,7°, 13 ile 434 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 482 hücre doğrudan müdahale adayı, bu da yanan karelerin %64'ü demek. Modelin iki yıllık iyileşme görünümü 0,274 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 3 hücrede dikimden önce erozyon kontrolü gerekiyor, 18 hücre öncelik sırasına göre değerlendirilecek. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2022_02": {
+      "paragraf": "Muğla, 13 Temmuz 2022. 706 hektarlık alan, 113 hücre. Yanan yerin %51'i ormanlık, medyan eğim 17,7°, 46 ile 900 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 38 hücre doğrudan müdahale adayı, bu da yanan karelerin %34'ü demek. Modelin iki yıllık iyileşme görünümü 0,299 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 5 hücrede dikimden önce erozyon kontrolü gerekiyor, 2 hücre öncelik sırasına göre değerlendirilecek. 8 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2022_03": {
+      "paragraf": "Muğla, 21 Eylül 2022. 488 hektarlık alan, 78 hücre. Yanan yerin %58'i ormanlık, medyan eğim 23,9°, 30 ile 683 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %64'ünde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,292 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 28 hücre doğrudan müdahale adayı, 16 tanesinde dikimden önce erozyon kontrolü gerekiyor. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2023_01": {
+      "paragraf": "İzmir, 27 Temmuz 2023. 1.775 hektarlık alan, 284 hücre. Yanan yerin %67'si ormanlık, medyan eğim 7,1°, 27 ile 306 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 140 hücre doğrudan müdahale adayı, bu da yanan karelerin %49'u demek. Modelin iki yıllık iyileşme görünümü 0,285 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 2 hücre öncelik sırasına göre değerlendirilecek. 77 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_01": {
+      "paragraf": "Manisa, 16 Ağustos 2024. 5.269 hektarlık alan, 843 hücre. Yanan yerin %49'u ormanlık, medyan eğim 11,1°, 77 ile 741 metre arasında uzanıyor. Baskın bir örüntü yok: alan hem kendi toparlanacak hem de müdahale isteyen kareler barındırıyor. Burada kararı öncelik sıralaması veriyor. Modelin iki yıllık iyileşme görünümü 0,285 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 193 hücre doğrudan müdahale adayı, 38 hücre öncelik sırasına göre değerlendirilecek. 150 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Alanın %19'u en yakın yola 2 kilometreden uzak; erişim bu yangında belirleyici olacak. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "karisik",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_02": {
+      "paragraf": "İzmir, 16 Ağustos 2024. 2.769 hektarlık alan, 443 hücre. Yanan yerin %38'i ormanlık, medyan eğim 13,8°, 5 ile 1.032 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %71'inde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,250 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 41 hücre doğrudan müdahale adayı, 2 tanesinde dikimden önce erozyon kontrolü gerekiyor, 3 hücre öncelik sırasına göre değerlendirilecek. 83 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_03": {
+      "paragraf": "Aydın, 17 Ağustos 2024. 3.019 hektarlık alan, 483 hücre. Yanan yerin %52'si ormanlık, medyan eğim 9,8°, 108 ile 1.243 metre arasında uzanıyor. Yanan alanın büyük bölümü orman değil: 180 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamının dışında kalıyor. Rehabilitasyon kararı geri kalan 303 hücre üzerinden veriliyor. Modelin iki yıllık iyileşme görünümü 0,306 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 83 hücre doğrudan müdahale adayı, 4 tanesinde dikimden önce erozyon kontrolü gerekiyor. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kapsam_dar",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_05": {
+      "paragraf": "İzmir, 30 Haziran 2024. 681 hektarlık alan, 109 hücre. Yanan yerin %75'i ormanlık, medyan eğim 10,9°, 0 ile 297 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 68 hücre doğrudan müdahale adayı, bu da yanan karelerin %62'si demek. Modelin iki yıllık iyileşme görünümü 0,297 — 53 yangının medyanıyla (0,310) aynı seviyede. 4 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_07": {
+      "paragraf": "İzmir, 17 Ağustos 2024. 1.200 hektarlık alan, 192 hücre. Yanan yerin %7'si ormanlık, medyan eğim 0,9°, 29 ile 264 metre arasında uzanıyor. Yanan alanın büyük bölümü orman değil: 148 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamının dışında kalıyor. Rehabilitasyon kararı geri kalan 44 hücre üzerinden veriliyor. Modelin iki yıllık iyileşme görünümü 0,199 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 4 hücre doğrudan müdahale adayı, 1 hücre öncelik sırasına göre değerlendirilecek. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kapsam_dar",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_08": {
+      "paragraf": "İzmir, 17 Ağustos 2024. 1.125 hektarlık alan, 180 hücre. Yanan yerin %1'i ormanlık, medyan eğim 0,3°, 19 ile 370 metre arasında uzanıyor. Yanan alanın büyük bölümü orman değil: 149 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamının dışında kalıyor. Rehabilitasyon kararı geri kalan 31 hücre üzerinden veriliyor. Modelin iki yıllık iyileşme görünümü 0,210 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kapsam_dar",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_09": {
+      "paragraf": "Aydın, 16 Ağustos 2024. 231 hektarlık alan, 37 hücre. Yanan yerin %49'u ormanlık, medyan eğim 2,6°, 44 ile 99 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %70'inde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,213 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 3 hücre doğrudan müdahale adayı, 8 hücre öncelik sırasına göre değerlendirilecek. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_10": {
+      "paragraf": "Muğla, 16 Ağustos 2024. 331 hektarlık alan, 53 hücre. Yanan yerin %68'i ormanlık, medyan eğim 9,8°, 34 ile 240 metre arasında uzanıyor. Alanın önemli bir bölümü kendi başına kapanmayacak: 16 hücre doğrudan müdahale adayı, bu da yanan karelerin %30'u demek. Modelin iki yıllık iyileşme görünümü 0,281 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 3 hücre öncelik sırasına göre değerlendirilecek. 9 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "yogun_mudahale",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "EGE_2024_11": {
+      "paragraf": "İzmir, 18 Ağustos 2024. 344 hektarlık alan, 55 hücre. Yanan yerin %89'u ormanlık, medyan eğim 12,3°, 64 ile 515 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %64'ünde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,307 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 19 hücre doğrudan müdahale adayı, 4 tanesinde dikimden önce erozyon kontrolü gerekiyor. 1 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "GDA_2021_01": {
+      "paragraf": "Hakkâri, 26 Ağustos 2021. 2.044 hektarlık alan, 327 hücre. Yanan yerin %6'sı ormanlık, medyan eğim 23,4°, 854 ile 2.299 metre arasında uzanıyor. Bu yangını okurken önce şunu bilmek gerekiyor: modelin bu bölgede öğrendiği bir örnek yok, aşağıdaki değerler başka bölgelerden genellenerek üretildi. Modelin iki yıllık iyileşme görünümü 0,262 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 1 hücre doğrudan müdahale adayı, 1 tanesinde dikimden önce erozyon kontrolü gerekiyor, 6 hücre öncelik sırasına göre değerlendirilecek, 1 hücrede doğal gençleşme izlenmesi yeterli. Alanın %42'si en yakın yola 2 kilometreden uzak; erişim bu yangında belirleyici olacak. Doğu Anadolu bölgesinde eğitim setimizde hiç referans yangını yok — buradaki tahminler tamamen diğer bölgelerden öğrenilenlere dayanıyor. Belirsizlik yüksek, saha doğrulaması gerekli. Bu yangının veri kalitesi bayrağı \"check\" — alan ölçümünde tutarsızlık var, sonuçlar temkinli okunmalı.",
+      "profil": "belirsiz",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "IAN_2021_01": {
+      "paragraf": "Adana, 29 Temmuz 2021. 575 hektarlık alan, 92 hücre. Yanan yerin %82'si ormanlık, medyan eğim 17,8°, 417 ile 1.145 metre arasında uzanıyor. Bu yangının asıl bulgusu müdahale değil, müdahale gerekmemesi: hücrelerin %67'sinde yangın hafif kalmış ve doğal toparlanma bekleniyor. Kaynak buraya değil, daha zayıf yangınlara ayrılmalı. Modelin iki yıllık iyileşme görünümü 0,399 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 17 hücre doğrudan müdahale adayı, 2 tanesinde dikimden önce erozyon kontrolü gerekiyor, 11 hücre öncelik sırasına göre değerlendirilecek. 2 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Akdeniz bölgesinde 13 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek.",
+      "profil": "kendi_toparlaniyor",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "IAN_2023_01": {
+      "paragraf": "Eskişehir, 23 Ağustos 2023. 1.394 hektarlık alan, 223 hücre. Yanan yerin %24'ü ormanlık, medyan eğim 2,1°, 1.052 ile 1.225 metre arasında uzanıyor. Bu yangını okurken önce şunu bilmek gerekiyor: modelin bu bölgede öğrendiği bir örnek yok, aşağıdaki değerler başka bölgelerden genellenerek üretildi. Modelin iki yıllık iyileşme görünümü 0,318 — 53 yangının medyanıyla (0,310) aynı seviyede. Dağılım: 34 hücre doğrudan müdahale adayı. 132 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. İç Anadolu bölgesinde eğitim setimizde hiç referans yangını yok — buradaki tahminler tamamen diğer bölgelerden öğrenilenlere dayanıyor. Belirsizlik yüksek, saha doğrulaması gerekli. Bu yangının veri kalitesi bayrağı \"check\" — alan ölçümünde tutarsızlık var, sonuçlar temkinli okunmalı.",
+      "profil": "belirsiz",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "IAN_2024_01": {
+      "paragraf": "Uşak, 18 Haziran 2024. 4.406 hektarlık alan, 705 hücre. Yanan yerin %21'i ormanlık, medyan eğim 4,0°, 506 ile 843 metre arasında uzanıyor. Yanan alanın büyük bölümü orman değil: 342 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamının dışında kalıyor. Rehabilitasyon kararı geri kalan 363 hücre üzerinden veriliyor. Modelin iki yıllık iyileşme görünümü 0,259 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 32 hücre doğrudan müdahale adayı. Ege bölgesinde 20 referans yangınımız olduğu için buradaki tahminlerin güveni yüksek. Bu yangının veri kalitesi bayrağı \"check\" — alan ölçümünde tutarsızlık var, sonuçlar temkinli okunmalı.",
+      "profil": "kapsam_dar",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "KAR_2024_01": {
+      "paragraf": "Bolu, 16 Ağustos 2024. 3.338 hektarlık alan, 534 hücre. Yanan yerin %81'i ormanlık, medyan eğim 12,6°, 721 ile 1.379 metre arasında uzanıyor. Bu yangını okurken önce şunu bilmek gerekiyor: modelin bu bölgede öğrendiği bir örnek yok, aşağıdaki değerler başka bölgelerden genellenerek üretildi. Modelin iki yıllık iyileşme görünümü 0,330 — 53 yangının medyanının (0,310) üstünde, yani ortalamadan daha zorlu bir toparlanma bekleniyor. Dağılım: 234 hücre doğrudan müdahale adayı. 20 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Karadeniz bölgesinde eğitim setimizde hiç referans yangını yok — buradaki tahminler tamamen diğer bölgelerden öğrenilenlere dayanıyor. Belirsizlik yüksek, saha doğrulaması gerekli.",
+      "profil": "belirsiz",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "MAR_2023_01": {
+      "paragraf": "Çanakkale, 22 Ağustos 2023. 4.156 hektarlık alan, 665 hücre. Yanan yerin %58'i ormanlık, medyan eğim 8,0°, 1 ile 434 metre arasında uzanıyor. Bu yangını okurken önce şunu bilmek gerekiyor: modelin bu bölgede öğrendiği bir örnek yok, aşağıdaki değerler başka bölgelerden genellenerek üretildi. Modelin iki yıllık iyileşme görünümü 0,279 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 164 hücre doğrudan müdahale adayı, 6 hücre öncelik sırasına göre değerlendirilecek. 219 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Marmara bölgesindeki tek referans yangını bu — doğrulamada bu yangın dışarıda bırakıldığında eğitimde bölgeden hiç örnek kalmıyor. Ölçtüğümüz sıralama başarısı burada +0,140'a düşüyor (bölgesel desteği olan yangınlarda +0,707). Tahminler yön gösterici, saha doğrulaması gerekli.",
+      "profil": "belirsiz",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "MAR_2024_01": {
+      "paragraf": "Çanakkale, 15 Ağustos 2024. 5.944 hektarlık alan, 951 hücre. Yanan yerin %20'si ormanlık, medyan eğim 2,2°, 0 ile 271 metre arasında uzanıyor. Bu yangını okurken önce şunu bilmek gerekiyor: modelin bu bölgede öğrendiği bir örnek yok, aşağıdaki değerler başka bölgelerden genellenerek üretildi. Modelin iki yıllık iyileşme görünümü 0,269 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 127 hücre doğrudan müdahale adayı, 16 hücre öncelik sırasına göre değerlendirilecek, 1 hücrede doğal gençleşme izlenmesi yeterli. 732 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Marmara bölgesindeki tek referans yangını bu — doğrulamada bu yangın dışarıda bırakıldığında eğitimde bölgeden hiç örnek kalmıyor. Ölçtüğümüz sıralama başarısı burada +0,140'a düşüyor (bölgesel desteği olan yangınlarda +0,707). Tahminler yön gösterici, saha doğrulaması gerekli.",
+      "profil": "belirsiz",
+      "kaynak": "sablon",
+      "onaylandi": true
+    },
+    "MAR_2024_02": {
+      "paragraf": "Bursa, 20 Haziran 2024. 1.712 hektarlık alan, 274 hücre. Yanan yerin %6'sı ormanlık, medyan eğim 9,3°, 315 ile 843 metre arasında uzanıyor. Bu yangını okurken önce şunu bilmek gerekiyor: modelin bu bölgede öğrendiği bir örnek yok, aşağıdaki değerler başka bölgelerden genellenerek üretildi. Modelin iki yıllık iyileşme görünümü 0,223 — 53 yangının medyanının (0,310) altında, yani ortalamadan daha kolay bir toparlanma bekleniyor. Dağılım: 6 hücre doğrudan müdahale adayı, 6 hücre öncelik sırasına göre değerlendirilecek. 53 hücre tarım, yerleşim ya da su yüzeyi olduğu için ağaçlandırma kapsamı dışında. Marmara bölgesindeki tek referans yangını bu — doğrulamada bu yangın dışarıda bırakıldığında eğitimde bölgeden hiç örnek kalmıyor. Ölçtüğümüz sıralama başarısı burada +0,140'a düşüyor (bölgesel desteği olan yangınlarda +0,707). Tahminler yön gösterici, saha doğrulaması gerekli.",
+      "profil": "belirsiz",
+      "kaynak": "sablon",
+      "onaylandi": true
+    }
+  }
+}
