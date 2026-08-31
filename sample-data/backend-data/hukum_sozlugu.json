@@ -1,0 +1,75 @@
+{
+  "surum": "1.1",
+  "dil": "tr",
+  "hukumler": [
+    {
+      "kod": "KAPSAM_DISI",
+      "baslik": "Ağaçlandırma kapsamı dışı",
+      "sira": 0
+    },
+    {
+      "kod": "SAHA_KONTROL",
+      "baslik": "Saha kontrolü gerekli",
+      "sira": 1
+    },
+    {
+      "kod": "IZLE",
+      "baslik": "İzle, müdahale etme",
+      "sira": 2
+    },
+    {
+      "kod": "EROZYON_ONCE",
+      "baslik": "Önce erozyon kontrolü",
+      "sira": 3
+    },
+    {
+      "kod": "DIKIM_ADAYI",
+      "baslik": "Aktif dikim adayı",
+      "sira": 4
+    },
+    {
+      "kod": "ONCELIGE_GORE",
+      "baslik": "Öncelik sırasına göre değerlendir",
+      "sira": 5
+    },
+    {
+      "kod": "GENCLESME_IZLE",
+      "baslik": "Doğal gençleşmeyi izle",
+      "sira": 6
+    }
+  ],
+  "ek_kosullar": {
+    "ERISIM_ZOR": "En yakın yol {yol} km — erişim ve lojistik bu karede belirleyici olacak.",
+    "ESKIDEN_ORMAN_DEGIL": "Yangın öncesi örtü {arazi_adi} idi; orman kurma değil, mevcut örtünün onarımı düşünülmeli.",
+    "SEYREK_ORTU": "Yangın öncesi ağaç örtüsü zaten seyrekti (%{agac_ortusu}) — buradaki açığın tamamı yangından kaynaklanmıyor olabilir.",
+    "DIK_YAMAC": "Eğim {egim}° ile yüksek; makineli çalışma sınırlı olabilir.",
+    "AGIR_YANMIS": "Yangın {siddet_adi} sınıfında (dNBR {dnbr}); toprak yüzeyi büyük olasılıkla açıkta.",
+    "DUSUK_GUVEN": "Bu bölgede referans yangınımız az — tahmin belirsizliği diğer bölgelerden yüksek, saha doğrulaması önerilir."
+  },
+  "zamanlama_notu": "Ölçümlerimizde 1. yıl değerleri yangının hemen sonrasından bile düşük çıkıyor (ibreli türlerde gecikmeli ölüm). Bu kareyi 2. yıl değerlendirmesinden önce yeniden yorumlamayın.",
+  "esikler": {
+    "toparlanma_zayif": 0.35,
+    "toparlanma_iyi": 0.5,
+    "egim_dik_derece": 25.0,
+    "yol_uzak_km": 2.0,
+    "ortu_seyrek": 0.3,
+    "kapsam_disi_arazi": [
+      "Su",
+      "Sulak alan",
+      "Tarim",
+      "Yerlesim"
+    ],
+    "dusuk_guven_bolge": [
+      "Dogu Anadolu",
+      "Ic Anadolu",
+      "Karadeniz",
+      "Marmara"
+    ]
+  },
+  "tur_tablosu": {
+    "kaynak": "ÖRNEK TABLO — OGM tür-yetişme ortamı rehberi ile değiştirilecek",
+    "surum": "0.1-ornek",
+    "onaylandi": false
+  },
+  "aciklama": "Hukum, oncelik skorundan BAGIMSIZDIR: agirlik kaydiricisi oynatildiginda sira degisir, hukum degismez. Oncelik 'ne zaman gidilecek', hukum 'gidince ne yapilacak' sorusunu cevaplar."
+}

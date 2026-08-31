@@ -1,0 +1,2866 @@
+{
+  "surum": "1.0",
+  "referans_kaynagi": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun",
+  "yanginlar": {
+    "AKD_2017_01": {
+      "fire_id": "AKD_2017_01",
+      "il": "Mersin",
+      "bolge": "Akdeniz",
+      "tarih": "2017-07-01",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 167,
+        "alan_ha": 1043.8,
+        "tahminli_hucre": 104
+      },
+      "siddet_dagilimi": {
+        "orta-dusuk": 76,
+        "dusuk": 62,
+        "orta-yuksek": 28,
+        "yuksek": 1
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 135,
+        "Agaclik": 32
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 63,
+        "EROZYON_ONCE": 1,
+        "DIKIM_ADAYI": 0,
+        "ONCELIGE_GORE": 77,
+        "GENCLESME_IZLE": 26
+      },
+      "arazi": {
+        "egim_medyan": 19.816128,
+        "egim_p90": 27.9293762,
+        "yukselti_min": 434.26083,
+        "yukselti_maks": 1132.6337,
+        "agaclik_orani": 0.19161676646706588,
+        "ortu_medyan": 0.25170842
+      },
+      "erisim": {
+        "yol_medyan_km": 1.1185204,
+        "yol_uzak_orani": 0.029940119760479042
+      },
+      "gorunum": {
+        "acik_ortalama": 0.34950961538461534,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.46830000000000005
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2020_01": {
+      "fire_id": "AKD_2020_01",
+      "il": "Hatay",
+      "bolge": "Akdeniz",
+      "tarih": "2020-09-05",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 1184,
+        "alan_ha": 7400.0,
+        "tahminli_hucre": 473
+      },
+      "siddet_dagilimi": {
+        "dusuk": 690,
+        "yuksek": 255,
+        "orta-yuksek": 142,
+        "orta-dusuk": 97
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 158,
+        "Otlak/calilik": 11,
+        "Yerlesim": 1,
+        "Su": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 2,
+        "SAHA_KONTROL": 0,
+        "IZLE": 709,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 0,
+        "ONCELIGE_GORE": 117,
+        "GENCLESME_IZLE": 356
+      },
+      "arazi": {
+        "egim_medyan": 10.514464,
+        "egim_p90": 19.8225929,
+        "yukselti_min": 38.949715,
+        "yukselti_maks": 1447.0267,
+        "agaclik_orani": 0.13344594594594594,
+        "ortu_medyan": 0.484783485
+      },
+      "erisim": {
+        "yol_medyan_km": 0.16575454,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3228105708245243,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.5404
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_01": {
+      "fire_id": "AKD_2021_01",
+      "il": "Antalya",
+      "bolge": "Akdeniz",
+      "tarih": "2021-07-29",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 9048,
+        "alan_ha": 56550.0,
+        "tahminli_hucre": 4917
+      },
+      "siddet_dagilimi": {
+        "dusuk": 3496,
+        "orta-dusuk": 2486,
+        "orta-yuksek": 2036,
+        "yuksek": 1030
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 6377,
+        "Otlak/calilik": 1757,
+        "Tarim": 635,
+        "Yerlesim": 254,
+        "Su": 24,
+        "Ciplak": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 913,
+        "SAHA_KONTROL": 1,
+        "IZLE": 3283,
+        "EROZYON_ONCE": 233,
+        "DIKIM_ADAYI": 520,
+        "ONCELIGE_GORE": 3548,
+        "GENCLESME_IZLE": 550
+      },
+      "arazi": {
+        "egim_medyan": 10.655194,
+        "egim_p90": 22.2928037,
+        "yukselti_min": 1.2273896,
+        "yukselti_maks": 1603.539,
+        "agaclik_orani": 0.7047966401414677,
+        "ortu_medyan": 0.8198890999999999
+      },
+      "erisim": {
+        "yol_medyan_km": 0.47892435,
+        "yol_uzak_orani": 0.010831122900088417
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3351519625788082,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4189
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_02": {
+      "fire_id": "AKD_2021_02",
+      "il": "Antalya",
+      "bolge": "Akdeniz",
+      "tarih": "2021-08-01",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 2158,
+        "alan_ha": 13487.5,
+        "tahminli_hucre": 1060
+      },
+      "siddet_dagilimi": {
+        "dusuk": 1038,
+        "orta-dusuk": 670,
+        "orta-yuksek": 340,
+        "yuksek": 110
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 1695,
+        "Otlak/calilik": 446,
+        "Yerlesim": 17
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 17,
+        "SAHA_KONTROL": 0,
+        "IZLE": 1084,
+        "EROZYON_ONCE": 210,
+        "DIKIM_ADAYI": 235,
+        "ONCELIGE_GORE": 509,
+        "GENCLESME_IZLE": 103
+      },
+      "arazi": {
+        "egim_medyan": 21.3021775,
+        "egim_p90": 32.345796299999996,
+        "yukselti_min": 184.04945,
+        "yukselti_maks": 2013.4346,
+        "agaclik_orani": 0.7854494902687674,
+        "ortu_medyan": 0.97898925
+      },
+      "erisim": {
+        "yol_medyan_km": 0.8520696999999999,
+        "yol_uzak_orani": 0.04541241890639481
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3836035849056604,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.36645
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_03": {
+      "fire_id": "AKD_2021_03",
+      "il": "Mersin",
+      "bolge": "Akdeniz",
+      "tarih": "2021-07-29",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 1481,
+        "alan_ha": 9256.2,
+        "tahminli_hucre": 465
+      },
+      "siddet_dagilimi": {
+        "dusuk": 654,
+        "orta-dusuk": 618,
+        "orta-yuksek": 203,
+        "yuksek": 6
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 765,
+        "Otlak/calilik": 691,
+        "Yerlesim": 23,
+        "Tarim": 1,
+        "Su": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 25,
+        "SAHA_KONTROL": 0,
+        "IZLE": 992,
+        "EROZYON_ONCE": 22,
+        "DIKIM_ADAYI": 102,
+        "ONCELIGE_GORE": 241,
+        "GENCLESME_IZLE": 99
+      },
+      "arazi": {
+        "egim_medyan": 17.422499,
+        "egim_p90": 26.339884,
+        "yukselti_min": 12.19702,
+        "yukselti_maks": 1134.8269,
+        "agaclik_orani": 0.5165428764348413,
+        "ortu_medyan": 0.45590204
+      },
+      "erisim": {
+        "yol_medyan_km": 1.346273,
+        "yol_uzak_orani": 0.30722484807562456
+      },
+      "gorunum": {
+        "acik_ortalama": 0.268952688172043,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4041
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_04": {
+      "fire_id": "AKD_2021_04",
+      "il": "Osmaniye",
+      "bolge": "Akdeniz",
+      "tarih": "2021-07-29",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 1740,
+        "alan_ha": 10875.0,
+        "tahminli_hucre": 759
+      },
+      "siddet_dagilimi": {
+        "dusuk": 900,
+        "orta-dusuk": 381,
+        "orta-yuksek": 351,
+        "yuksek": 108
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 551,
+        "Tarim": 526,
+        "Otlak/calilik": 52,
+        "Su": 12,
+        "Yerlesim": 11
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 549,
+        "SAHA_KONTROL": 1,
+        "IZLE": 538,
+        "EROZYON_ONCE": 1,
+        "DIKIM_ADAYI": 63,
+        "ONCELIGE_GORE": 418,
+        "GENCLESME_IZLE": 170
+      },
+      "arazi": {
+        "egim_medyan": 5.6244648999999995,
+        "egim_p90": 12.33510785,
+        "yukselti_min": 46.037273,
+        "yukselti_maks": 489.6267,
+        "agaclik_orani": 0.31666666666666665,
+        "ortu_medyan": 0.24272830499999998
+      },
+      "erisim": {
+        "yol_medyan_km": 0.41987486500000004,
+        "yol_uzak_orani": 0.013793103448275862
+      },
+      "gorunum": {
+        "acik_ortalama": 0.31964361001317526,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4535
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_05": {
+      "fire_id": "AKD_2021_05",
+      "il": "Adana",
+      "bolge": "Akdeniz",
+      "tarih": "2021-07-29",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 1428,
+        "alan_ha": 8925.0,
+        "tahminli_hucre": 442
+      },
+      "siddet_dagilimi": {
+        "dusuk": 922,
+        "orta-dusuk": 201,
+        "orta-yuksek": 196,
+        "yuksek": 109
+      },
+      "arazi_dagilimi": {
+        "Tarim": 858,
+        "Agaclik": 527,
+        "Su": 25,
+        "Otlak/calilik": 15,
+        "Yerlesim": 3
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 886,
+        "SAHA_KONTROL": 0,
+        "IZLE": 155,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 86,
+        "ONCELIGE_GORE": 274,
+        "GENCLESME_IZLE": 27
+      },
+      "arazi": {
+        "egim_medyan": 5.9050915,
+        "egim_p90": 11.1725172,
+        "yukselti_min": 96.15144,
+        "yukselti_maks": 513.34674,
+        "agaclik_orani": 0.36904761904761907,
+        "ortu_medyan": 0.25959675
+      },
+      "erisim": {
+        "yol_medyan_km": 0.6457851349999999,
+        "yol_uzak_orani": 0.004201680672268907
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3095988687782805,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.39185000000000003
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_06": {
+      "fire_id": "AKD_2021_06",
+      "il": "Mersin",
+      "bolge": "Akdeniz",
+      "tarih": "2021-07-30",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 530,
+        "alan_ha": 3312.5,
+        "tahminli_hucre": 98
+      },
+      "siddet_dagilimi": {
+        "dusuk": 254,
+        "orta-dusuk": 220,
+        "orta-yuksek": 56
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 313,
+        "Otlak/calilik": 194,
+        "Tarim": 20,
+        "Yerlesim": 3
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 23,
+        "SAHA_KONTROL": 0,
+        "IZLE": 409,
+        "EROZYON_ONCE": 1,
+        "DIKIM_ADAYI": 11,
+        "ONCELIGE_GORE": 76,
+        "GENCLESME_IZLE": 10
+      },
+      "arazi": {
+        "egim_medyan": 14.848289999999999,
+        "egim_p90": 25.9138823,
+        "yukselti_min": 2.7096748,
+        "yukselti_maks": 1023.2753,
+        "agaclik_orani": 0.590566037735849,
+        "ortu_medyan": 0.409995085
+      },
+      "erisim": {
+        "yol_medyan_km": 0.65160292,
+        "yol_uzak_orani": 0.01509433962264151
+      },
+      "gorunum": {
+        "acik_ortalama": 0.26570204081632653,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.39485000000000003
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_07": {
+      "fire_id": "AKD_2021_07",
+      "il": "Adana",
+      "bolge": "Akdeniz",
+      "tarih": "2021-07-28",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 83,
+        "alan_ha": 518.8,
+        "tahminli_hucre": 34
+      },
+      "siddet_dagilimi": {
+        "dusuk": 49,
+        "orta-dusuk": 20,
+        "orta-yuksek": 14
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 79,
+        "Otlak/calilik": 3,
+        "Yerlesim": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 1,
+        "SAHA_KONTROL": 0,
+        "IZLE": 48,
+        "EROZYON_ONCE": 4,
+        "DIKIM_ADAYI": 22,
+        "ONCELIGE_GORE": 8,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 18.584848,
+        "egim_p90": 24.568062599999998,
+        "yukselti_min": 408.3075,
+        "yukselti_maks": 1080.5994,
+        "agaclik_orani": 0.9518072289156626,
+        "ortu_medyan": 0.91438854
+      },
+      "erisim": {
+        "yol_medyan_km": 0.75482965,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.39695294117647056,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.3384
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_08": {
+      "fire_id": "AKD_2021_08",
+      "il": "Burdur",
+      "bolge": "Akdeniz",
+      "tarih": "2021-08-11",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 95,
+        "alan_ha": 593.8,
+        "tahminli_hucre": 55
+      },
+      "siddet_dagilimi": {
+        "dusuk": 38,
+        "orta-dusuk": 35,
+        "orta-yuksek": 16,
+        "yuksek": 6
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 85,
+        "Otlak/calilik": 10
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 40,
+        "EROZYON_ONCE": 2,
+        "DIKIM_ADAYI": 10,
+        "ONCELIGE_GORE": 38,
+        "GENCLESME_IZLE": 5
+      },
+      "arazi": {
+        "egim_medyan": 17.47316,
+        "egim_p90": 24.374861400000004,
+        "yukselti_min": 236.31874,
+        "yukselti_maks": 827.15094,
+        "agaclik_orani": 0.8947368421052632,
+        "ortu_medyan": 0.97166914
+      },
+      "erisim": {
+        "yol_medyan_km": 1.478866,
+        "yol_uzak_orani": 0.2
+      },
+      "gorunum": {
+        "acik_ortalama": 0.4105654545454545,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.3779
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_09": {
+      "fire_id": "AKD_2021_09",
+      "il": "Isparta",
+      "bolge": "Akdeniz",
+      "tarih": "2021-08-02",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 176,
+        "alan_ha": 1100.0,
+        "tahminli_hucre": 70
+      },
+      "siddet_dagilimi": {
+        "dusuk": 105,
+        "orta-dusuk": 40,
+        "orta-yuksek": 29,
+        "yuksek": 2
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 137,
+        "Otlak/calilik": 31,
+        "Tarim": 3,
+        "Su": 3,
+        "Yerlesim": 2
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 8,
+        "SAHA_KONTROL": 0,
+        "IZLE": 98,
+        "EROZYON_ONCE": 7,
+        "DIKIM_ADAYI": 20,
+        "ONCELIGE_GORE": 38,
+        "GENCLESME_IZLE": 5
+      },
+      "arazi": {
+        "egim_medyan": 17.3661005,
+        "egim_p90": 29.342087,
+        "yukselti_min": 256.08813,
+        "yukselti_maks": 1117.5106,
+        "agaclik_orani": 0.7784090909090909,
+        "ortu_medyan": 0.85558382
+      },
+      "erisim": {
+        "yol_medyan_km": 0.40291387,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.36366000000000004,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.36550000000000005
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_10": {
+      "fire_id": "AKD_2021_10",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2021-08-02",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 94,
+        "alan_ha": 587.5,
+        "tahminli_hucre": 49
+      },
+      "siddet_dagilimi": {
+        "orta-dusuk": 33,
+        "dusuk": 32,
+        "orta-yuksek": 26,
+        "yuksek": 3
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 69,
+        "Otlak/calilik": 15,
+        "Tarim": 10
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 10,
+        "SAHA_KONTROL": 0,
+        "IZLE": 35,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 2,
+        "ONCELIGE_GORE": 38,
+        "GENCLESME_IZLE": 9
+      },
+      "arazi": {
+        "egim_medyan": 9.152395,
+        "egim_p90": 16.187205100000003,
+        "yukselti_min": 46.38156,
+        "yukselti_maks": 367.6112,
+        "agaclik_orani": 0.7340425531914894,
+        "ortu_medyan": 0.886249185
+      },
+      "erisim": {
+        "yol_medyan_km": 0.383332825,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.32957346938775506,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.431
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2021_11": {
+      "fire_id": "AKD_2021_11",
+      "il": "Mersin",
+      "bolge": "Akdeniz",
+      "tarih": "2021-07-29",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 115,
+        "alan_ha": 718.8,
+        "tahminli_hucre": 9
+      },
+      "siddet_dagilimi": {
+        "dusuk": 99,
+        "orta-dusuk": 16
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 74,
+        "Agaclik": 40,
+        "Yerlesim": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 1,
+        "SAHA_KONTROL": 0,
+        "IZLE": 105,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 1,
+        "ONCELIGE_GORE": 4,
+        "GENCLESME_IZLE": 4
+      },
+      "arazi": {
+        "egim_medyan": 13.699527,
+        "egim_p90": 24.746208,
+        "yukselti_min": 19.114838,
+        "yukselti_maks": 570.297,
+        "agaclik_orani": 0.34782608695652173,
+        "ortu_medyan": 0.28319034
+      },
+      "erisim": {
+        "yol_medyan_km": 0.5996329,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2119888888888889,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4823
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2022_01": {
+      "fire_id": "AKD_2022_01",
+      "il": "Mersin",
+      "bolge": "Akdeniz",
+      "tarih": "2022-09-07",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 351,
+        "alan_ha": 2193.8,
+        "tahminli_hucre": 85
+      },
+      "siddet_dagilimi": {
+        "dusuk": 224,
+        "orta-dusuk": 123,
+        "orta-yuksek": 4
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 191,
+        "Otlak/calilik": 158,
+        "Yerlesim": 2
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 2,
+        "SAHA_KONTROL": 0,
+        "IZLE": 264,
+        "EROZYON_ONCE": 10,
+        "DIKIM_ADAYI": 74,
+        "ONCELIGE_GORE": 1,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 13.892429,
+        "egim_p90": 21.261713,
+        "yukselti_min": 8.109439,
+        "yukselti_maks": 700.51575,
+        "agaclik_orani": 0.5441595441595442,
+        "ortu_medyan": 0.7950911
+      },
+      "erisim": {
+        "yol_medyan_km": 0.40712994,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2892529411764705,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.1396
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2023_01": {
+      "fire_id": "AKD_2023_01",
+      "il": "Mersin",
+      "bolge": "Akdeniz",
+      "tarih": "2023-07-16",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 124,
+        "alan_ha": 775.0,
+        "tahminli_hucre": 10
+      },
+      "siddet_dagilimi": {
+        "dusuk": 92,
+        "orta-dusuk": 31,
+        "orta-yuksek": 1
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 108,
+        "Agaclik": 16
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 114,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 5,
+        "ONCELIGE_GORE": 4,
+        "GENCLESME_IZLE": 1
+      },
+      "arazi": {
+        "egim_medyan": 11.186204499999999,
+        "egim_p90": 16.026886400000002,
+        "yukselti_min": 237.4887,
+        "yukselti_maks": 733.337,
+        "agaclik_orani": 0.12903225806451613,
+        "ortu_medyan": 0.36618577
+      },
+      "erisim": {
+        "yol_medyan_km": 0.7703247950000001,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.23781999999999998,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.3581
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "AKD_2023_02": {
+      "fire_id": "AKD_2023_02",
+      "il": "Hatay",
+      "bolge": "Akdeniz",
+      "tarih": "2023-07-17",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 170,
+        "alan_ha": 1062.5,
+        "tahminli_hucre": 70
+      },
+      "siddet_dagilimi": {
+        "dusuk": 100,
+        "orta-dusuk": 59,
+        "orta-yuksek": 11
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 66,
+        "Otlak/calilik": 19,
+        "Yerlesim": 3,
+        "Tarim": 2
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 5,
+        "SAHA_KONTROL": 0,
+        "IZLE": 96,
+        "EROZYON_ONCE": 9,
+        "DIKIM_ADAYI": 60,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 16.3514025,
+        "egim_p90": 26.1042617,
+        "yukselti_min": 28.883318,
+        "yukselti_maks": 1184.8038,
+        "agaclik_orani": 0.38823529411764707,
+        "ortu_medyan": 0.8861759250000001
+      },
+      "erisim": {
+        "yol_medyan_km": 0.23765662999999998,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.36922857142857146,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.03815
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "DAN_2021_01": {
+      "fire_id": "DAN_2021_01",
+      "il": "Tunceli",
+      "bolge": "Dogu Anadolu",
+      "tarih": "2021-08-27",
+      "kalite": "check",
+      "buyukluk": {
+        "hucre": 710,
+        "alan_ha": 4437.5,
+        "tahminli_hucre": 114
+      },
+      "siddet_dagilimi": {
+        "dusuk": 588,
+        "orta-dusuk": 107,
+        "orta-yuksek": 14,
+        "yuksek": 1
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 492,
+        "Otlak/calilik": 216,
+        "Tarim": 2
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 2,
+        "SAHA_KONTROL": 0,
+        "IZLE": 594,
+        "EROZYON_ONCE": 3,
+        "DIKIM_ADAYI": 2,
+        "ONCELIGE_GORE": 83,
+        "GENCLESME_IZLE": 26
+      },
+      "arazi": {
+        "egim_medyan": 13.5899575,
+        "egim_p90": 22.490855200000002,
+        "yukselti_min": 1174.0652,
+        "yukselti_maks": 2023.0645,
+        "agaclik_orani": 0.6929577464788732,
+        "ortu_medyan": 0.61901398
+      },
+      "erisim": {
+        "yol_medyan_km": 1.69420435,
+        "yol_uzak_orani": 0.38591549295774646
+      },
+      "gorunum": {
+        "acik_ortalama": 0.37554035087719295,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.43915000000000004
+      },
+      "guven": {
+        "seviye": "dusuk",
+        "bolgedeki_referans_yangini": 0,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2017_01": {
+      "fire_id": "EGE_2017_01",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2017-07-02",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 390,
+        "alan_ha": 2437.5,
+        "tahminli_hucre": 224
+      },
+      "siddet_dagilimi": {
+        "dusuk": 166,
+        "orta-yuksek": 90,
+        "yuksek": 71,
+        "orta-dusuk": 63
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 269,
+        "Agaclik": 110,
+        "Tarim": 11
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 11,
+        "SAHA_KONTROL": 0,
+        "IZLE": 155,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 1,
+        "ONCELIGE_GORE": 109,
+        "GENCLESME_IZLE": 114
+      },
+      "arazi": {
+        "egim_medyan": 12.726357,
+        "egim_p90": 20.67417,
+        "yukselti_min": 2.2199492,
+        "yukselti_maks": 484.63892,
+        "agaclik_orani": 0.28205128205128205,
+        "ortu_medyan": 0.30191064
+      },
+      "erisim": {
+        "yol_medyan_km": 0.85652643,
+        "yol_uzak_orani": 0.046153846153846156
+      },
+      "gorunum": {
+        "acik_ortalama": 0.32487723214285713,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.5023500000000001
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2017_02": {
+      "fire_id": "EGE_2017_02",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2017-07-27",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 216,
+        "alan_ha": 1350.0,
+        "tahminli_hucre": 157
+      },
+      "siddet_dagilimi": {
+        "orta-dusuk": 69,
+        "orta-yuksek": 61,
+        "dusuk": 57,
+        "yuksek": 29
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 188,
+        "Agaclik": 27,
+        "Ciplak": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 59,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 9,
+        "ONCELIGE_GORE": 91,
+        "GENCLESME_IZLE": 57
+      },
+      "arazi": {
+        "egim_medyan": 14.609027000000001,
+        "egim_p90": 19.861639,
+        "yukselti_min": 323.68872,
+        "yukselti_maks": 1059.309,
+        "agaclik_orani": 0.125,
+        "ortu_medyan": 0.7243475
+      },
+      "erisim": {
+        "yol_medyan_km": 0.523915855,
+        "yol_uzak_orani": 0.004629629629629629
+      },
+      "gorunum": {
+        "acik_ortalama": 0.32225796178343946,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4609
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2017_03": {
+      "fire_id": "EGE_2017_03",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2017-09-07",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 99,
+        "alan_ha": 618.8,
+        "tahminli_hucre": 55
+      },
+      "siddet_dagilimi": {
+        "dusuk": 40,
+        "orta-dusuk": 35,
+        "orta-yuksek": 23,
+        "yuksek": 1
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 54,
+        "Agaclik": 44,
+        "Tarim": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 1,
+        "SAHA_KONTROL": 0,
+        "IZLE": 43,
+        "EROZYON_ONCE": 2,
+        "DIKIM_ADAYI": 0,
+        "ONCELIGE_GORE": 29,
+        "GENCLESME_IZLE": 24
+      },
+      "arazi": {
+        "egim_medyan": 15.941073,
+        "egim_p90": 24.817226,
+        "yukselti_min": 24.485508,
+        "yukselti_maks": 1090.9788,
+        "agaclik_orani": 0.4444444444444444,
+        "ortu_medyan": 0.20753394
+      },
+      "erisim": {
+        "yol_medyan_km": 0.29944655,
+        "yol_uzak_orani": 0.010101010101010102
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2928363636363637,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.497
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2019_01": {
+      "fire_id": "EGE_2019_01",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2019-07-11",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 246,
+        "alan_ha": 1537.5,
+        "tahminli_hucre": 172
+      },
+      "siddet_dagilimi": {
+        "dusuk": 74,
+        "orta-dusuk": 74,
+        "orta-yuksek": 68,
+        "yuksek": 30
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 229,
+        "Otlak/calilik": 13,
+        "Yerlesim": 4
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 4,
+        "SAHA_KONTROL": 0,
+        "IZLE": 70,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 3,
+        "ONCELIGE_GORE": 134,
+        "GENCLESME_IZLE": 35
+      },
+      "arazi": {
+        "egim_medyan": 14.0051895,
+        "egim_p90": 23.5672775,
+        "yukselti_min": 2.8654232,
+        "yukselti_maks": 542.6847,
+        "agaclik_orani": 0.9308943089430894,
+        "ortu_medyan": 0.16134231
+      },
+      "erisim": {
+        "yol_medyan_km": 0.50618845,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.34231453488372093,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.44235
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2019_02": {
+      "fire_id": "EGE_2019_02",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2019-08-19",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 74,
+        "alan_ha": 462.5,
+        "tahminli_hucre": 33
+      },
+      "siddet_dagilimi": {
+        "dusuk": 40,
+        "orta-yuksek": 15,
+        "orta-dusuk": 14,
+        "yuksek": 5
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 36,
+        "Otlak/calilik": 25,
+        "Tarim": 13
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 13,
+        "SAHA_KONTROL": 0,
+        "IZLE": 29,
+        "EROZYON_ONCE": 4,
+        "DIKIM_ADAYI": 1,
+        "ONCELIGE_GORE": 18,
+        "GENCLESME_IZLE": 9
+      },
+      "arazi": {
+        "egim_medyan": 18.1247625,
+        "egim_p90": 27.918170500000002,
+        "yukselti_min": 52.5145,
+        "yukselti_maks": 700.734,
+        "agaclik_orani": 0.4864864864864865,
+        "ortu_medyan": 0.323350075
+      },
+      "erisim": {
+        "yol_medyan_km": 0.904350075,
+        "yol_uzak_orani": 0.22972972972972974
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3454969696969697,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4507
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2019_03": {
+      "fire_id": "EGE_2019_03",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2019-08-19",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 92,
+        "alan_ha": 575.0,
+        "tahminli_hucre": 46
+      },
+      "siddet_dagilimi": {
+        "dusuk": 37,
+        "yuksek": 25,
+        "orta-dusuk": 17,
+        "orta-yuksek": 13
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 49,
+        "Otlak/calilik": 31,
+        "Tarim": 9,
+        "Yerlesim": 3
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 12,
+        "SAHA_KONTROL": 0,
+        "IZLE": 34,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 5,
+        "ONCELIGE_GORE": 26,
+        "GENCLESME_IZLE": 15
+      },
+      "arazi": {
+        "egim_medyan": 9.681192,
+        "egim_p90": 16.328042000000003,
+        "yukselti_min": 58.735466,
+        "yukselti_maks": 583.7643,
+        "agaclik_orani": 0.532608695652174,
+        "ortu_medyan": 0.27486185500000004
+      },
+      "erisim": {
+        "yol_medyan_km": 1.2708883000000002,
+        "yol_uzak_orani": 0.14130434782608695
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3406173913043478,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4433
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2020_01": {
+      "fire_id": "EGE_2020_01",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2020-08-02",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 126,
+        "alan_ha": 787.5,
+        "tahminli_hucre": 64
+      },
+      "siddet_dagilimi": {
+        "dusuk": 60,
+        "orta-yuksek": 29,
+        "orta-dusuk": 27,
+        "yuksek": 10
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 84,
+        "Otlak/calilik": 22,
+        "Tarim": 18,
+        "Yerlesim": 2
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 20,
+        "SAHA_KONTROL": 0,
+        "IZLE": 45,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 3,
+        "ONCELIGE_GORE": 26,
+        "GENCLESME_IZLE": 32
+      },
+      "arazi": {
+        "egim_medyan": 10.792469,
+        "egim_p90": 18.8854635,
+        "yukselti_min": 35.27993,
+        "yukselti_maks": 332.60284,
+        "agaclik_orani": 0.6666666666666666,
+        "ortu_medyan": 0.34721305999999996
+      },
+      "erisim": {
+        "yol_medyan_km": 0.302742725,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.32337656249999996,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.51215
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2021_01": {
+      "fire_id": "EGE_2021_01",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2021-08-02",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 2667,
+        "alan_ha": 16668.8,
+        "tahminli_hucre": 1943
+      },
+      "siddet_dagilimi": {
+        "orta-yuksek": 865,
+        "yuksek": 703,
+        "orta-dusuk": 585,
+        "dusuk": 514
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 1868,
+        "Otlak/calilik": 732,
+        "Yerlesim": 47,
+        "Tarim": 14,
+        "Su": 5,
+        "Ciplak": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 66,
+        "SAHA_KONTROL": 0,
+        "IZLE": 660,
+        "EROZYON_ONCE": 39,
+        "DIKIM_ADAYI": 677,
+        "ONCELIGE_GORE": 870,
+        "GENCLESME_IZLE": 355
+      },
+      "arazi": {
+        "egim_medyan": 12.089579,
+        "egim_p90": 20.542146000000002,
+        "yukselti_min": 2.2325623,
+        "yukselti_maks": 852.828,
+        "agaclik_orani": 0.7004124484439445,
+        "ortu_medyan": 0.89884675
+      },
+      "erisim": {
+        "yol_medyan_km": 0.6717698,
+        "yol_uzak_orani": 0.046494188226471694
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3623077200205867,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.3882
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2021_02": {
+      "fire_id": "EGE_2021_02",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2021-08-05",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 2208,
+        "alan_ha": 13800.0,
+        "tahminli_hucre": 1465
+      },
+      "siddet_dagilimi": {
+        "dusuk": 608,
+        "orta-yuksek": 584,
+        "orta-dusuk": 527,
+        "yuksek": 489
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 1938,
+        "Otlak/calilik": 217,
+        "Tarim": 47,
+        "Yerlesim": 5,
+        "Su": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 53,
+        "SAHA_KONTROL": 0,
+        "IZLE": 690,
+        "EROZYON_ONCE": 35,
+        "DIKIM_ADAYI": 756,
+        "ONCELIGE_GORE": 624,
+        "GENCLESME_IZLE": 50
+      },
+      "arazi": {
+        "egim_medyan": 12.2686915,
+        "egim_p90": 20.67797,
+        "yukselti_min": 547.7687,
+        "yukselti_maks": 1842.8042,
+        "agaclik_orani": 0.8777173913043478,
+        "ortu_medyan": 1.0
+      },
+      "erisim": {
+        "yol_medyan_km": 1.3520664500000001,
+        "yol_uzak_orani": 0.3188405797101449
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3856960409556314,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.3442
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2021_03": {
+      "fire_id": "EGE_2021_03",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2021-07-30",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 1849,
+        "alan_ha": 11556.2,
+        "tahminli_hucre": 1306
+      },
+      "siddet_dagilimi": {
+        "orta-dusuk": 513,
+        "orta-yuksek": 513,
+        "dusuk": 506,
+        "yuksek": 317
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 1632,
+        "Otlak/calilik": 179,
+        "Yerlesim": 34,
+        "Tarim": 2,
+        "Su": 2
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 38,
+        "SAHA_KONTROL": 0,
+        "IZLE": 508,
+        "EROZYON_ONCE": 35,
+        "DIKIM_ADAYI": 74,
+        "ONCELIGE_GORE": 975,
+        "GENCLESME_IZLE": 219
+      },
+      "arazi": {
+        "egim_medyan": 17.093985,
+        "egim_p90": 26.5158968,
+        "yukselti_min": 10.5784855,
+        "yukselti_maks": 819.1264,
+        "agaclik_orani": 0.8826392644672796,
+        "ortu_medyan": 0.9836048
+      },
+      "erisim": {
+        "yol_medyan_km": 0.16987836,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.36812228177641654,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4334
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2021_04": {
+      "fire_id": "EGE_2021_04",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2021-08-04",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 1415,
+        "alan_ha": 8843.8,
+        "tahminli_hucre": 608
+      },
+      "siddet_dagilimi": {
+        "dusuk": 762,
+        "orta-dusuk": 372,
+        "orta-yuksek": 218,
+        "yuksek": 63
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 1250,
+        "Otlak/calilik": 160,
+        "Tarim": 3,
+        "Ciplak": 1,
+        "Yerlesim": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 4,
+        "SAHA_KONTROL": 0,
+        "IZLE": 803,
+        "EROZYON_ONCE": 152,
+        "DIKIM_ADAYI": 244,
+        "ONCELIGE_GORE": 202,
+        "GENCLESME_IZLE": 10
+      },
+      "arazi": {
+        "egim_medyan": 22.073742,
+        "egim_p90": 32.4675486,
+        "yukselti_min": 3.4757545,
+        "yukselti_maks": 1918.8271,
+        "agaclik_orani": 0.8833922261484098,
+        "ortu_medyan": 0.97006464
+      },
+      "erisim": {
+        "yol_medyan_km": 1.548215,
+        "yol_uzak_orani": 0.36537102473498234
+      },
+      "gorunum": {
+        "acik_ortalama": 0.4012330592105263,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.3295
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2021_05": {
+      "fire_id": "EGE_2021_05",
+      "il": "Aydın",
+      "bolge": "Ege",
+      "tarih": "2021-08-07",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 318,
+        "alan_ha": 1987.5,
+        "tahminli_hucre": 162
+      },
+      "siddet_dagilimi": {
+        "dusuk": 144,
+        "orta-dusuk": 86,
+        "orta-yuksek": 54,
+        "yuksek": 34
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 270,
+        "Otlak/calilik": 33,
+        "Tarim": 15
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 15,
+        "SAHA_KONTROL": 0,
+        "IZLE": 141,
+        "EROZYON_ONCE": 14,
+        "DIKIM_ADAYI": 70,
+        "ONCELIGE_GORE": 71,
+        "GENCLESME_IZLE": 7
+      },
+      "arazi": {
+        "egim_medyan": 15.232492,
+        "egim_p90": 23.879178000000007,
+        "yukselti_min": 70.62129,
+        "yukselti_maks": 1375.5249,
+        "agaclik_orani": 0.8490566037735849,
+        "ortu_medyan": 0.787911775
+      },
+      "erisim": {
+        "yol_medyan_km": 1.0875251499999998,
+        "yol_uzak_orani": 0.0031446540880503146
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3716759259259259,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.3443
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2021_06": {
+      "fire_id": "EGE_2021_06",
+      "il": "Denizli",
+      "bolge": "Ege",
+      "tarih": "2021-08-03",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 184,
+        "alan_ha": 1150.0,
+        "tahminli_hucre": 98
+      },
+      "siddet_dagilimi": {
+        "orta-yuksek": 65,
+        "orta-dusuk": 64,
+        "dusuk": 48,
+        "yuksek": 7
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 154,
+        "Otlak/calilik": 26,
+        "Su": 2,
+        "Tarim": 2
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 4,
+        "SAHA_KONTROL": 0,
+        "IZLE": 82,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 50,
+        "ONCELIGE_GORE": 48,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 9.69608925,
+        "egim_p90": 13.9306544,
+        "yukselti_min": 487.27243,
+        "yukselti_maks": 847.54517,
+        "agaclik_orani": 0.8369565217391305,
+        "ortu_medyan": 0.50236601
+      },
+      "erisim": {
+        "yol_medyan_km": 0.930494665,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.28684897959183675,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.34835
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2021_07": {
+      "fire_id": "EGE_2021_07",
+      "il": "Aydın",
+      "bolge": "Ege",
+      "tarih": "2021-08-04",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 159,
+        "alan_ha": 993.8,
+        "tahminli_hucre": 76
+      },
+      "siddet_dagilimi": {
+        "dusuk": 81,
+        "orta-dusuk": 40,
+        "orta-yuksek": 28,
+        "yuksek": 10
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 113,
+        "Otlak/calilik": 46
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 83,
+        "EROZYON_ONCE": 3,
+        "DIKIM_ADAYI": 39,
+        "ONCELIGE_GORE": 33,
+        "GENCLESME_IZLE": 1
+      },
+      "arazi": {
+        "egim_medyan": 18.138372,
+        "egim_p90": 23.0807356,
+        "yukselti_min": 479.2522,
+        "yukselti_maks": 1663.3663,
+        "agaclik_orani": 0.710691823899371,
+        "ortu_medyan": 0.84491104
+      },
+      "erisim": {
+        "yol_medyan_km": 0.25177434,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3897197368421052,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.33965
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2021_08": {
+      "fire_id": "EGE_2021_08",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2021-08-14",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 67,
+        "alan_ha": 418.8,
+        "tahminli_hucre": 49
+      },
+      "siddet_dagilimi": {
+        "orta-yuksek": 33,
+        "orta-dusuk": 18,
+        "dusuk": 12,
+        "yuksek": 4
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 41,
+        "Agaclik": 22,
+        "Tarim": 4
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 4,
+        "SAHA_KONTROL": 0,
+        "IZLE": 16,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 0,
+        "ONCELIGE_GORE": 25,
+        "GENCLESME_IZLE": 22
+      },
+      "arazi": {
+        "egim_medyan": 15.944808,
+        "egim_p90": 27.8916874,
+        "yukselti_min": 11.845908,
+        "yukselti_maks": 444.7342,
+        "agaclik_orani": 0.3283582089552239,
+        "ortu_medyan": 0.3939395
+      },
+      "erisim": {
+        "yol_medyan_km": 1.0195255,
+        "yol_uzak_orani": 0.04477611940298507
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2631612244897959,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.498
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2022_01": {
+      "fire_id": "EGE_2022_01",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2022-06-22",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 758,
+        "alan_ha": 4737.5,
+        "tahminli_hucre": 500
+      },
+      "siddet_dagilimi": {
+        "orta-dusuk": 463,
+        "dusuk": 238,
+        "orta-yuksek": 57
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 447,
+        "Otlak/calilik": 311
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 258,
+        "EROZYON_ONCE": 3,
+        "DIKIM_ADAYI": 479,
+        "ONCELIGE_GORE": 18,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 9.677531,
+        "egim_p90": 17.0701604,
+        "yukselti_min": 13.347068,
+        "yukselti_maks": 433.84387,
+        "agaclik_orani": 0.5897097625329816,
+        "ortu_medyan": 0.94077852
+      },
+      "erisim": {
+        "yol_medyan_km": 0.7280323200000001,
+        "yol_uzak_orani": 0.06728232189973615
+      },
+      "gorunum": {
+        "acik_ortalama": 0.273875,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.21045
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2022_02": {
+      "fire_id": "EGE_2022_02",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2022-07-13",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 113,
+        "alan_ha": 706.2,
+        "tahminli_hucre": 40
+      },
+      "siddet_dagilimi": {
+        "dusuk": 65,
+        "orta-dusuk": 41,
+        "orta-yuksek": 7
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 58,
+        "Otlak/calilik": 47,
+        "Yerlesim": 8
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 8,
+        "SAHA_KONTROL": 0,
+        "IZLE": 65,
+        "EROZYON_ONCE": 5,
+        "DIKIM_ADAYI": 33,
+        "ONCELIGE_GORE": 2,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 17.667799,
+        "egim_p90": 26.1881206,
+        "yukselti_min": 46.08853,
+        "yukselti_maks": 899.93744,
+        "agaclik_orani": 0.5132743362831859,
+        "ortu_medyan": 0.8164887
+      },
+      "erisim": {
+        "yol_medyan_km": 0.28634706,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2988375,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.18635
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2022_03": {
+      "fire_id": "EGE_2022_03",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2022-09-21",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 78,
+        "alan_ha": 487.5,
+        "tahminli_hucre": 28
+      },
+      "siddet_dagilimi": {
+        "dusuk": 44,
+        "orta-dusuk": 31,
+        "orta-yuksek": 3
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 45,
+        "Otlak/calilik": 33
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 50,
+        "EROZYON_ONCE": 16,
+        "DIKIM_ADAYI": 12,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 23.886161,
+        "egim_p90": 30.2125423,
+        "yukselti_min": 29.677023,
+        "yukselti_maks": 683.31384,
+        "agaclik_orani": 0.5769230769230769,
+        "ortu_medyan": 0.82851175
+      },
+      "erisim": {
+        "yol_medyan_km": 0.8077343,
+        "yol_uzak_orani": 0.07692307692307693
+      },
+      "gorunum": {
+        "acik_ortalama": 0.29170714285714283,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.1846
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2023_01": {
+      "fire_id": "EGE_2023_01",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2023-07-27",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 284,
+        "alan_ha": 1775.0,
+        "tahminli_hucre": 151
+      },
+      "siddet_dagilimi": {
+        "dusuk": 117,
+        "orta-dusuk": 109,
+        "orta-yuksek": 58
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 189,
+        "Tarim": 76,
+        "Otlak/calilik": 18,
+        "Yerlesim": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 77,
+        "SAHA_KONTROL": 0,
+        "IZLE": 65,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 140,
+        "ONCELIGE_GORE": 2,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 7.102201750000001,
+        "egim_p90": 13.339754400000002,
+        "yukselti_min": 27.154816,
+        "yukselti_maks": 306.42053,
+        "agaclik_orani": 0.6654929577464789,
+        "ortu_medyan": 0.87337382
+      },
+      "erisim": {
+        "yol_medyan_km": 0.22377753,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2852291390728477,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.2128
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_01": {
+      "fire_id": "EGE_2024_01",
+      "il": "Manisa",
+      "bolge": "Ege",
+      "tarih": "2024-08-16",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 843,
+        "alan_ha": 5268.8,
+        "tahminli_hucre": 231
+      },
+      "siddet_dagilimi": {
+        "dusuk": 516,
+        "orta-dusuk": 278,
+        "orta-yuksek": 49
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 417,
+        "Otlak/calilik": 276,
+        "Tarim": 150
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 150,
+        "SAHA_KONTROL": 0,
+        "IZLE": 462,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 193,
+        "ONCELIGE_GORE": 38,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 11.146445,
+        "egim_p90": 16.915588000000003,
+        "yukselti_min": 76.75593,
+        "yukselti_maks": 740.5622,
+        "agaclik_orani": 0.49466192170818507,
+        "ortu_medyan": 0.71853733
+      },
+      "erisim": {
+        "yol_medyan_km": 1.2666777,
+        "yol_uzak_orani": 0.1874258600237248
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2846103896103896,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.2079
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_02": {
+      "fire_id": "EGE_2024_02",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2024-08-16",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 443,
+        "alan_ha": 2768.8,
+        "tahminli_hucre": 69
+      },
+      "siddet_dagilimi": {
+        "dusuk": 340,
+        "orta-dusuk": 102,
+        "orta-yuksek": 1
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 192,
+        "Agaclik": 168,
+        "Tarim": 73,
+        "Yerlesim": 10
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 83,
+        "SAHA_KONTROL": 0,
+        "IZLE": 316,
+        "EROZYON_ONCE": 2,
+        "DIKIM_ADAYI": 39,
+        "ONCELIGE_GORE": 3,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 13.849653,
+        "egim_p90": 20.8364944,
+        "yukselti_min": 4.768033,
+        "yukselti_maks": 1031.9454,
+        "agaclik_orani": 0.3792325056433409,
+        "ortu_medyan": 0.52861756
+      },
+      "erisim": {
+        "yol_medyan_km": 0.22757782,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2503014492753624,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.2711
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_03": {
+      "fire_id": "EGE_2024_03",
+      "il": "Aydın",
+      "bolge": "Ege",
+      "tarih": "2024-08-17",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 483,
+        "alan_ha": 3018.8,
+        "tahminli_hucre": 93
+      },
+      "siddet_dagilimi": {
+        "dusuk": 361,
+        "orta-dusuk": 119,
+        "orta-yuksek": 3
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 250,
+        "Tarim": 174,
+        "Otlak/calilik": 53,
+        "Yerlesim": 6
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 180,
+        "SAHA_KONTROL": 0,
+        "IZLE": 220,
+        "EROZYON_ONCE": 4,
+        "DIKIM_ADAYI": 79,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 9.818417,
+        "egim_p90": 20.555868600000004,
+        "yukselti_min": 107.863815,
+        "yukselti_maks": 1242.878,
+        "agaclik_orani": 0.5175983436853002,
+        "ortu_medyan": 0.6749061
+      },
+      "erisim": {
+        "yol_medyan_km": 0.6920948,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3059827956989247,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.1161
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_05": {
+      "fire_id": "EGE_2024_05",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2024-06-30",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 109,
+        "alan_ha": 681.2,
+        "tahminli_hucre": 68
+      },
+      "siddet_dagilimi": {
+        "orta-dusuk": 41,
+        "dusuk": 36,
+        "orta-yuksek": 32
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 82,
+        "Otlak/calilik": 23,
+        "Tarim": 3,
+        "Sulak alan": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 4,
+        "SAHA_KONTROL": 0,
+        "IZLE": 37,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 68,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 10.935895,
+        "egim_p90": 17.938113,
+        "yukselti_min": -0.28207213,
+        "yukselti_maks": 296.62054,
+        "agaclik_orani": 0.7522935779816514,
+        "ortu_medyan": 0.9839817
+      },
+      "erisim": {
+        "yol_medyan_km": 0.36729634,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.29737352941176476,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.14255
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_07": {
+      "fire_id": "EGE_2024_07",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2024-08-17",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 192,
+        "alan_ha": 1200.0,
+        "tahminli_hucre": 16
+      },
+      "siddet_dagilimi": {
+        "dusuk": 164,
+        "orta-dusuk": 28
+      },
+      "arazi_dagilimi": {
+        "Tarim": 148,
+        "Otlak/calilik": 30,
+        "Agaclik": 14
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 148,
+        "SAHA_KONTROL": 0,
+        "IZLE": 39,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 4,
+        "ONCELIGE_GORE": 1,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 0.9181996750000001,
+        "egim_p90": 11.732990500000001,
+        "yukselti_min": 29.326279,
+        "yukselti_maks": 264.05652,
+        "agaclik_orani": 0.07291666666666667,
+        "ortu_medyan": 0.0
+      },
+      "erisim": {
+        "yol_medyan_km": 0.5608886,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.1991625,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.5629
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_08": {
+      "fire_id": "EGE_2024_08",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2024-08-17",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 180,
+        "alan_ha": 1125.0,
+        "tahminli_hucre": 16
+      },
+      "siddet_dagilimi": {
+        "dusuk": 163,
+        "orta-dusuk": 17
+      },
+      "arazi_dagilimi": {
+        "Tarim": 146,
+        "Otlak/calilik": 30,
+        "Yerlesim": 3,
+        "Agaclik": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 149,
+        "SAHA_KONTROL": 0,
+        "IZLE": 31,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 0,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 0.34836782499999996,
+        "egim_p90": 23.5450285,
+        "yukselti_min": 19.460678,
+        "yukselti_maks": 369.7039,
+        "agaclik_orani": 0.005555555555555556,
+        "ortu_medyan": 0.0
+      },
+      "erisim": {
+        "yol_medyan_km": 0.5140995349999999,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.21009999999999998,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.5347999999999999
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_09": {
+      "fire_id": "EGE_2024_09",
+      "il": "Aydın",
+      "bolge": "Ege",
+      "tarih": "2024-08-16",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 37,
+        "alan_ha": 231.2,
+        "tahminli_hucre": 11
+      },
+      "siddet_dagilimi": {
+        "dusuk": 20,
+        "orta-dusuk": 17
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 19,
+        "Agaclik": 18
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 26,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 3,
+        "ONCELIGE_GORE": 8,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 2.642742,
+        "egim_p90": 6.5521522,
+        "yukselti_min": 43.737995,
+        "yukselti_maks": 99.01233,
+        "agaclik_orani": 0.4864864864864865,
+        "ortu_medyan": 0.07385514
+      },
+      "erisim": {
+        "yol_medyan_km": 0.3091121,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.21277272727272728,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.3714
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_10": {
+      "fire_id": "EGE_2024_10",
+      "il": "Muğla",
+      "bolge": "Ege",
+      "tarih": "2024-08-16",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 53,
+        "alan_ha": 331.2,
+        "tahminli_hucre": 19
+      },
+      "siddet_dagilimi": {
+        "dusuk": 32,
+        "orta-dusuk": 21
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 36,
+        "Tarim": 9,
+        "Otlak/calilik": 8
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 9,
+        "SAHA_KONTROL": 0,
+        "IZLE": 25,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 16,
+        "ONCELIGE_GORE": 3,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 9.822737,
+        "egim_p90": 15.158330000000001,
+        "yukselti_min": 34.024494,
+        "yukselti_maks": 240.23666,
+        "agaclik_orani": 0.6792452830188679,
+        "ortu_medyan": 0.7657062
+      },
+      "erisim": {
+        "yol_medyan_km": 0.9721799,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.28053157894736835,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.2476
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "EGE_2024_11": {
+      "fire_id": "EGE_2024_11",
+      "il": "İzmir",
+      "bolge": "Ege",
+      "tarih": "2024-08-18",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 55,
+        "alan_ha": 343.8,
+        "tahminli_hucre": 19
+      },
+      "siddet_dagilimi": {
+        "dusuk": 33,
+        "orta-dusuk": 14,
+        "orta-yuksek": 8
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 49,
+        "Otlak/calilik": 5,
+        "Tarim": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 1,
+        "SAHA_KONTROL": 0,
+        "IZLE": 35,
+        "EROZYON_ONCE": 4,
+        "DIKIM_ADAYI": 15,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 12.270186,
+        "egim_p90": 25.9679432,
+        "yukselti_min": 63.691925,
+        "yukselti_maks": 514.6801,
+        "agaclik_orani": 0.8909090909090909,
+        "ortu_medyan": 0.97394574
+      },
+      "erisim": {
+        "yol_medyan_km": 0.4922605,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.30695789473684204,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.2438
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "GDA_2021_01": {
+      "fire_id": "GDA_2021_01",
+      "il": "Hakkâri",
+      "bolge": "Dogu Anadolu",
+      "tarih": "2021-08-26",
+      "kalite": "check",
+      "buyukluk": {
+        "hucre": 327,
+        "alan_ha": 2043.8,
+        "tahminli_hucre": 8
+      },
+      "siddet_dagilimi": {
+        "dusuk": 285,
+        "orta-dusuk": 36,
+        "orta-yuksek": 6
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 309,
+        "Agaclik": 18
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 0,
+        "SAHA_KONTROL": 0,
+        "IZLE": 319,
+        "EROZYON_ONCE": 1,
+        "DIKIM_ADAYI": 0,
+        "ONCELIGE_GORE": 6,
+        "GENCLESME_IZLE": 1
+      },
+      "arazi": {
+        "egim_medyan": 23.422886,
+        "egim_p90": 35.188491000000006,
+        "yukselti_min": 853.62775,
+        "yukselti_maks": 2299.3687,
+        "agaclik_orani": 0.05504587155963303,
+        "ortu_medyan": 0.24204622
+      },
+      "erisim": {
+        "yol_medyan_km": 1.5516157,
+        "yol_uzak_orani": 0.41896024464831805
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2623375,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.4726
+      },
+      "guven": {
+        "seviye": "dusuk",
+        "bolgedeki_referans_yangini": 0,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "IAN_2021_01": {
+      "fire_id": "IAN_2021_01",
+      "il": "Adana",
+      "bolge": "Akdeniz",
+      "tarih": "2021-07-29",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 92,
+        "alan_ha": 575.0,
+        "tahminli_hucre": 28
+      },
+      "siddet_dagilimi": {
+        "dusuk": 63,
+        "orta-dusuk": 20,
+        "orta-yuksek": 9
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 75,
+        "Otlak/calilik": 15,
+        "Su": 1,
+        "Yerlesim": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 2,
+        "SAHA_KONTROL": 0,
+        "IZLE": 62,
+        "EROZYON_ONCE": 2,
+        "DIKIM_ADAYI": 15,
+        "ONCELIGE_GORE": 11,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 17.834208500000003,
+        "egim_p90": 23.9978872,
+        "yukselti_min": 417.11966,
+        "yukselti_maks": 1145.2052,
+        "agaclik_orani": 0.8152173913043478,
+        "ortu_medyan": 0.88696942
+      },
+      "erisim": {
+        "yol_medyan_km": 0.88476877,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3992035714285714,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.33775
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 13,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "IAN_2023_01": {
+      "fire_id": "IAN_2023_01",
+      "il": "Eskişehir",
+      "bolge": "Ic Anadolu",
+      "tarih": "2023-08-23",
+      "kalite": "check",
+      "buyukluk": {
+        "hucre": 223,
+        "alan_ha": 1393.8,
+        "tahminli_hucre": 34
+      },
+      "siddet_dagilimi": {
+        "dusuk": 185,
+        "orta-dusuk": 29,
+        "orta-yuksek": 9
+      },
+      "arazi_dagilimi": {
+        "Tarim": 130,
+        "Agaclik": 54,
+        "Otlak/calilik": 37,
+        "Yerlesim": 2
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 132,
+        "SAHA_KONTROL": 0,
+        "IZLE": 57,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 34,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 2.0903313,
+        "egim_p90": 9.8989878,
+        "yukselti_min": 1051.9054,
+        "yukselti_maks": 1224.9916,
+        "agaclik_orani": 0.242152466367713,
+        "ortu_medyan": 0.0
+      },
+      "erisim": {
+        "yol_medyan_km": 0.61892974,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.3175500000000001,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.01655
+      },
+      "guven": {
+        "seviye": "dusuk",
+        "bolgedeki_referans_yangini": 0,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "IAN_2024_01": {
+      "fire_id": "IAN_2024_01",
+      "il": "Uşak",
+      "bolge": "Ege",
+      "tarih": "2024-06-18",
+      "kalite": "check",
+      "buyukluk": {
+        "hucre": 705,
+        "alan_ha": 4406.2,
+        "tahminli_hucre": 38
+      },
+      "siddet_dagilimi": {
+        "dusuk": 635,
+        "orta-dusuk": 70
+      },
+      "arazi_dagilimi": {
+        "Tarim": 335,
+        "Otlak/calilik": 218,
+        "Agaclik": 145,
+        "Yerlesim": 7
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 342,
+        "SAHA_KONTROL": 0,
+        "IZLE": 331,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 32,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 3.9929492,
+        "egim_p90": 10.704337800000003,
+        "yukselti_min": 506.40634,
+        "yukselti_maks": 843.2291,
+        "agaclik_orani": 0.20567375886524822,
+        "ortu_medyan": 0.04163045
+      },
+      "erisim": {
+        "yol_medyan_km": 0.7303052,
+        "yol_uzak_orani": 0.03404255319148936
+      },
+      "gorunum": {
+        "acik_ortalama": 0.25936578947368416,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.07780000000000001
+      },
+      "guven": {
+        "seviye": "yuksek",
+        "bolgedeki_referans_yangini": 20,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "KAR_2024_01": {
+      "fire_id": "KAR_2024_01",
+      "il": "Bolu",
+      "bolge": "Karadeniz",
+      "tarih": "2024-08-16",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 534,
+        "alan_ha": 3337.5,
+        "tahminli_hucre": 234
+      },
+      "siddet_dagilimi": {
+        "dusuk": 293,
+        "orta-dusuk": 208,
+        "orta-yuksek": 33
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 431,
+        "Otlak/calilik": 83,
+        "Tarim": 11,
+        "Yerlesim": 9
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 20,
+        "SAHA_KONTROL": 0,
+        "IZLE": 280,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 234,
+        "ONCELIGE_GORE": 0,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 12.58279725,
+        "egim_p90": 18.294952799999997,
+        "yukselti_min": 720.5471,
+        "yukselti_maks": 1378.8247,
+        "agaclik_orani": 0.8071161048689138,
+        "ortu_medyan": 0.9226254199999999
+      },
+      "erisim": {
+        "yol_medyan_km": 1.2477154000000001,
+        "yol_uzak_orani": 0.10486891385767791
+      },
+      "gorunum": {
+        "acik_ortalama": 0.32964401709401703,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.03245
+      },
+      "guven": {
+        "seviye": "dusuk",
+        "bolgedeki_referans_yangini": 0,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "MAR_2023_01": {
+      "fire_id": "MAR_2023_01",
+      "il": "Çanakkale",
+      "bolge": "Marmara",
+      "tarih": "2023-08-22",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 665,
+        "alan_ha": 4156.2,
+        "tahminli_hucre": 180
+      },
+      "siddet_dagilimi": {
+        "dusuk": 396,
+        "orta-dusuk": 217,
+        "orta-yuksek": 52
+      },
+      "arazi_dagilimi": {
+        "Agaclik": 387,
+        "Tarim": 211,
+        "Otlak/calilik": 59,
+        "Yerlesim": 7,
+        "Su": 1
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 219,
+        "SAHA_KONTROL": 0,
+        "IZLE": 276,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 164,
+        "ONCELIGE_GORE": 6,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 7.980068,
+        "egim_p90": 14.113112800000001,
+        "yukselti_min": 1.1847159,
+        "yukselti_maks": 433.5613,
+        "agaclik_orani": 0.5819548872180451,
+        "ortu_medyan": 0.6927961
+      },
+      "erisim": {
+        "yol_medyan_km": 0.5892722,
+        "yol_uzak_orani": 0.016541353383458645
+      },
+      "gorunum": {
+        "acik_ortalama": 0.27903500000000003,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.1594
+      },
+      "guven": {
+        "seviye": "dusuk",
+        "bolgedeki_referans_yangini": 1,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "MAR_2024_01": {
+      "fire_id": "MAR_2024_01",
+      "il": "Çanakkale",
+      "bolge": "Marmara",
+      "tarih": "2024-08-15",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 951,
+        "alan_ha": 5943.8,
+        "tahminli_hucre": 207
+      },
+      "siddet_dagilimi": {
+        "dusuk": 707,
+        "orta-dusuk": 132,
+        "orta-yuksek": 97,
+        "yuksek": 15
+      },
+      "arazi_dagilimi": {
+        "Tarim": 726,
+        "Agaclik": 194,
+        "Otlak/calilik": 25,
+        "Yerlesim": 6
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 732,
+        "SAHA_KONTROL": 0,
+        "IZLE": 75,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 127,
+        "ONCELIGE_GORE": 16,
+        "GENCLESME_IZLE": 1
+      },
+      "arazi": {
+        "egim_medyan": 2.1548355,
+        "egim_p90": 8.486177,
+        "yukselti_min": 0.33301753,
+        "yukselti_maks": 270.76617,
+        "agaclik_orani": 0.20399579390115669,
+        "ortu_medyan": 0.043373935
+      },
+      "erisim": {
+        "yol_medyan_km": 0.46177512,
+        "yol_uzak_orani": 0.004206098843322818
+      },
+      "gorunum": {
+        "acik_ortalama": 0.2694685990338164,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.292
+      },
+      "guven": {
+        "seviye": "dusuk",
+        "bolgedeki_referans_yangini": 1,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    },
+    "MAR_2024_02": {
+      "fire_id": "MAR_2024_02",
+      "il": "Bursa",
+      "bolge": "Marmara",
+      "tarih": "2024-06-20",
+      "kalite": "ok",
+      "buyukluk": {
+        "hucre": 274,
+        "alan_ha": 1712.5,
+        "tahminli_hucre": 12
+      },
+      "siddet_dagilimi": {
+        "dusuk": 254,
+        "orta-dusuk": 20
+      },
+      "arazi_dagilimi": {
+        "Otlak/calilik": 204,
+        "Tarim": 50,
+        "Agaclik": 17,
+        "Yerlesim": 3
+      },
+      "hukum_dagilimi": {
+        "KAPSAM_DISI": 53,
+        "SAHA_KONTROL": 3,
+        "IZLE": 206,
+        "EROZYON_ONCE": 0,
+        "DIKIM_ADAYI": 6,
+        "ONCELIGE_GORE": 6,
+        "GENCLESME_IZLE": 0
+      },
+      "arazi": {
+        "egim_medyan": 9.27824625,
+        "egim_p90": 15.374575050000006,
+        "yukselti_min": 315.293,
+        "yukselti_maks": 843.42676,
+        "agaclik_orani": 0.06204379562043796,
+        "ortu_medyan": 0.1671219
+      },
+      "erisim": {
+        "yol_medyan_km": 0.7658673,
+        "yol_uzak_orani": 0.0
+      },
+      "gorunum": {
+        "acik_ortalama": 0.22290833333333335,
+        "tum_yanginlar_medyani": 0.3095988687782805,
+        "toparlanma_medyan": 0.34665
+      },
+      "guven": {
+        "seviye": "dusuk",
+        "bolgedeki_referans_yangini": 1,
+        "kaynak": "ai/data/ara/yangin_ozeti.csv -> egitime_uygun"
+      }
+    }
+  }
+}

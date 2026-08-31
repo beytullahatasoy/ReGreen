@@ -1,0 +1,80 @@
+{
+  "_okubeni": [
+    "TUR-YETISME ORTAMI TABLOSU",
+    "",
+    "!!! BU BIR ORNEK TABLODUR !!!",
+    "",
+    "Icindeki tur adlari SISTEMIN CIKARIMI DEGILDIR ve bilimsel bir kaynaga",
+    "dayanmamaktadir. Tablo yalnizca MEKANIZMAYI gostermek icin vardir:",
+    "sistem yetisme ortamini tarif eder, tur onerisi DISARIDAN verilen bu",
+    "tablodan okunur.",
+    "",
+    "Sahada kullanilmadan once OGM'nin kendi tur-yetisme ortami rehberiyle",
+    "degistirilmelidir. Degisiklik yalnizca bu dosyadadir, kod degismez.",
+    "",
+    "Eslesme sirayla denenir, ILK uyan kayit kullanilir. Hicbiri uymazsa",
+    "tur onerisi uretilmez ve arayuzde yalnizca yetisme ortami tarifi cikar.",
+    "",
+    "Alanlar:",
+    "  bolge      : yangin bolgesi listesi, bos ise hepsi",
+    "  yukselti   : [min, max] metre",
+    "  egim       : [min, max] derece",
+    "  arazi      : arazi ortusu listesi, bos ise hepsi",
+    "  turler     : onerilen tur adlari"
+  ],
+
+  "kaynak": "ÖRNEK TABLO — OGM tür-yetişme ortamı rehberi ile değiştirilecek",
+  "surum": "0.1-ornek",
+  "onaylandi": false,
+
+  "kurallar": [
+    {
+      "ad": "akdeniz-ege alcak kusak",
+      "bolge": ["Akdeniz", "Ege"],
+      "yukselti": [0, 800],
+      "egim": [0, 90],
+      "arazi": ["Agaclik"],
+      "turler": ["kızılçam", "fıstıkçamı"]
+    },
+    {
+      "ad": "akdeniz-ege orta kusak",
+      "bolge": ["Akdeniz", "Ege"],
+      "yukselti": [800, 1500],
+      "egim": [0, 90],
+      "arazi": ["Agaclik"],
+      "turler": ["karaçam", "sedir"]
+    },
+    {
+      "ad": "akdeniz-ege yuksek kusak",
+      "bolge": ["Akdeniz", "Ege"],
+      "yukselti": [1500, 4000],
+      "egim": [0, 90],
+      "arazi": ["Agaclik"],
+      "turler": ["sedir", "ardıç"]
+    },
+    {
+      "ad": "marmara-karadeniz ormanlik",
+      "bolge": ["Marmara", "Karadeniz"],
+      "yukselti": [0, 1200],
+      "egim": [0, 90],
+      "arazi": ["Agaclik"],
+      "turler": ["meşe", "kayın", "karaçam"]
+    },
+    {
+      "ad": "ic-dogu anadolu ormanlik",
+      "bolge": ["Ic Anadolu", "Dogu Anadolu"],
+      "yukselti": [0, 4000],
+      "egim": [0, 90],
+      "arazi": ["Agaclik"],
+      "turler": ["karaçam", "meşe"]
+    },
+    {
+      "ad": "calilik-otlak, her bolge",
+      "bolge": [],
+      "yukselti": [0, 4000],
+      "egim": [0, 90],
+      "arazi": ["Otlak/calilik", "Ciplak"],
+      "turler": ["maki türleri", "kermes meşesi"]
+    }
+  ]
+}
