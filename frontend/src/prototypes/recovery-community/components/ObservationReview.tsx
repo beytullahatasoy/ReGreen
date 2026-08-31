@@ -1,0 +1,5 @@
+import { observations, zones } from "../data/demoData";
+
+export function ObservationReview({ onAction }: { onAction: (label: string) => void }) {
+  return <section className="rc-section"><div className="rc-section-head"><div><span className="rc-kicker">Supporting field evidence</span><h2>Observation review</h2></div><span className="rc-demo-pill">Demo data · review only</span></div><p className="rc-section-intro">Volunteer observations support field awareness and remain subject to expert or organisation review.</p><div className="rc-observation-list">{observations.map(item=>{const zone=zones.find(z=>z.id===item.zoneId)!;return <article key={item.id}><div><span className="rc-status">{item.status}</span><h3>{zone.name}</h3><p>{item.submittedBy} · {item.date}</p></div><div><strong>Geotagged location</strong><p>{item.location}</p></div><div><strong>Structured answers</strong><p>{item.answers.join(" · ")}</p>{item.note&&<small>Note: {item.note}</small>}</div><button onClick={()=>onAction(`Review ${item.id}`)}>Review evidence →</button></article>})}</div></section>;
+}
