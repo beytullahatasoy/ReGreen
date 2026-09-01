@@ -18,3 +18,48 @@
 @media(max-width:1000px){.rc-summary{grid-template-columns:repeat(2,1fr)}.rc-summary article:last-child{grid-column:1/-1}.rc-zone-operations{grid-template-columns:1fr 1fr}.rc-activity-table article,.rc-observation-list article{grid-template-columns:1fr 1fr}.rc-filters{grid-template-columns:1fr 1fr}.rc-zone-discovery{grid-template-columns:1fr}}
 @media(max-width:620px){.rc-summary,.rc-zone-operations,.rc-filters,.rc-zone-discovery{grid-template-columns:1fr}.rc-summary article:last-child{grid-column:auto}.rc-zone-discovery>article{grid-template-columns:1fr}.rc-activity-table article,.rc-observation-list article,.rc-reason-grid,.rc-zone-modal__grid{grid-template-columns:1fr}.rc-zone-modal__body{padding:18px}.rc-zone-modal>header{padding:18px}.rc-zone-modal .rc-journey{padding:18px}}
 .rc-section>.rc-update-card{margin-top:0}
+.rc-brand__logo{position:relative;display:block;width:38px;height:38px;overflow:hidden;border:1px solid #527064;border-radius:50%;background:#fff}
+.rc-brand__logo img{position:absolute;width:84px;height:auto;max-width:none;left:-23px;top:-2px}
+.rc-flow{grid-template-columns:repeat(5,1fr)}
+.rc-header{display:grid;grid-template-columns:minmax(230px,1fr) auto minmax(230px,1fr);padding:0 24px}
+.rc-header nav{justify-self:center;margin-left:0}.rc-header__meta{justify-self:end;margin-left:0}
+@media(max-width:900px){.rc-flow{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.rc-flow{grid-template-columns:1fr}.rc-header{display:grid;grid-template-columns:auto 1fr;height:64px;min-height:64px;flex-wrap:nowrap;padding:0 10px}.rc-brand__logo{width:34px;height:34px}.rc-brand__logo img{width:76px;left:-21px}.rc-brand>span:last-child{display:none}.rc-header nav{order:initial;width:auto;justify-self:end;margin:0}.rc-header nav a{padding:0 7px;font-size:9px}.rc-header__meta{display:none}}
+
+/* Topographic Intelligence motif: same decorative contour + grid layer as the Expert workspace, so all three screens share one visual language. */
+.rc-hero, .rc-volunteer-hero { position: relative; overflow: hidden; }
+.rc-hero > *, .rc-volunteer-hero > * { position: relative; z-index: 1; }
+.rc-hero::before, .rc-volunteer-hero::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(121,168,142,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(121,168,142,.05) 1px, transparent 1px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 700'%3E%3Cg fill='none' stroke='%2379a88e' stroke-width='1.2' stroke-opacity='.35'%3E%3Cellipse cx='760' cy='140' rx='420' ry='260' transform='rotate(-12 760 140)'/%3E%3Cellipse cx='760' cy='140' rx='340' ry='200' transform='rotate(-12 760 140)'/%3E%3Cellipse cx='760' cy='140' rx='260' ry='150' transform='rotate(-12 760 140)'/%3E%3Cellipse cx='760' cy='140' rx='180' ry='105' transform='rotate(-12 760 140)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 64px 64px, 64px 64px, 900px 700px;
+  background-position: 0 0, 0 0, right top;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+/* Balanced dark palette: charcoal surfaces reduce green fatigue without losing the ReGreen identity. */
+.rc-shell {
+  --rc-bg:#151917;
+  --rc-panel:#202523;
+  --rc-panel-2:#2a302d;
+  --rc-line:#454f4a;
+  --rc-muted:#b5beb9;
+  --rc-green:#8eb7a1;
+}
+.rc-header { background:#0a1511; }
+.rc-hero,.rc-volunteer-hero {
+  background:radial-gradient(circle at 80% 30%,rgba(73,116,92,.14),transparent 36%),linear-gradient(135deg,#19201d,#121614 72%);
+}
+.rc-hero::before,.rc-volunteer-hero::before { opacity:.58; }
+.rc-zone-row,.rc-filters select,.rc-upload,.rc-location,.rc-observation select,.rc-observation textarea { background:#171c1a; }
+.rc-zone-row:hover,.rc-zone-row:focus-visible,.rc-zone-row.is-selected { background:#303a35; border-color:#60746a; }
+.rc-assessment,.rc-update-grid>div { background:#191e1c; }
+.rc-update-card { background:linear-gradient(145deg,#2a302d,#1b201e); }
+.rc-flow>div>span { background:#303934; }
+.rc-footer { background:#0a100e; }
+.rc-zone-modal { background:#151e1b; border-color:#556b61; }
+.rc-zone-modal>header { background:rgb(21 30 27 / 96%); }

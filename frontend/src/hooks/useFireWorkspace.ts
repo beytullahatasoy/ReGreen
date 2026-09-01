@@ -87,7 +87,12 @@ export function useFireWorkspace() {
     setFireNarrative(null);
     fireService.getFireNarrative(selectedFireId).then((narrative) => {
       if (active) setFireNarrative(narrative);
-    }).catch(() => { if (active) setFireNarrative(null); });
+    }).catch((reason: unknown) => {
+      if (!active) return;
+      setFireNarrative(null);
+      const isKnownMissingNarrative = reason instanceof ApiError && reason.problem.code === "FIRE_NARRATIVE_NOT_FOUND";
+      if (!isKnownMissingNarrative) console.error("Fire narrative could not be loaded.", reason);
+    });
     return () => { active = false; };
   }, [selectedFireId]);
 
