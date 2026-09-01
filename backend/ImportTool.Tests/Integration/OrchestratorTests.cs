@@ -285,6 +285,197 @@ public class OrchestratorTests
     }
 
     [LocalDbFact]
+    public async Task FireWithHukumLayer_Imports_CellVerdictsAndFireNarrativeLandCorrectly()
+    {
+        // (a) hukumler.csv + narrative dosyaları mevcut bir yangın temiz import edilmeli ve
+        // CellVerdicts/FireNarratives satırları doğru şekilde yazılmalı.
+        var fx = new SyntheticFireFixture("TESTF_2026_11");
+        fx.WriteHukumlerCsv(hukum: "DIKIM_ADAYI", ozet: "Aktif dikim adayı test özeti.");
+        fx.WriteHukumSozlugu();
+        fx.WriteNarrativeFiles(paragraf: "Test yangın paragrafı.", profil: "dik_arazi", onaylandi: true);
+        try
+        {
+            var (exitCode, report) = await Run(fx);
+
+            Assert.Equal(0, exitCode);
+            Assert.Equal(1, report.Summary.Ok);
+
+            await using var db = DatabaseFixture.CreateContext();
+            Assert.Equal(4, db.CellVerdicts.Count(v => v.FireId == fx.FireId));
+            Assert.All(fx.CellIds, cellId =>
+                Assert.True(db.CellVerdicts.Any(v => v.CellId == cellId && v.Hukum == "DIKIM_ADAYI")));
+
+            var narrative = db.FireNarratives.Single(n => n.FireId == fx.FireId);
+            Assert.Equal("Test yangın paragrafı.", narrative.Paragraf);
+            Assert.Equal("dik_arazi", narrative.Profil);
+            Assert.True(narrative.Onaylandi);
+            Assert.Equal("sablon (deterministik)", narrative.Uretim);
+            Assert.Contains(fx.FireId, narrative.SayiBlogu);
+
+            var sozluk = db.HukumSozlugu.Single();
+            Assert.Equal("1.1", sozluk.Surum);
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [LocalDbFact]
+    public async Task FireWithoutHukumLayer_StillImportsFine_BackwardCompatible()
+    {
+        // (b) hukumler.csv/narrative YOK — mevcut davranış (hüküm katmanından önceki) korunmalı.
+        var fx = new SyntheticFireFixture("TESTF_2026_12");
+        try
+        {
+            var (exitCode, report) = await Run(fx);
+
+            Assert.Equal(0, exitCode);
+            Assert.Equal(1, report.Summary.Ok);
+
+            await using var db = DatabaseFixture.CreateContext();
+            Assert.Equal(4, db.Cells.Count());
+            Assert.Equal(0, db.CellVerdicts.Count());
+            Assert.Equal(0, db.FireNarratives.Count());
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [LocalDbFact]
+    public async Task HukumCellIdMismatch_FailsWithHukumCellMismatch()
+    {
+        // (c) hucreler.csv <-> hukumler.csv cell_id uyuşmazlığı.
+        var fx = new SyntheticFireFixture("TESTF_2026_13");
+        fx.WriteHukumlerCsv(cellIdOverride: "TESTF_2026_13_999999");
+        fx.WriteHukumSozlugu();
+        try
+        {
+            var (exitCode, report) = await Run(fx);
+
+            Assert.Equal(1, exitCode);
+            Assert.Equal(1, report.Summary.Failed);
+            Assert.Equal("HUKUM_CELL_MISMATCH", report.Fires[0].ErrorCode);
+
+            await using var db = DatabaseFixture.CreateContext();
+            Assert.Equal(0, db.Fires.Count()); // yangının hiçbir parçası yazılmadı
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [LocalDbFact]
+    public async Task SecondRun_UnchangedHukumData_IsIdempotent()
+    {
+        // (d) aynı hüküm verisiyle ikinci çalıştırma no-op olmalı (AlreadyImported).
+        var fx = new SyntheticFireFixture("TESTF_2026_14");
+        fx.WriteHukumlerCsv(hukum: "IZLE");
+        fx.WriteHukumSozlugu();
+        try
+        {
+            await Run(fx);
+            await using (var db = DatabaseFixture.CreateContext())
+                Assert.Equal(4, db.CellVerdicts.Count(v => v.FireId == fx.FireId));
+
+            var options = new CliOptions
+            {
+                ManifestPath = fx.ManifestPath, ReportPath = Path.Combine(fx.Dir, "r2.json"),
+                ConnectionString = DatabaseFixture.ConnectionString,
+            };
+            var (exitCode, report) = await ImportTool.Orchestrator.RunAsync(options, TextWriter.Null, TextWriter.Null);
+
+            Assert.Equal(0, exitCode);
+            Assert.Equal(1, report.Summary.AlreadyImported);
+
+            await using var db2 = DatabaseFixture.CreateContext();
+            Assert.Equal(4, db2.CellVerdicts.Count(v => v.FireId == fx.FireId)); // çoğalmadı
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [LocalDbFact]
+    public async Task SecondModelRun_DifferentHukumForSameCell_IsVersioned()
+    {
+        // Aynı hücre, yeni model teslimatında farklı hüküm alabilir; eski run korunur.
+        var fx = new SyntheticFireFixture("TESTF_2026_15", DateTimeOffset.Parse("2026-01-01T00:00:00+00:00"));
+        fx.WriteHukumlerCsv(hukum: "IZLE");
+        fx.WriteHukumSozlugu();
+        try
+        {
+            await Run(fx);
+
+            var fx2 = new SyntheticFireFixture(fx.FireId, DateTimeOffset.Parse("2026-02-01T00:00:00+00:00"));
+            fx2.WriteHukumlerCsv(hukum: "DIKIM_ADAYI"); // AYNI hücreler için FARKLI hüküm
+            fx2.WriteHukumSozlugu();
+            try
+            {
+                var options = new CliOptions
+                {
+                    ManifestPath = fx2.ManifestPath, ReportPath = Path.Combine(fx2.Dir, "r.json"),
+                    ConnectionString = DatabaseFixture.ConnectionString,
+                };
+                var (exitCode, report) = await ImportTool.Orchestrator.RunAsync(options, TextWriter.Null, TextWriter.Null);
+
+                Assert.Equal(0, exitCode);
+                Assert.Equal(1, report.Summary.Ok);
+
+                await using var db = DatabaseFixture.CreateContext();
+                Assert.Equal(2, db.ModelRuns.Count(m => m.FireId == fx.FireId));
+                Assert.Equal(8, db.CellVerdicts.Count(v => v.FireId == fx.FireId));
+                var latestRunId = db.ModelRuns.Where(m => m.FireId == fx.FireId)
+                    .OrderByDescending(m => m.GeneratedAt).Select(m => m.Id).First();
+                Assert.All(fx.CellIds, cellId =>
+                    Assert.True(db.CellVerdicts.Any(v => v.CellId == cellId
+                        && v.ModelRunId == latestRunId && v.Hukum == "DIKIM_ADAYI")));
+            }
+            finally { fx2.Cleanup(); }
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [LocalDbFact]
+    public async Task NarrativeFilePair_WhenOneFileIsMissing_IsFatal()
+    {
+        var fx = new SyntheticFireFixture("TESTF_2026_17");
+        fx.WriteNarrativeFiles();
+        File.Delete(Path.Combine(fx.Dir, "yangin_ozetleri.json"));
+        try
+        {
+            var (exitCode, report) = await Run(fx);
+
+            Assert.Equal(2, exitCode);
+            Assert.Equal("NARRATIVE_FILE_PAIR_INCOMPLETE", report.FatalError?.Code);
+            await using var db = DatabaseFixture.CreateContext();
+            Assert.Empty(db.Fires);
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [LocalDbFact]
+    public async Task DryRun_AlreadyImportedRunWithDifferentHukum_IsRejectedWithoutWriting()
+    {
+        var fx = new SyntheticFireFixture("TESTF_2026_16");
+        fx.WriteHukumlerCsv(hukum: "IZLE");
+        fx.WriteHukumSozlugu();
+        try
+        {
+            await Run(fx);
+            fx.WriteHukumlerCsv(hukum: "DIKIM_ADAYI");
+
+            var options = new CliOptions
+            {
+                ManifestPath = fx.ManifestPath, DryRun = true,
+                ReportPath = Path.Combine(fx.Dir, "dry-hukum-report.json"),
+                ConnectionString = DatabaseFixture.ConnectionString,
+            };
+            var (exitCode, report) = await ImportTool.Orchestrator.RunAsync(
+                options, TextWriter.Null, TextWriter.Null);
+
+            Assert.Equal(1, exitCode);
+            Assert.Equal("HUKUM_MISMATCH", report.Fires[0].ErrorCode);
+            await using var db = DatabaseFixture.CreateContext();
+            Assert.Equal(1, db.ModelRuns.Count(m => m.FireId == fx.FireId));
+            Assert.All(db.CellVerdicts, verdict => Assert.Equal("IZLE", verdict.Hukum));
+        }
+        finally { fx.Cleanup(); }
+    }
+
+    [LocalDbFact]
     public async Task DryRun_TamperedExistingCell_IsRejectedWithoutWriting()
     {
         var fx = new SyntheticFireFixture("TESTF_2026_10", DateTimeOffset.Parse("2026-01-01T00:00:00+00:00"));

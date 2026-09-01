@@ -51,6 +51,36 @@ describe("HttpFireService", () => {
     });
   });
 
+  it("requests the cell verdict endpoint with URL-encoded path segments", async () => {
+    const fetcher = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => jsonResponse({}));
+    const service = new HttpFireService("http://localhost:5066", fetcher as unknown as typeof fetch);
+
+    await service.getCellVerdict("AKD 2021/01", "cell/01");
+
+    const url = new URL(String(fetcher.mock.calls[0]?.[0]));
+    expect(url.pathname).toBe("/api/fires/AKD%202021%2F01/cells/cell%2F01/hukum");
+  });
+
+  it("requests the fire narrative endpoint", async () => {
+    const fetcher = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => jsonResponse({}));
+    const service = new HttpFireService("http://localhost:5066", fetcher as unknown as typeof fetch);
+
+    await service.getFireNarrative("AKD 2021/01");
+
+    const url = new URL(String(fetcher.mock.calls[0]?.[0]));
+    expect(url.pathname).toBe("/api/fires/AKD%202021%2F01/summary");
+  });
+
+  it("requests the global hukum dictionary endpoint", async () => {
+    const fetcher = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => jsonResponse({}));
+    const service = new HttpFireService("http://localhost:5066", fetcher as unknown as typeof fetch);
+
+    await service.getHukumSozlugu();
+
+    const url = new URL(String(fetcher.mock.calls[0]?.[0]));
+    expect(url.pathname).toBe("/api/hukum-sozlugu");
+  });
+
   it("converts a problem response into ApiError", async () => {
     const problem = {
       type: "https://regreen/errors/fire-not-found",

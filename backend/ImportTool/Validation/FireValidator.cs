@@ -87,6 +87,28 @@ public class FireValidator(string manifestDir, Manifest manifest, Dictionary<str
         var priorityCheck = ValidatePriority(rows, metadata);
         if (priorityCheck is not null) return priorityCheck;
 
+        // §hüküm (opsiyonel) — {fire_id}_hukumler.csv manifest.files_per_fire'da YOK (bilerek,
+        // AI ekibinin ayrı teslimatı). Dosya yoksa bu yangının hüküm verisi henüz yok demektir;
+        // hata DEĞİL, backward-compatible no-op (bkz. docs/hukum_sozlesmesi.md).
+        List<HukumRow>? hukumRows = null;
+        var hukumPath = ResolveSafePath($"{entry.FireId}_hukumler.csv");
+        if (File.Exists(hukumPath))
+        {
+            try
+            {
+                hukumRows = ReadHukumCsv(hukumPath, out var hukumHeaderError);
+                if (hukumHeaderError is not null)
+                    return FireValidationResult.Failed("HUKUM_CSV_HEADER_MISMATCH", hukumHeaderError);
+            }
+            catch (Exception ex)
+            {
+                return FireValidationResult.Failed("HUKUM_CSV_PARSE_ERROR", $"{Path.GetFileName(hukumPath)}: {ex.Message}");
+            }
+
+            var hukumCheck = ValidateHukumRows(entry, rows, hukumRows);
+            if (hukumCheck is not null) return hukumCheck;
+        }
+
         // Başarısız bir yangının cell_id'leri paylaşılan çalışma durumuna sızmasın.
         // Ortak sözlüğe ancak yangının tüm doğrulamaları geçtikten sonra kaydet.
         var registrationCheck = RegisterCellIds(entry, rows);
@@ -98,6 +120,7 @@ public class FireValidator(string manifestDir, Manifest manifest, Dictionary<str
             Metadata = metadata,
             Perimeter = perimeter,
             CellRows = rows,
+            HukumRows = hukumRows,
         });
     }
 
@@ -195,6 +218,107 @@ public class FireValidator(string manifestDir, Manifest manifest, Dictionary<str
             rows.Add(row);
         }
         return rows;
+    }
+
+    /// <summary>{fire_id}_hukumler.csv okuma — ReadCsv ile AYNI CsvHelper deseni (bkz. üstteki not).</summary>
+    private static List<HukumRow> ReadHukumCsv(string path, out string? headerError)
+    {
+        headerError = null;
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture);
+        using var reader = new StreamReader(path);
+        using var csv = new CsvReader(reader, config);
+
+        // ReadCsv'deki gibi: boş CSV alanı null sayılır (ek_kosullar/tur_onerisi boş olabilir).
+        csv.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add(string.Empty);
+
+        csv.Read();
+        csv.ReadHeader();
+        var actualHeader = csv.HeaderRecord ?? [];
+        if (!actualHeader.SequenceEqual(HukumRow.ExpectedHeader))
+        {
+            headerError = $"Beklenen: [{string.Join(",", HukumRow.ExpectedHeader)}], " +
+                          $"Gelen: [{string.Join(",", actualHeader)}]";
+            return [];
+        }
+
+        var rows = new List<HukumRow>();
+        var lineNumber = 1;
+        while (csv.Read())
+        {
+            lineNumber++;
+            var row = csv.GetRecord<HukumRow>();
+            row.SourceLineNumber = lineNumber;
+            rows.Add(row);
+        }
+        return rows;
+    }
+
+    /// <summary>
+    /// hukumler.csv ↔ hucreler.csv cell_id 1:1 eşleşmesi + değer doğrulaması —
+    /// docs/hukum_sozlesmesi.md. Dosya-içi tekrar da HUKUM_CELL_MISMATCH sayılır (aynı hücre
+    /// için iki farklı hüküm anlamsız olurdu).
+    /// </summary>
+    private static FireValidationResult? ValidateHukumRows(
+        ManifestFireEntry entry, List<CellRow> cellRows, List<HukumRow> hukumRows)
+    {
+        var cellIds = new HashSet<string>(cellRows.Select(r => r.CellId));
+        var hukumCellIds = new HashSet<string>(hukumRows.Count);
+
+        foreach (var row in hukumRows)
+        {
+            if (string.IsNullOrEmpty(row.CellId))
+                return FireValidationResult.Failed("HUKUM_CELL_MISMATCH",
+                    $"Satır {row.SourceLineNumber}: cell_id boş.");
+
+            if (!hukumCellIds.Add(row.CellId))
+                return FireValidationResult.Failed("HUKUM_CELL_MISMATCH",
+                    $"Satır {row.SourceLineNumber}: cell_id dosya içinde tekrarlı: {row.CellId}");
+
+            if (!cellIds.Contains(row.CellId))
+                return FireValidationResult.Failed("HUKUM_CELL_MISMATCH",
+                    $"Satır {row.SourceLineNumber}: cell_id={row.CellId}, " +
+                    $"{entry.FireId}_hucreler.csv'de yok.");
+
+            if (string.IsNullOrEmpty(row.Hukum) || !ContractEnums.HukumCodes.Contains(row.Hukum))
+                return FireValidationResult.Failed("HUKUM_INVALID_VALUE",
+                    $"Satır {row.SourceLineNumber}: bilinmeyen hukum kodu: {row.Hukum}");
+
+            if (row.EkKosullar is not null)
+            {
+                foreach (var code in row.EkKosullar.Split('|', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (!ContractEnums.EkKosulCodes.Contains(code))
+                        return FireValidationResult.Failed("HUKUM_INVALID_VALUE",
+                            $"Satır {row.SourceLineNumber}: bilinmeyen ek_kosul kodu: {code}");
+                }
+            }
+
+            if (row.ToparlanmaOrani is { } orani && (!double.IsFinite(orani) || orani < 0 || orani > 1))
+                return FireValidationResult.Failed("HUKUM_INVALID_VALUE",
+                    $"Satır {row.SourceLineNumber}: toparlanma_orani aralık dışı: {orani}");
+
+            if (string.IsNullOrEmpty(row.Tetikleyen))
+                return FireValidationResult.Failed("HUKUM_INVALID_VALUE",
+                    $"Satır {row.SourceLineNumber}: tetikleyen boş olamaz.");
+
+            if (string.IsNullOrEmpty(row.Ozet))
+                return FireValidationResult.Failed("HUKUM_INVALID_VALUE",
+                    $"Satır {row.SourceLineNumber}: ozet boş olamaz.");
+
+            if (string.IsNullOrEmpty(row.Ayrinti))
+                return FireValidationResult.Failed("HUKUM_INVALID_VALUE",
+                    $"Satır {row.SourceLineNumber}: ayrinti boş olamaz.");
+        }
+
+        if (hukumCellIds.Count != cellIds.Count)
+        {
+            var missing = cellIds.Except(hukumCellIds).Take(5);
+            return FireValidationResult.Failed("HUKUM_CELL_MISMATCH",
+                $"{entry.FireId}_hucreler.csv'deki bazı cell_id'ler hukumler.csv'de yok (1:1 olmalı), " +
+                $"örnek: {string.Join(", ", missing)}");
+        }
+
+        return null;
     }
 
     private FireValidationResult? ValidateMetadataConsistency(ManifestFireEntry entry, FireMetadata meta)

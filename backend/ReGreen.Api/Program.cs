@@ -75,6 +75,7 @@ app.UseResponseCompression();
 app.UseCors("Default");
 
 app.MapFireEndpoints();
+app.MapHukumEndpoints();
 app.MapHealthEndpoints();
 
 app.Run();

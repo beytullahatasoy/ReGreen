@@ -18,15 +18,15 @@ export function ExpertWorkspace() {
     <div className="workspace__body">
       <ControlPanel fires={data.fires} selectedFire={data.selectedFire} selectedFireId={data.selectedFireId} onFireChange={data.selectFire}
         layer={layer} onLayerChange={setLayer} priorities={data.priorityClasses} onTogglePriority={data.togglePriority}
-        statuses={data.predictionStatuses} onToggleStatus={data.toggleStatus} weights={data.weights} onWeightChange={data.setWeights}
+        statuses={data.predictionStatuses} onToggleStatus={data.toggleStatus} weights={data.weights} defaultWeights={data.defaultWeights} onWeightChange={data.setWeights}
         onResetWeights={data.resetWeights} cellsResponse={data.cellsResponse} open={controlsOpen} isMock={(import.meta.env.VITE_SERVICE_MODE ?? "mock") === "mock"}
-        comparison={data.scenarioComparison} onClearComparison={data.clearScenarioComparison} />
+        comparison={data.scenarioComparison} onClearComparison={data.clearScenarioComparison} fireNarrative={data.fireNarrative} />
       <MapWorkspace perimeter={data.perimeter} cells={data.visibleCells} cellSizeM={data.cellsResponse?.cell_size_m ?? 250}
         layer={layer} loading={data.loading} loadingMessage={data.loadingMessage} error={data.error}
         selectedCell={data.selectedCell} scenarioHighlights={data.scenarioHighlights} scenarioFeedback={data.scenarioFeedback}
         onSelectCell={selectCell} />
       <button className="mobile-panel-toggle" onClick={() => setControlsOpen((open) => !open)} aria-label="Toggle controls">Controls</button>
-      <CellDetailPanel cell={data.selectedCell} cellsResponse={data.cellsResponse} priorityTransition={data.selectedCell && data.scenarioComparison ? data.scenarioComparison.transitions.get(data.selectedCell.cell_id) ?? null : null} onClose={() => data.setSelectedCell(null)} />
+      <CellDetailPanel cell={data.selectedCell} cellsResponse={data.cellsResponse} priorityTransition={data.selectedCell && data.scenarioComparison ? data.scenarioComparison.transitions.get(data.selectedCell.cell_id) ?? null : null} verdict={data.selectedCellVerdict} hukumSozlugu={data.hukumSozlugu} verdictLoading={data.verdictLoading} onClose={() => data.setSelectedCell(null)} />
     </div>
   </main>;
 }

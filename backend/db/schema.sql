@@ -1,7 +1,8 @@
 -- ReGreen — Veritabanı Şeması (MS SQL Server)
--- Kaynak: docs/db-schema.md v1.2 (tasarım gerekçeleri orada)
--- Dayanak: docs/data-contract.md v1.5 + Teknik Mimari Planı v4.1 §7 DDL
--- Kapsam: Faz 1/2 çekirdek (Fires, Cells, ModelRuns, Predictions). Faz 3 (Zone/Campaign/
+-- Kaynak: docs/db-schema.md v1.4 (tasarım gerekçeleri orada)
+-- Dayanak: docs/data-contract.md v1.5, docs/hukum_sozlesmesi.md + Teknik Mimari Planı v4.1 §7 DDL
+-- Kapsam: Faz 1/2 çekirdek (Fires, Cells, ModelRuns, Predictions) + hüküm katmanı
+-- (CellVerdicts, FireNarratives, HukumSozlugu — docs/db-schema.md §9). Faz 3 (Zone/Campaign/
 -- Community/Volunteer/FieldObservation) bu dosyanın DIŞINDA.
 --
 -- ⚡ işaretli satırlar PDF v4.1'in DDL'ine göre değişiklik/eklemedir — gerekçesi
@@ -235,3 +236,78 @@ CREATE INDEX IX_Predictions_FireId_ModelRunId ON Predictions (FireId, ModelRunId
 -- CSV'nin fire_id'siyle ilgili ModelRun'ın FireId'sinin aynı olduğunu kontrol etmeli —
 -- composite FK sadece YANLIŞ eşleşmeyi INSERT anında reddeder, önceden anlamlı bir
 -- hata mesajıyla durdurmaz (ham FK constraint hatası olarak sızar).
+
+-- ============================================================================
+-- HÜKÜM KATMANI (docs/db-schema.md §9, docs/hukum_sozlesmesi.md) — AI ekibinin
+-- ayrı, opsiyonel "hüküm katmanı" teslimatı. Mevcut Faz 1/2 tablolarına (yukarıda)
+-- hiçbir değişiklik yapmaz, tamamen katmanlı ekleme (AddHukumKatmani migration'ı).
+-- ============================================================================
+
+-- Yangına özgü değildir; sözlük sürümü başına bir satır tutulur. Aynı sürüm farklı
+-- içerikle tekrar teslim edilirse importer reddeder, yeni sürüm geçmişi bozmaz.
+CREATE TABLE HukumSozlugu (
+    Surum               NVARCHAR(20)   NOT NULL PRIMARY KEY,
+    JsonIcerik          NVARCHAR(MAX)  NOT NULL,
+    ImportedAt          DATETIMEOFFSET NOT NULL DEFAULT SYSUTCDATETIME()
+);
+
+-- Hücre + ModelRun başına opsiyonel hüküm. Ağırlık kaydırıcısından bağımsızdır;
+-- recovery_gap_pred kullandığı için model teslimatından bağımsız DEĞİLDİR.
+CREATE TABLE CellVerdicts (
+    CellId              NVARCHAR(50)   NOT NULL,
+    FireId              NVARCHAR(50)   NOT NULL,
+    ModelRunId          INT            NOT NULL,
+    HukumSozluguSurum   NVARCHAR(20)   NOT NULL,
+
+    Hukum               NVARCHAR(20)   NOT NULL,
+    EkKosullar          NVARCHAR(120)  NULL,                             -- '|' ile ayrılmış 0..6 kod, boşsa NULL
+    ToparlanmaOrani     FLOAT          NULL,
+    TurOnerisi          NVARCHAR(500)  NULL,                             -- onaylanmamış örnek veri, bkz. HukumSozlugu.JsonIcerik -> tur_tablosu.onaylandi
+    Tetikleyen          NVARCHAR(300)  NOT NULL,
+    Ozet                NVARCHAR(MAX)  NOT NULL,
+    Ayrinti             NVARCHAR(MAX)  NOT NULL,
+    ZamanlamaNotuVar    BIT            NOT NULL,
+
+    CONSTRAINT CK_CellVerdicts_Hukum CHECK (
+        Hukum IN ('KAPSAM_DISI', 'SAHA_KONTROL', 'IZLE', 'EROZYON_ONCE',
+                  'DIKIM_ADAYI', 'ONCELIGE_GORE', 'GENCLESME_IZLE')
+    ),
+    CONSTRAINT CK_CellVerdicts_ToparlanmaOrani_Range CHECK (
+        ToparlanmaOrani IS NULL OR ToparlanmaOrani BETWEEN 0 AND 1
+    ),
+    CONSTRAINT PK_CellVerdicts PRIMARY KEY (CellId, ModelRunId, HukumSozluguSurum),
+    CONSTRAINT FK_CellVerdicts_Cell FOREIGN KEY (FireId, CellId)
+        REFERENCES Cells (FireId, CellId),
+    CONSTRAINT FK_CellVerdicts_ModelRun FOREIGN KEY (FireId, ModelRunId)
+        REFERENCES ModelRuns (FireId, Id),
+    CONSTRAINT FK_CellVerdicts_HukumSozlugu FOREIGN KEY (HukumSozluguSurum)
+        REFERENCES HukumSozlugu (Surum)
+);
+
+CREATE INDEX IX_CellVerdicts_FireId_CellId ON CellVerdicts (FireId, CellId);
+CREATE INDEX IX_CellVerdicts_FireId_ModelRunId ON CellVerdicts (FireId, ModelRunId);
+CREATE INDEX IX_CellVerdicts_ModelRunId_CellId ON CellVerdicts (ModelRunId, CellId);
+CREATE INDEX IX_CellVerdicts_HukumSozluguSurum ON CellVerdicts (HukumSozluguSurum);
+
+-- ModelRun başına opsiyonel yangın anlatısı.
+CREATE TABLE FireNarratives (
+    ModelRunId          INT            NOT NULL,
+    FireId              NVARCHAR(50)   NOT NULL FOREIGN KEY REFERENCES Fires(FireId),
+    NarrativeVersion    NVARCHAR(20)   NOT NULL,
+
+    Paragraf            NVARCHAR(MAX)  NOT NULL,
+    Profil              NVARCHAR(30)   NOT NULL,
+    Onaylandi           BIT            NOT NULL,
+    Uretim              NVARCHAR(100)  NOT NULL,                         -- paket genelinde sabit (yangin_metinleri.json üst seviye 'uretim')
+    SayiBlogu           NVARCHAR(MAX)  NOT NULL,                         -- yangin_ozetleri.json'daki ham sayı bloğu, opak JSON
+
+    CONSTRAINT PK_FireNarratives PRIMARY KEY (ModelRunId, NarrativeVersion),
+    CONSTRAINT CK_FireNarratives_Profil CHECK (
+        Profil IN ('yogun_mudahale', 'karisik', 'kendi_toparlaniyor',
+                   'dik_arazi', 'belirsiz', 'kapsam_dar')
+    ),
+    CONSTRAINT FK_FireNarratives_ModelRun FOREIGN KEY (FireId, ModelRunId)
+        REFERENCES ModelRuns (FireId, Id)
+);
+CREATE INDEX IX_FireNarratives_FireId_ModelRunId
+    ON FireNarratives (FireId, ModelRunId);

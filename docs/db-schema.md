@@ -1,7 +1,7 @@
 # ReGreen — Veritabanı Şeması (db-schema.md)
 
-**Sürüm:** 1.3 (ilk taslak — henüz uygulanmadı, backend'de hiç kod yok)
-**Kapsam:** Faz 1/2 çekirdek — `Fires`, `Cells`, `ModelRuns`, `Predictions`. Zone/Campaign/Community/Volunteer/Field Observation (Faz 3) bu planın DIŞINDA.
+**Sürüm:** 1.4
+**Kapsam:** Faz 1/2 çekirdek — `Fires`, `Cells`, `ModelRuns`, `Predictions`, `CellVerdicts`, `FireNarratives`, `HukumSozlugu`. Zone/Campaign/Community/Volunteer/Field Observation (Faz 3) bu planın DIŞINDA.
 **Dayanak:** [`docs/data-contract.md`](./data-contract.md) v1.5 (alan adı/tip/null/aralık için tek doğru kaynak) + Teknik Mimari Planı v4.1 §7 DDL (başlangıç noktası).
 **Kural:** İlk backend şeması ve migration artık bu belgeye göre oluşturuldu. Bu yüzden data-contract.md v1.5'in işaret ettiği PDF v4.1 boşlukları (⚡ ile işaretli) ayrı bir "v4.2 migration"a ertelenmeden doğrudan ilk şemaya gömüldü. SQL karşılığı: [`backend/db/schema.sql`](../backend/db/schema.sql).
 
@@ -22,6 +22,11 @@
 1. EF Core migration'ının composite FK'ler için otomatik ürettiği iki destek indeksi (`IX_Predictions_FireId_CellId`, `IX_Predictions_FireId_ModelRunId`) artık `backend/db/schema.sql`'de de var — §6'daki "EF migration ile schema.sql birebir aynı" iddiası artık gerçekten doğru.
 2. `Fires.PerimeterGeoJson` ↔ mevcut kayıt karşılaştırması artık ham JSON metni değil; geometriler normalize edildikten sonra `EqualsExact(..., 1e-9)` ile koordinat bazlı yapılıyor (`ImportTool/Import/EntityComparer.cs`) — whitespace, property sırası, ring başlangıcı veya yönü değişince aynı geometri yanlışlıkla reddedilmiyor.
 
+**v1.4 değişiklikleri (hüküm katmanı eklendi — docs/hukum_sozlesmesi.md, AI ekibinin ayrı teslimatı):**
+1. Yeni tablolar: `CellVerdicts` (hücre + ModelRun başına hüküm/gerekçe), `FireNarratives` (ModelRun başına yangın özeti + sayı bloğu), `HukumSozlugu` (sürüm başına global sözlük) — bkz. §9.
+2. Üçü de mevcut Faz 1/2 tablolarına (`Fires`/`Cells`/`ModelRuns`/`Predictions`) hiçbir değişiklik yapmaz — tamamen katmanlı ekleme, geriye dönük uyumlu.
+3. `CellVerdicts`, `Predictions`'takiyle AYNI composite FK desenini (`(FireId, CellId)` → `Cells` alternate key) kullanır — hücrenin yanlış yangının hükmüne bağlanması aynı şekilde DB seviyesinde engellenir.
+
 ---
 
 ## 1. İlişki Şeması
@@ -32,6 +37,9 @@ erDiagram
     Fires ||--o{ ModelRuns : "yangın+teslimat kombinasyonu (bkz. data-contract §11)"
     Cells ||--o{ Predictions : "hücre tahmin geçmişi"
     ModelRuns ||--o{ Predictions : "run başına tahminler"
+    Cells ||--o{ CellVerdicts : "model teslimatı başına hüküm"
+    ModelRuns ||--o{ CellVerdicts : "run hüküm kümesi"
+    ModelRuns ||--o| FireNarratives : "run yangın özeti"
 
     Fires {
         string FireId PK
@@ -86,7 +94,29 @@ erDiagram
         float DefaultPriorityScore
         string DefaultPriorityClass
     }
+    CellVerdicts {
+        string CellId PK
+        string FireId "composite FK -> Cells"
+        string Hukum
+        string EkKosullar
+        float ToparlanmaOrani
+        string TurOnerisi
+        string Tetikleyen
+        string Ozet
+        string Ayrinti
+        bit ZamanlamaNotuVar
+    }
+    FireNarratives {
+        string FireId PK "FK -> Fires"
+        string Paragraf
+        string Profil
+        bit Onaylandi
+        string Uretim
+        string SayiBlogu
+    }
 ```
+
+`HukumSozlugu` (`FireId`'siz, sürüm başına global satır) yukarıdaki ilişki grafiğinin DIŞINDA — bkz. §9.3.
 
 **Neden `ModelRuns.FireId`:** `normalization_reference`, `in_training_set`, `out_of_fold_cells` fire'a özeldir (data-contract §8.3, §9.3) — tek bir AI teslimatı (53 yangın) 53 ayrı `ModelRuns` satırı üretir, aynı teslimatın satırları `ModelVersion`+`GeneratedAt` ile eşleşir. Bu PDF v4.1'in zaten doğru kurduğu tasarım, değişmiyor (bkz. data-contract §11, §12/v1.3 notu).
 
@@ -247,20 +277,78 @@ modelBuilder.Entity<Prediction>()
   `Cells(FireId, CellId)` ve `ModelRuns(FireId, Id)` için alternate key'ler migration'da `UNIQUE` kısıtlarına karşılık gelmelidir.
 - İlk migration `InitialCreate` adıyla oluşturulmuştur. v1.2 düzeltmeleri ilk
   migration'a gömülüdür; ayrıca bir "v4.2 fix" migration'ı yoktur.
+- Hüküm katmanı (§11) `AddHukumKatmani` adında AYRI, ikinci bir migration olarak
+  eklenmiştir (`InitialCreate`'e gömülmedi) — `CellVerdicts`, `FireNarratives`,
+  `HukumSozlugu` tablolarını ve CHECK kısıtlarını oluşturur, mevcut tabloları değiştirmez.
 
 EF Core modeli, migration ve `backend/db/schema.sql` testler ve şema incelemesiyle
 birbirleriyle hizalanmıştır.
 
 ---
 
-## 9. Kapsam Dışı (Faz 3)
+## 9. Hüküm Katmanı — `CellVerdicts`, `FireNarratives`, `HukumSozlugu`
+
+**Kaynak:** [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md) (AI ekibinin "hüküm katmanı" veri sözleşmesi, sürüm 1.3). Bu üç tablo mevcut Faz 1/2 şemasına (`Fires`/`Cells`/`ModelRuns`/`Predictions`) EKLENDİ — hiçbirini değiştirmiyor. Kaynak dosyalar (`{fire_id}_hukumler.csv`, `hukum_sozlugu.json`, `yangin_ozetleri.json`, `yangin_metinleri.json`) `manifest.json`'un `files_per_fire` listesinde BİLEREK yok — AI ekibinin ayrı, opsiyonel bir yan-teslimatı (bkz. docs/import-flow.md §3.8).
+
+**Temel ilke:** hüküm aktif ağırlık kaydırıcısından bağımsızdır; fakat `recovery_gap_pred` kullandığı için **ModelRun'a bağlıdır**. Yeni model teslimatı aynı hücre için farklı hüküm üretebilir; eski run'ın hükmü korunur.
+
+### 9.1. `CellVerdicts`
+
+| Kolon | Tip | Null? | Kısıt / Not | Contract karşılığı |
+|---|---|---|---|---|
+| `CellId` | `NVARCHAR(50)` | Hayır | **Composite PK (`CellId`,`ModelRunId`,`HukumSozluguSurum`)** + FK parçası | `cell_id` |
+| `FireId` | `NVARCHAR(50)` | Hayır | Composite FK'nin diğer yarısı | `{fire_id}_hucreler.csv`'den türetilir (hukumler.csv'de `fire_id` kolonu yok) |
+| `ModelRunId` | `INT` | Hayır | Composite FK → `ModelRuns(FireId,Id)`; hükmün üretildiği teslimat | importer tarafından atanır |
+| `HukumSozluguSurum` | `NVARCHAR(20)` | Hayır | FK → `HukumSozlugu(Surum)` | `hukum_sozlugu.json.surum` |
+| `Hukum` | `NVARCHAR(20)` | Hayır | `CHECK (Hukum IN (7 değer))`: `KAPSAM_DISI, SAHA_KONTROL, IZLE, EROZYON_ONCE, DIKIM_ADAYI, ONCELIGE_GORE, GENCLESME_IZLE` | `hukum` |
+| `EkKosullar` | `NVARCHAR(120)` | **Evet** | `\|` ile ayrılmış 0..6 kod (`ERISIM_ZOR, ESKIDEN_ORMAN_DEGIL, SEYREK_ORTU, DIK_YAMAC, AGIR_YANMIS, DUSUK_GUVEN`). CSV'deki boş alan NULL'a çevrilir (ImportTool CsvHelper ayarı, `_hucreler.csv`'nin `land_cover` kolonuyla aynı davranış) | `ek_kosullar` |
+| `ToparlanmaOrani` | `FLOAT` | **Evet** | `CHECK (ToparlanmaOrani IS NULL OR BETWEEN 0 AND 1)` | `toparlanma_orani` |
+| `TurOnerisi` | `NVARCHAR(500)` | **Evet** | Virgüllü tür listesi — **onaylanmamış örnek veri** (bkz. `hukum_sozlugu.json → tur_tablosu.onaylandi=false`); UI bu uyarıyı göstermeden `tur_onerisi`'ni yayınlamamalı | `tur_onerisi` |
+| `Tetikleyen` | `NVARCHAR(300)` | Hayır | Denetim izi, ör. `toparlanma=0.27 egim=36.0>=25 <0.35` | `tetikleyen` |
+| `Ozet` | `NVARCHAR(MAX)` | Hayır | Panelde üstte gösterilecek 1-2 cümle | `ozet` |
+| `Ayrinti` | `NVARCHAR(MAX)` | Hayır | Detay bölümündeki gerekçe + ek koşullar | `ayrinti` |
+| `ZamanlamaNotuVar` | `BIT` | Hayır | `true` ise `HukumSozlugu.JsonIcerik → zamanlama_notu` panelin altında tek dipnot olarak gösterilir | `zamanlama_notu_var` |
+
+**İlişki:** Her `(CellId, ModelRunId, HukumSozluguSurum)` için en fazla bir hüküm; aynı model çıktısı yeni kural/sözlük sürümüyle yeniden yorumlanabilir.
+
+### 9.2. `FireNarratives`
+
+| Kolon | Tip | Null? | Kısıt / Not | Contract karşılığı |
+|---|---|---|---|---|
+| `ModelRunId` | `INT` | Hayır | **Composite PK (`ModelRunId`,`NarrativeVersion`)**, FK → `ModelRuns(FireId,Id)` | importer tarafından atanır |
+| `FireId` | `NVARCHAR(50)` | Hayır | FK → `Fires(FireId)` ve ModelRun composite FK parçası | `fire_id` |
+| `NarrativeVersion` | `NVARCHAR(20)` | Hayır | Anlatı sözleşmesi/üretici sürümü | `yangin_metinleri.json.surum` |
+| `Paragraf` | `NVARCHAR(MAX)` | Hayır | Bölge seçilince gösterilecek tek paragraf (517–1.086 karakter, medyan 728) | `yangin_metinleri.json → yanginlar[fire_id].paragraf` |
+| `Profil` | `NVARCHAR(30)` | Hayır | `CHECK (Profil IN (6 değer))`: `yogun_mudahale, karisik, kendi_toparlaniyor, dik_arazi, belirsiz, kapsam_dar` | `...profil` |
+| `Onaylandi` | `BIT` | Hayır | | `...onaylandi` |
+| `Uretim` | `NVARCHAR(100)` | Hayır | Üretim yöntemi (ör. `"sablon (deterministik)"`) — kaynak JSON'da fire başına DEĞİL, dosyanın ÜST seviyesinde tek bir alan; her yangına aynı değer kopyalanır | `yangin_metinleri.json → uretim` (üst seviye) |
+| `SayiBlogu` | `NVARCHAR(MAX)` | Hayır | Paragrafın dayandığı ham sayı bloğu — opak JSON, `Fires.PerimeterGeoJson` ile AYNI teknikle (`JsonDocument.Parse(...).RootElement.Clone()`) API'de aynen geçirilir, alan alan modellenmez | `yangin_ozetleri.json → yanginlar[fire_id]` (tüm blok) |
+
+**İlişki:** ModelRun ve anlatı sürümü başına opsiyonel satır; yeni model veya anlatı sürümü eskisini ezmez.
+
+### 9.3. `HukumSozlugu`
+
+Yangına özgü değildir; **sürüm başına bir global satır** tutulur. Böylece sözlüğün yeni sürümü eski hükümlerin anlamını bozmaz.
+
+| Kolon | Tip | Null? | Kısıt / Not | Contract karşılığı |
+|---|---|---|---|---|
+| `Surum` | `NVARCHAR(20)` | Hayır | **PK**, ör. `"1.2"`; aynı sürüm farklı içerikle gelemez | `surum` |
+| `JsonIcerik` | `NVARCHAR(MAX)` | Hayır | Dosyanın TAMAMI, ham JSON — `hukumler[]`, `ek_kosullar{}`, `zamanlama_notu`, `esikler{}`, `tur_tablosu{}`, `aciklama` dahil | (dosyanın tamamı) |
+| `ImportedAt` | `DATETIMEOFFSET` | Hayır | `DEFAULT SYSUTCDATETIME()` — `ModelRuns.ImportedAt` ile AYNI "kaynakta olmayan, DB'nin ürettiği alan" deseni (bkz. §7) | — |
+
+**İmport notu:** Aynı `Surum` mevcutsa içerik birebir doğrulanır; farklı içerik FATAL, yeni sürüm ise yeni satırdır.
+
+---
+
+## 10. Kapsam Dışı (Faz 3)
 
 `Zone`, `Campaign`, `Community`, `Volunteer`, `FieldObservation` tabloları bu planda YOK — ne şema ne de yer tutucu FK. data-contract.md ve PDF v4.1 ile aynı sınır korunuyor: bu modüller ayrı bir mimari dokümanla ele alınacak.
 
 ---
 
-## 10. Kaynak Dosyalar
+## 11. Kaynak Dosyalar
 
 - [`docs/data-contract.md`](./data-contract.md) v1.5 — alan adı/tip/null/aralık/enum için tek doğru kaynak
+- [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md) — hüküm katmanının (§11) veri sözleşmesi ve semantiği
 - `ReGreen_Teknik Mimari Planı.pdf` v4.1 §7 — bu şemanın başlangıç noktası olan DDL
 - [`backend/db/schema.sql`](../backend/db/schema.sql) — bu belgenin çalıştırılabilir SQL karşılığı

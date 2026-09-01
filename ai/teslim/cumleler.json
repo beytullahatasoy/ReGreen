@@ -13,7 +13,7 @@
     "teslim edilen CSV'de bir sutuna karsilik gelir. Yeni bir yer tutucu",
     "eklemek icin hukum.py icindeki _slotlar() fonksiyonuna eklenmeli."
   ],
-  "surum": "1.1",
+  "surum": "1.2",
   "dil": "tr",
   "hukum": {
     "KAPSAM_DISI": {
@@ -33,7 +33,7 @@
     },
     "EROZYON_ONCE": {
       "baslik": "Önce erozyon kontrolü",
-      "cumle": "Ağır etkilenmiş ve eğim {egim}° — dikimden önce toprak tutma önlemi gerekiyor.",
+      "cumle": "Toparlanma tahmini zayıf ve eğim {egim}° — dikimden önce toprak tutma önlemi gerekiyor.",
       "gerekce": "Modelin tahminine göre yangın öncesi örtünün ancak %{toparlanma} kadarı iki yılda geri gelecek. Dik yamaçta çıplak toprak ilk sağanakta taşınır; stabilizasyon yapılmadan yapılan dikim de birlikte gider."
     },
     "DIKIM_ADAYI": {

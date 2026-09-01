@@ -19,6 +19,9 @@ public class SyntheticFireFixture
     public string FireId { get; }
     public string ManifestPath => Path.Combine(Dir, "manifest.json");
 
+    /// <summary>Write() tarafından üretilen 4 hücrenin cell_id'leri — hüküm katmanı testleri için.</summary>
+    public IReadOnlyList<string> CellIds { get; private set; } = [];
+
     private static readonly (double Recovery, double Slope, double Road)[] PredictedInputs =
     [
         (0.20, 5.0, 1.0),
@@ -65,16 +68,21 @@ public class SyntheticFireFixture
 
         var inv = CultureInfo.InvariantCulture;
         var csvRows = new List<string>();
+        var cellIds = new List<string>();
         var cellNo = 1;
 
         foreach (var (recovery, slope, road) in PredictedInputs)
         {
             var score = PriorityCalculator.ComputeScore(recovery, slope, road, normModel, pw);
             var cls = PriorityCalculator.Classify(score, pt);
+            cellIds.Add($"{FireId}_{cellNo:D6}");
             csvRows.Add(FormatRow(cellNo++, "predicted", recovery, slope, road, score, cls));
         }
+        cellIds.Add($"{FireId}_{cellNo:D6}");
         csvRows.Add(FormatRow(cellNo++, "low_severity", null, 8.0, 0.5, 0.0, "DUSUK"));
+        cellIds.Add($"{FireId}_{cellNo:D6}");
         csvRows.Add(FormatRow(cellNo++, "no_data", null, 3.0, 0.3, null, null, elevationMissing: true));
+        CellIds = cellIds;
 
         var cellCount = csvRows.Count;
         var statusCounts = new { predicted = 2, low_severity = 1, no_data = 1 };
@@ -199,5 +207,75 @@ public class SyntheticFireFixture
     public void Cleanup()
     {
         try { Directory.Delete(Dir, recursive: true); } catch { /* best effort */ }
+    }
+
+    /// <summary>
+    /// Bu fixture'ın 4 hücresi için geçerli, birbirini AYNI şekilde eşleyen bir
+    /// {fire_id}_hukumler.csv yazar — hüküm katmanı testleri için (docs/hukum_sozlesmesi.md).
+    /// `cellIdOverride` verilirse SADECE ilk satırın cell_id'si o değere değiştirilir
+    /// (HUKUM_CELL_MISMATCH senaryosunu tetiklemek için).
+    /// </summary>
+    public void WriteHukumlerCsv(string hukum = "IZLE", string? cellIdOverride = null, string ozet = "test ozet")
+    {
+        const string header = "cell_id,hukum,ek_kosullar,toparlanma_orani,tur_onerisi,tetikleyen,ozet,ayrinti,zamanlama_notu_var";
+        var lines = new List<string> { header };
+        for (var i = 0; i < CellIds.Count; i++)
+        {
+            var cellId = i == 0 && cellIdOverride is not null ? cellIdOverride : CellIds[i];
+            lines.Add($"{cellId},{hukum},,,,test tetikleyen,{ozet},test ayrinti,False");
+        }
+        File.WriteAllText(Path.Combine(Dir, $"{FireId}_hukumler.csv"), string.Join("\n", lines));
+    }
+
+    /// <summary>Global hukum_sozlugu.json — manifest'in yanına, gerçek dosyanın küçük bir taslağı.</summary>
+    public void WriteHukumSozlugu(string surum = "1.1")
+    {
+        var json = $$"""
+        {
+          "surum": "{{surum}}",
+          "dil": "tr",
+          "hukumler": [{"kod": "IZLE", "baslik": "izle", "sira": 0}],
+          "ek_kosullar": {},
+          "zamanlama_notu": "test notu",
+          "esikler": {},
+          "tur_tablosu": {"kaynak": "test", "surum": "0.1", "onaylandi": false},
+          "aciklama": "test"
+        }
+        """;
+        File.WriteAllText(Path.Combine(Dir, "hukum_sozlugu.json"), json);
+    }
+
+    /// <summary>yangin_metinleri.json + yangin_ozetleri.json — bu fixture'ın fire_id'si için tek girdi.</summary>
+    public void WriteNarrativeFiles(
+        string paragraf = "Test paragraf.", string profil = "karisik",
+        bool onaylandi = true, string uretim = "sablon (deterministik)")
+    {
+        var metinler = $$"""
+        {
+          "surum": "1.0",
+          "dil": "tr",
+          "uretim": "{{uretim}}",
+          "yanginlar": {
+            "{{FireId}}": {
+              "paragraf": "{{paragraf}}",
+              "profil": "{{profil}}",
+              "kaynak": "sablon",
+              "onaylandi": {{(onaylandi ? "true" : "false")}}
+            }
+          }
+        }
+        """;
+        File.WriteAllText(Path.Combine(Dir, "yangin_metinleri.json"), metinler);
+
+        var ozetler = $$"""
+        {
+          "surum": "1.0",
+          "referans_kaynagi": "test",
+          "yanginlar": {
+            "{{FireId}}": { "fire_id": "{{FireId}}", "il": "Test", "bolge": "Test" }
+          }
+        }
+        """;
+        File.WriteAllText(Path.Combine(Dir, "yangin_ozetleri.json"), ozetler);
     }
 }

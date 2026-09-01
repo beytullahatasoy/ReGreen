@@ -1,4 +1,4 @@
-import type { PredictionStatus, PriorityClass } from "../types";
+import type { LandCover, PredictionStatus, PriorityClass, SeverityClass } from "../types";
 
 export const priorityClassLabels: Record<PriorityClass, string> = {
   COK_YUKSEK: "Very High",
@@ -11,6 +11,23 @@ export const predictionStatusLabels: Record<PredictionStatus, string> = {
   predicted: "Prediction Available",
   low_severity: "Not Prioritized",
   no_data: "Insufficient Data",
+};
+
+export const severityClassLabels: Record<SeverityClass, string> = {
+  dusuk: "Low",
+  "orta-dusuk": "Low-Medium",
+  "orta-yuksek": "Medium-High",
+  yuksek: "High",
+};
+
+export const landCoverLabels: Record<LandCover, string> = {
+  Agaclik: "Forest",
+  "Ciplak": "Bare/Sparse Vegetation",
+  "Otlak/calilik": "Grassland/Shrubland",
+  Su: "Water",
+  "Sulak alan": "Wetland",
+  Tarim: "Agricultural Land",
+  Yerlesim: "Settlement",
 };
 
 export function formatDecimal(value: number | null, digits = 2): string {

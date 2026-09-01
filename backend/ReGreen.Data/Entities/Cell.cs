@@ -27,4 +27,7 @@ public class Cell
     public string? LandCover { get; set; }
 
     public List<Prediction> Predictions { get; set; } = [];
+
+    /// <summary>Model teslimatı başına opsiyonel hüküm.</summary>
+    public List<CellVerdict> Verdicts { get; set; } = [];
 }

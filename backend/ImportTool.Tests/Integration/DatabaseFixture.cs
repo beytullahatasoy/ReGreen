@@ -40,6 +40,12 @@ public class DatabaseFixture : IAsyncLifetime
     public static async Task ResetAsync()
     {
         await using var db = CreateContext();
+        // FK sırası: CellVerdicts/FireNarratives -> Cells/Fires'tan ÖNCE silinmeli
+        // (composite FK'ler NoAction — bkz. AppDbContext.ConfigureCellVerdicts/FireNarratives).
+        // HukumSozlugu global/FK'siz ama testler arasında da temizlenir (aynı izolasyon ilkesi).
+        await db.Database.ExecuteSqlRawAsync("DELETE FROM CellVerdicts;");
+        await db.Database.ExecuteSqlRawAsync("DELETE FROM FireNarratives;");
+        await db.Database.ExecuteSqlRawAsync("DELETE FROM HukumSozlugu;");
         await db.Database.ExecuteSqlRawAsync("DELETE FROM Predictions;");
         await db.Database.ExecuteSqlRawAsync("DELETE FROM ModelRuns;");
         await db.Database.ExecuteSqlRawAsync("DELETE FROM Cells;");

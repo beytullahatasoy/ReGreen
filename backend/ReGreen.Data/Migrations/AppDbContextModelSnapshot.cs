@@ -88,6 +88,75 @@ namespace ReGreen.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ReGreen.Data.Entities.CellVerdict", b =>
+                {
+                    b.Property<string>("CellId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("ModelRunId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HukumSozluguSurum")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Ayrinti")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EkKosullar")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("FireId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Hukum")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Ozet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tetikleyen")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<double?>("ToparlanmaOrani")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TurOnerisi")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("ZamanlamaNotuVar")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CellId", "ModelRunId", "HukumSozluguSurum");
+
+                    b.HasIndex("HukumSozluguSurum");
+
+                    b.HasIndex("FireId", "CellId");
+
+                    b.HasIndex("FireId", "ModelRunId");
+
+                    b.HasIndex("ModelRunId", "CellId")
+                        .HasDatabaseName("IX_CellVerdicts_ModelRunId_CellId");
+
+                    b.ToTable("CellVerdicts", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_CellVerdicts_Hukum", "Hukum IN ('KAPSAM_DISI', 'SAHA_KONTROL', 'IZLE', 'EROZYON_ONCE', 'DIKIM_ADAYI', 'ONCELIGE_GORE', 'GENCLESME_IZLE')");
+
+                            t.HasCheckConstraint("CK_CellVerdicts_ToparlanmaOrani_Range", "ToparlanmaOrani IS NULL OR ToparlanmaOrani BETWEEN 0 AND 1");
+                        });
+                });
+
             modelBuilder.Entity("ReGreen.Data.Entities.Fire", b =>
                 {
                     b.Property<string>("FireId")
@@ -146,6 +215,71 @@ namespace ReGreen.Data.Migrations
 
                             t.HasCheckConstraint("CK_Fires_QualityFlag", "QualityFlag IN ('ok', 'check')");
                         });
+                });
+
+            modelBuilder.Entity("ReGreen.Data.Entities.FireNarrative", b =>
+                {
+                    b.Property<int>("ModelRunId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NarrativeVersion")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("FireId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("Onaylandi")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Paragraf")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Profil")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("SayiBlogu")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Uretim")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("ModelRunId", "NarrativeVersion");
+
+                    b.HasIndex("FireId", "ModelRunId");
+
+                    b.ToTable("FireNarratives", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_FireNarratives_Profil", "Profil IN ('yogun_mudahale', 'karisik', 'kendi_toparlaniyor', 'dik_arazi', 'belirsiz', 'kapsam_dar')");
+                        });
+                });
+
+            modelBuilder.Entity("ReGreen.Data.Entities.HukumSozlugu", b =>
+                {
+                    b.Property<string>("Surum")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset>("ImportedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
+                    b.Property<string>("JsonIcerik")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Surum");
+
+                    b.ToTable("HukumSozlugu", (string)null);
                 });
 
             modelBuilder.Entity("ReGreen.Data.Entities.ModelRun", b =>
@@ -322,6 +456,55 @@ namespace ReGreen.Data.Migrations
                     b.Navigation("Fire");
                 });
 
+            modelBuilder.Entity("ReGreen.Data.Entities.CellVerdict", b =>
+                {
+                    b.HasOne("ReGreen.Data.Entities.HukumSozlugu", "HukumSozlugu")
+                        .WithMany("CellVerdicts")
+                        .HasForeignKey("HukumSozluguSurum")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ReGreen.Data.Entities.Cell", "Cell")
+                        .WithMany("Verdicts")
+                        .HasForeignKey("FireId", "CellId")
+                        .HasPrincipalKey("FireId", "CellId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ReGreen.Data.Entities.ModelRun", "ModelRun")
+                        .WithMany("CellVerdicts")
+                        .HasForeignKey("FireId", "ModelRunId")
+                        .HasPrincipalKey("FireId", "Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Cell");
+
+                    b.Navigation("HukumSozlugu");
+
+                    b.Navigation("ModelRun");
+                });
+
+            modelBuilder.Entity("ReGreen.Data.Entities.FireNarrative", b =>
+                {
+                    b.HasOne("ReGreen.Data.Entities.Fire", "Fire")
+                        .WithMany("Narratives")
+                        .HasForeignKey("FireId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ReGreen.Data.Entities.ModelRun", "ModelRun")
+                        .WithMany("Narratives")
+                        .HasForeignKey("FireId", "ModelRunId")
+                        .HasPrincipalKey("FireId", "Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Fire");
+
+                    b.Navigation("ModelRun");
+                });
+
             modelBuilder.Entity("ReGreen.Data.Entities.ModelRun", b =>
                 {
                     b.HasOne("ReGreen.Data.Entities.Fire", "Fire")
@@ -357,6 +540,8 @@ namespace ReGreen.Data.Migrations
             modelBuilder.Entity("ReGreen.Data.Entities.Cell", b =>
                 {
                     b.Navigation("Predictions");
+
+                    b.Navigation("Verdicts");
                 });
 
             modelBuilder.Entity("ReGreen.Data.Entities.Fire", b =>
@@ -364,10 +549,21 @@ namespace ReGreen.Data.Migrations
                     b.Navigation("Cells");
 
                     b.Navigation("ModelRuns");
+
+                    b.Navigation("Narratives");
+                });
+
+            modelBuilder.Entity("ReGreen.Data.Entities.HukumSozlugu", b =>
+                {
+                    b.Navigation("CellVerdicts");
                 });
 
             modelBuilder.Entity("ReGreen.Data.Entities.ModelRun", b =>
                 {
+                    b.Navigation("CellVerdicts");
+
+                    b.Navigation("Narratives");
+
                     b.Navigation("Predictions");
                 });
 #pragma warning restore 612, 618

@@ -1,6 +1,6 @@
 # ReGreen — Veri Sözleşmesi (data-contract.md)
 
-**Sürüm:** 1.6
+**Sürüm:** 1.7
 **Kapsam:** AI (Buğra) → Backend (Beytullah) → Frontend (Zeynep). ReGreen Zone / Campaign / Community / Volunteer / Field Observation bu sözleşmenin kapsamı DIŞINDA (Faz 3).
 **Dayanak:** Bu belge, gerçek `ReGreen_AI_teslim_v1.zip` paketi (53 yangın, 37.163 hücre) tek tek açılıp doğrulandıktan sonra yazılmıştır. Referans kaynaklar: `alan_eslesme.json`, `oncelik.py`, `OKUBENI.md`. **1.2 sürümünde**, ekip arkadaşının teslim ettiği `sample-data/` paketindeki 53 yangının TAMAMI (37.163 satır) satır satır script ile tekrar tarandı — alan adları, null sayıları, enum değerleri ve sayısal aralıklar gerçek veriyle karşılaştırıldı (bkz. §12).
 **Kural:** Bu dosya tek doğru kaynaktır. Alan adı/tip/anlam konusunda anlaşmazlık çıkarsa buraya bakılır, kimse kendi hafızasından isim üretmez. Değişiklik gerekiyorsa önce bu dosya PR ile güncellenir, sonra kod yazılır.
@@ -358,6 +358,43 @@ Gerçek dosyalar (`AKD_2021_05_metadata.json` — `ok`, `DAN_2021_01_metadata.js
 
 > **Önceki sürümde eksikti:** `modis_area_ha`, `cell_size_m`, `cell_count`, `burned_area_ha`, `crs`, `in_training_set`, `out_of_fold_cells`, `has_perimeter`, `status_counts` bu tabloda hiç yer almıyordu — sadece `model_version`, `generated_at`, `schema_version`, `normalization_reference`, `priority_weights`, `priority_thresholds`, `quality_flag`, `quality_note` vardı. 1.2 ile tam alan listesine tamamlandı. `in_training_set` / `out_of_fold_cells` özellikle önemli: bunlar olmadan backend, bir tahminin kat-dışı mı yoksa doğrudan mı üretildiğini ayırt edemez (bkz. yukarıdaki açıklama).
 
+### 9.4. `{fire_id}_hukumler.csv` — sütun sırası
+
+**Kaynak:** [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md) — AI ekibinin ayrı, opsiyonel "hüküm katmanı" teslimatı. `{fire_id}_hucreler.csv`/`manifest.json`/`{fire_id}_metadata.json`'a DOKUNMAZ, tamamen yeni bir yan dosya; `manifest.json`'un `files_per_fire` listesinde BİLEREK yok.
+
+```
+cell_id, hukum, ek_kosullar, toparlanma_orani, tur_onerisi, tetikleyen, ozet,
+ayrinti, zamanlama_notu_var
+```
+
+9 sütun, sabit sıra. `cell_id` üzerinden `{fire_id}_hucreler.csv` ile **BİREBİR (1:1)** eşleşir — her hücrenin tam olarak bir hüküm satırı vardır, ne eksik ne fazla.
+
+| Alan | Tip | Null? | Açıklama | Kabul edilen değer / aralık | Örnek değer |
+| --- | --- | --- | --- | --- | --- |
+| `cell_id` | string | Hayır | Birleştirme anahtarı, §2 ile aynı kalıp | §2 ile aynı | `AKD_2021_01_020514` |
+| `hukum` | string enum | Hayır | Kural motorunun sıralı kararı — **hüküm, `priority_score`'dan BAĞIMSIZDIR**: ağırlık değişse bile hüküm değişmez (bkz. docs/hukum_sozlesmesi.md "hüküm ≠ öncelik") | 7 değer: `KAPSAM_DISI`, `SAHA_KONTROL`, `IZLE`, `EROZYON_ONCE`, `DIKIM_ADAYI`, `ONCELIGE_GORE`, `GENCLESME_IZLE` | `EROZYON_ONCE` |
+| `ek_kosullar` | string | **Evet** | `\|` ile ayrılmış 0..6 kod, hükmün üstüne biner | `ERISIM_ZOR`, `ESKIDEN_ORMAN_DEGIL`, `SEYREK_ORTU`, `DIK_YAMAC`, `AGIR_YANMIS`, `DUSUK_GUVEN` (herhangi bir birleşimi, veya boş) | `AGIR_YANMIS\|DIK_YAMAC` |
+| `toparlanma_orani` | float | **Evet** | `(ndvi_before - recovery_gap_pred) / ndvi_before` — yangın öncesi örtünün tahmini geri gelen oranı | 0–1 | `0.2727` |
+| `tur_onerisi` | string | **Evet** | Virgüllü tür listesi — **sistemin çıkarımı DEĞİL**, dışarıdan verilen bir yetişme-ortamı tablosundan okunuyor. `hukum_sozlugu.json → tur_tablosu.onaylandi = false` olduğu sürece ÖRNEK/onaysız veridir, UI kaynak notu olmadan göstermemeli | Serbest metin veya boş | `"kızılçam, fıstıkçamı"` |
+| `tetikleyen` | string | Hayır | Denetim izi — hükmü hangi ölçümün/eşiğin tetiklediği, her zaman dolu | Serbest metin | `"toparlanma=0.27 egim=36.0>=25 <0.35"` |
+| `ozet` | string | Hayır | Panelin üstünde gösterilecek 1-2 cümlelik hüküm metni, her zaman dolu | Serbest metin (Türkçe) | `"Önce erozyon kontrolü. Toparlanma tahmini zayıf ve eğim 36,0°..."` |
+| `ayrinti` | string | Hayır | Detay bölümündeki uzun gerekçe, her zaman dolu | Serbest metin (Türkçe) | `"Modelin tahminine göre yangın öncesi örtünün ancak %27 kadarı..."` |
+| `zamanlama_notu_var` | bool | Hayır | `true` ise `hukum_sozlugu.json → zamanlama_notu` sabit dipnotu bu hücrede gösterilmeli — metin hücre başına TEKRARLANMAZ | `True` / `False` | `True` |
+
+**Doğrulama (ImportTool, bkz. docs/import-flow.md §3.8):** `hukum` 7 bilinen kodun dışına çıkarsa, `ek_kosullar`'daki herhangi bir kod 6 bilinen kodun dışına çıkarsa veya `toparlanma_orani` `0..1` aralığı dışındaysa yangın reddedilir (`HUKUM_INVALID_VALUE`). `cell_id` kümesi `_hucreler.csv`'ninkiyle birebir eşleşmezse (fazla/eksik/tekrarlı) `HUKUM_CELL_MISMATCH`.
+
+### 9.5. `hukum_sozlugu.json` / `yangin_ozetleri.json` / `yangin_metinleri.json`
+
+Üçü de `{fire_id}_hukumler.csv`'nin AKSİNE **yangın başına değil, paket genelinde** bulunur (manifest'in yanında, tek dosya) ve import sırasında yangın döngüsünden ÖNCE bir kez okunur (bkz. docs/import-flow.md §3.8). Detaylı alan sözleşmesi için AI ekibinin kendi belgesi [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md) tek doğru kaynaktır — burada sadece backend'in bu dosyaları nasıl gördüğü özetlenir:
+
+| Dosya | Kapsam | Backend nasıl saklar |
+| --- | --- | --- |
+| `hukum_sozlugu.json` | **GLOBAL**, yangına özgü değil (~2,6 KB) — 7 hükmün başlığı/sırası, 6 ek koşulun şablon cümlesi, `zamanlama_notu` sabit metni, eşikler (`esikler`), tür tablosunun onay bayrağı (`tur_tablosu.onaylandi`) | `HukumSozlugu` tablosunda TEK global satır, ham JSON olarak (`JsonIcerik`) — alan alan modellenmez, `GET /api/hukum-sozlugu` ile aynen geçirilir |
+| `yangin_ozetleri.json` | `yanginlar[fire_id]` ile anahtarlanmış, HER yangın için bir "sayı bloğu" (büyüklük, şiddet/arazi/hüküm dağılımı, erişim, güven — bkz. hukum_sozlesmesi.md "Katman 1") | Her yangının kendi bloğu `FireNarratives.SayiBlogu`'na ham JSON olarak verbatim yazılır (`Fires.PerimeterGeoJson` ile AYNI "opak blob" deseni) |
+| `yangin_metinleri.json` | `yanginlar[fire_id]` ile anahtarlanmış, HER yangın için `{paragraf, profil, kaynak, onaylandi}` + dosyanın ÜST seviyesinde paket-geneli `uretim` alanı | `paragraf`/`profil`/`onaylandi` → `FireNarratives`'in aynı adlı kolonları; üst seviye `uretim` her yangının `FireNarratives.Uretim`'ine kopyalanır (`kaynak` alanı ayrıca saklanmaz, `uretim` ile kavramsal olarak örtüşür) |
+
+**Opsiyonellik:** Üçü de manifest'in yanında bulunmayabilir — bulunmazlarsa ilgili tablo(lar) hiç yazılmaz, import hata vermez (backward-compatible no-op). `yangin_ozetleri.json`/`yangin_metinleri.json`'dan sadece biri varsa da aynı şekilde: o yangın için anlatı atlanır.
+
 ---
 
 ## 10. Kalite Bayrakları
@@ -377,8 +414,11 @@ Gerçek dosyalar (`AKD_2021_05_metadata.json` — `ok`, `DAN_2021_01_metadata.js
 | `Cells`       | Hücre merkezi + TÜM sabit özellikler (§3, §4) — CSV silinse bile veri kaybolmaz                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `ModelRuns`   | **Her yangın + teslimat kombinasyonu bir satır.** `normalization_reference` yangına özel olduğu için tek AI teslimatı 53 ayrı satır üretir; `ModelVersion`+`GeneratedAt` bunları aynı teslimata bağlar. PDF v4.1'de eksik olan `InTrainingSet`/`OutOfFoldCells`, güncel `docs/db-schema.md` v1.2 ve `backend/db/schema.sql` içinde eklenmiştir. `UNIQUE(FireId, ModelVersion, GeneratedAt)` aynı yangın teslimatının çoğalmasını engeller |
 | `Predictions` | KATMAN 1 çıktısı (`prediction_status`, `recovery_gap_pred`) + AI'ın varsayılan priority'si. Insert-only                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `CellVerdicts` | Hüküm katmanı (§9.4), `(CellId, ModelRunId, HukumSozluguSurum)` başına bir satır. Ağırlık kaydırıcısından bağımsız; model ve hüküm motoru sürümüne bağlıdır |
+| `FireNarratives` | Hüküm katmanı (§9.5), `(ModelRunId, NarrativeVersion)` başına opsiyonel yangın özeti + ham sayı bloğu |
+| `HukumSozlugu` | Hüküm katmanı (§9.5), sürüm başına global sözlük; eski sürümler korunur |
 
-`ModelRuns` ve `Predictions` üzerinde `UNIQUE` kısıtları vardır (aynı paket iki kez import edilirse veri çoğalmaz).
+`ModelRuns` ve `Predictions` üzerinde `UNIQUE` kısıtları vardır (aynı paket iki kez import edilirse veri çoğalmaz). `CellVerdicts`/`FireNarratives`/`HukumSozlugu` de aynı insert-or-verify felsefesini izler (bkz. docs/db-schema.md §9, docs/import-flow.md §3.8/§4).
 
 ---
 
@@ -395,6 +435,7 @@ Gerçek dosyalar (`AKD_2021_05_metadata.json` — `ok`, `DAN_2021_01_metadata.js
 | 1.6   | Model `rf_v1` → `ridge_v2` teslimatıyla hizalandı (şema/kolon adları AYNI kaldı, sadece değerler ve algoritma değişti). §3 başlığı "6 Öznitelik (Random Forest)" → "7 Öznitelik (Ridge Regression)"; `ndvi_drop` artık modele girdiği için §4'ten §3'e taşındı, rol açıklaması güncellendi. §6'daki "Random Forest" referansları genel "model" ifadesine çevrildi (algoritma `ModelRuns.ModelVersion`'a bağlı, koda gömülü değil). §6.4'teki `recovery_gap_pred` (0,1187–0,576 → 0,11–0,6546) ve `priority_score` (0,0–0,9683 → 0,0–0,9754) aralıkları 53 yangının 37.163 satırı yeniden taranarak güncellendi — diğer 6 öznitelik (`tree_cover` .. `ndvi_drop`) hücre-sabiti olduğu için DEĞİŞMEDİ, bu da doğrulandı. §9.2'ye `ridge_v2` ile ilk kez ortaya çıkan `features` (iç öznitelik adları) ve `model_performance` (Spearman/top-20 isabet metrikleri, elle kopyalamayı önlemek için eklenmiş) alanları eklendi; `model_version` örnek değerleri §9.2/§9.3'te `ridge_v2`'ye güncellendi. Ayrıca API katmanında `CellsResponseDto`'ya `normalization_reference`, `model_version` ve `priority_thresholds` eklendi (ilki Buğra'nın somut isteğiydi — frontend'in öncelik skorunu 3 bileşene ayırarak göstermesi için gerekliydi; diğer ikisi aynı gözden geçirmede eklenen tamamlayıcı alanlar — `priority_thresholds` olmadan frontend `priority_class` renklendirmesi için `{fire_id}_metadata.json`'a ayrıca erişmek zorunda kalıyordu). Veri zaten `ModelRun`'da vardı, sadece response'a taşındı — bkz. `docs/api-contract.md` §4.5. `normalization_reference`'ın `min`/`max`'ı artık API'de HER ZAMAN sayı: `FireValidator` §3.3.4'e null-reddi eklendi (önceden `FireImporter` null'ı sessizce `0`'a çeviriyordu, DB kolonları zaten NOT NULL olduğu için "gerçek 0" ile "referans yok" ayrımı kayboluyordu — bkz. `ReGreen.Core.Priority.NormRange` XML doc'u), API katmanı da ayrı non-nullable `NormalizationReferenceDto` tipiyle bunu yansıtıyor. |
 
 | 1.6 (devam) | İkinci bir gözden geçirme turunda ek gerçek hatalar bulundu ve düzeltildi: `docs/api-contract.md` §4.5 ile `data-contract.md` §7/§8.3/§9.2 örneklerindeki eski `rf_v1` sayıları güncellendi; donmuş PriorityCalculator test örnekleri gerçek `ridge_v2` değerleriyle değiştirildi; `OKUBENI.md`, üç `alan_eslesme.json` kopyası, frontend manifest toplamı ve `HUCRE_PANELI.md` hizalandı. Son kontrolde frontend bileşen formülü backend ile aynı clamp/degenerate-range kurallarına getirildi, API için `applied_weights` kullanımı açıklandı, `model_performance` alt alanları şemalandırıldı ve yeni response alanları OpenAPI regresyon testiyle korumaya alındı. |
+| 1.7 | Hüküm katmanı eklendi (docs/hukum_sozlesmesi.md, AI ekibinin ayrı opsiyonel yan-teslimatı): `{fire_id}_hukumler.csv` sütun sözleşmesi (§9.4, yeni) ve `hukum_sozlugu.json`/`yangin_ozetleri.json`/`yangin_metinleri.json`'ın backend'de nasıl saklandığının özeti (§9.5, yeni) eklendi; §11 DB şeması özetine `CellVerdicts`/`FireNarratives`/`HukumSozlugu` satırları eklendi. Mevcut hiçbir alan/tablo/enum değişmedi — tamamen katmanlı ekleme. |
 
 ---
 
@@ -403,6 +444,7 @@ Gerçek dosyalar (`AKD_2021_05_metadata.json` — `ok`, `DAN_2021_01_metadata.js
 - `sample-data/backend-data/alan_eslesme.json` — iç isim ↔ API isim eşleşmesi (Türkçe kaynak)
 - `sample-data/backend-data/oncelik.py` — öncelik formülünün referans Python uygulaması
 - `sample-data/backend-data/OKUBENI.md` — AI teslim paketinin okuma kılavuzu
+- [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md) — hüküm katmanının (§9.4/§9.5) veri sözleşmesi ve semantiği
 - `sample-data/frontend-data/HUCRE_PANELI.md` — hücre detay paneli spesifikasyonu
 - `sample-data/README.md` — backend-data / frontend-data klasör ayrımı ve sürüm politikası
 - Teknik Mimari Planı v4.1 (PDF) — DB şeması, API tasarımı, import akışı, frontend renklendirme kuralları

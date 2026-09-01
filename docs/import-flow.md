@@ -1,8 +1,8 @@
 # ReGreen — Import Akışı (import-flow.md)
 
-**Sürüm:** 1.2 (uygulandı ve test edildi — `backend/ImportTool`, gerçek LocalDB + `sample-data/backend-data` 53 yangınlık paketle uçtan uca doğrulandı)
-**Kapsam:** AI teslim paketinin (`manifest.json` + yangın başına 3 dosya) veritabanına aktarılması. Faz 1/2 çekirdek.
-**Dayanak:** [`docs/data-contract.md`](./data-contract.md) v1.5, [`docs/db-schema.md`](./db-schema.md) v1.2 + [`backend/db/schema.sql`](../backend/db/schema.sql), Teknik Mimari Planı v4.1 §8 (başlangıç noktası).
+**Sürüm:** 1.3 (uygulandı ve test edildi — `backend/ImportTool`, gerçek LocalDB + `sample-data/backend-data` 53 yangınlık paketle uçtan uca doğrulandı)
+**Kapsam:** AI teslim paketinin (`manifest.json` + yangın başına 3 dosya) veritabanına aktarılması + hüküm katmanının (docs/hukum_sozlesmesi.md) opsiyonel yan dosyalarının içe aktarılması (§3.8). Faz 1/2 çekirdek.
+**Dayanak:** [`docs/data-contract.md`](./data-contract.md) v1.5, [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md) (hüküm katmanı), [`docs/db-schema.md`](./db-schema.md) v1.4 + [`backend/db/schema.sql`](../backend/db/schema.sql), Teknik Mimari Planı v4.1 §8 (başlangıç noktası).
 **Kural:** PDF §8'in belirtmediği veya kendi içinde çeliştiği davranışlar bu belgede açıkça tanımlanır. Importer, contract'ta olmayan alan adı, varsayılan değer veya tolerans üretmez.
 
 ---
@@ -135,6 +135,23 @@ Dosya doğrulamaları tamamlandıktan sonra, yazmadan önce:
 
 Dry-run modunda §3'ün tamamı, DB salt-okunur sorguları dahil çalışır. Başarılı ve daha önce import edilmemiş yangın `validated`; mevcut run `already_imported` olur. Hiçbir transaction/`INSERT`/`UPDATE` açılmaz.
 
+### 3.8. Hüküm katmanı — opsiyonel yan dosyalar
+
+docs/hukum_sozlesmesi.md'deki "hüküm katmanı", AI ekibinin ana teslim paketinden AYRI, opsiyonel bir yan-teslimattır. Dört dosya `manifest.json`'un `files_per_fire` listesinde BİLEREK yok; bulunmazlarsa hüküm katmanı sessizce atlanır — hata DEĞİL, backward-compatible no-op. İki farklı seviyede çözülürler:
+
+1. **Yangın düzeyinde, opsiyonel (`FireValidator`):** `{fire_id}_hukumler.csv` — `{fire_id}_hucreler.csv` gibi §3.1.5'teki güvenli path çözümüyle (`{fire_id}` yerine konur, path traversal engellenir) ama `files_per_fire` şablonlarından BAĞIMSIZ, doğrudan `Path.Combine` ile aranır. `File.Exists` ile kontrol edilir:
+   - Yoksa: bu yangının hüküm verisi yok, `FireImportData.HukumRows = null`. Hata değildir.
+   - Varsa: CSV parse edilir (data-contract §9.1'in `_hucreler.csv` okuma deseniyle AYNI CsvHelper yapılandırması — boş alan `null` sayılır) ve doğrulanır:
+     - `hukum` 7 bilinen koddan biri olmalı, değilse `HUKUM_INVALID_VALUE`.
+     - `ek_kosullar` (varsa) `\|` ile ayrılan her kod 6 bilinen koddan biri olmalı, `toparlanma_orani` (varsa) `0..1` aralığında ve sonlu olmalı — aksi `HUKUM_INVALID_VALUE`.
+     - `cell_id` kümesi, aynı yangının `_hucreler.csv`'sindeki `cell_id` kümesiyle **1:1 BİREBİR** eşleşmeli (fazla/eksik/tekrarlı `cell_id` → `HUKUM_CELL_MISMATCH`). Header uyuşmazlığı/parse hatası sırasıyla `HUKUM_CSV_HEADER_MISMATCH`/`HUKUM_CSV_PARSE_ERROR` ile raporlanır (`_hucreler.csv`'nin `CSV_HEADER_MISMATCH`/`CSV_PARSE_ERROR` kodlarıyla aynı desen).
+
+2. **Paket düzeyinde, opsiyonel (`Orchestrator`):** `hukum_sozlugu.json` (GLOBAL, tek sözlük) ve `yangin_ozetleri.json`/`yangin_metinleri.json` (fire_id ile anahtarlanmış TEK dosya, per-fire DEĞİL) — manifest'in yanında, yangın döngüsünden ÖNCE bir kez okunur:
+   - Hüküm CSV'si varsa `hukum_sozlugu.json` zorunludur (`HUKUM_SOZLUGU_REQUIRED`). Sözlük sürüm başına insert-or-verify edilir; aynı sürüm farklı içerikle gelirse `HUKUM_SOZLUGU_MISMATCH`, yeni sürümse yeni satırdır.
+   - `yangin_metinleri.json` ve `yangin_ozetleri.json` birlikte bulunmalıdır; tek dosya `NARRATIVE_FILE_PAIR_INCOMPLETE` ile FATAL olur. Sürümleri eşleşmeli ve her manifest yangını iki dosyada da bulunmalıdır; eksik fire_id `NARRATIVE_FIRE_MISSING` ile o yangını reddeder.
+
+`FireImportData`, bu opsiyonel verileri taşıyacak şekilde genişletildi: `HukumRows` (`FireValidator` tarafından doldurulur, `init`), `Narrative` (paket-geneli olduğu için `FireValidator` DEĞİL `Orchestrator` tarafından, doğrulama başarıyla döndükten SONRA atanır — bilerek mutable).
+
 ---
 
 ## 4. Yangın Başına Yazma İşlemi
@@ -152,7 +169,14 @@ BEGIN TRANSACTION
        - Yoksa INSERT.
        - Varsa FireId dahil tüm data-contract §3/§4 sabit alanları karşılaştırılır;
          fark varsa failed. Otomatik UPDATE yapılmaz.
-    3. ModelRuns INSERT
+    3. ModelRuns INSERT; Id üretilir
+    3b. CellVerdicts (CellId + ModelRunId) insert-or-verify
+       - Yoksa INSERT. Varsa Hukum/EkKosullar/ToparlanmaOrani/TurOnerisi/Tetikleyen/
+         Ozet/Ayrinti/ZamanlamaNotuVar karşılaştırılır; fark varsa HUKUM_MISMATCH.
+    3c. FireNarratives (ModelRunId) insert-or-verify
+       - Model teslimatı düzeyinde tekil. Yoksa INSERT. Varsa
+         Paragraf/Profil/Onaylandi/Uretim/SayiBlogu karşılaştırılır; fark varsa
+         FIRE_NARRATIVE_MISMATCH.
     4. Predictions INSERT
 COMMIT
 -- herhangi bir hata: ROLLBACK, yangın failed, sonraki yangına devam
@@ -161,6 +185,8 @@ COMMIT
 Karşılaştırmalarda metin/tarih/enum değerleri birebirdir. Kaynaktan yeniden parse edilen sayısal değerler için `abs(a-b) <= 1e-9 * max(1, abs(a), abs(b))`; GeoJSON geometrileri normalize edildikten sonra koordinatlarda `1e-9` derece toleransıyla karşılaştırılır. Marker aynı canonical geometry üzerinden yeniden üretilir. Uyuşmazlıkta alan adı, iki değer ve kullanılan tolerans loglanır. SQL komutları parametreli çalıştırılır; dosya değerleri SQL metnine birleştirilmez.
 
 Tek transaction, `Fires`/`Cells` yazıldıktan sonra `ModelRuns` veya `Predictions` aşamasında hata çıkarsa yarım yangın bırakılmamasını garanti eder.
+
+**Hüküm katmanı SONRADAN gelirse (§3.8, gerçek `sample-data` üzerinde uçtan uca doğrulandı):** Ana veri (`Fires`/`Cells`/`ModelRuns`/`Predictions`) zaten `already_imported` olsa bile — yani `UQ_ModelRuns` anahtarı zaten mevcutsa (§5) — hüküm katmanı (`CellVerdicts`/`FireNarratives`) hâlâ eksikse AYRI, küçük bir transaction'da insert-or-verify edilir. Bu, `hukumler.csv`/anlatı dosyalarının ana teslimattan SONRA, ayrı bir "hüküm katmanı" teslimatı olarak gelebileceği gerçek senaryoyu destekler (bkz. docs/hukum_sozlesmesi.md) — aksi halde erken `already_imported` kısayolu bu veriyi hiçbir zaman yazamazdı. Rapor durumu yine `already_imported` kalır (ana veri açısından "yeni" bir şey olmadı); hüküm katmanında uyuşmazlık varsa `failed` (`HUKUM_MISMATCH`/`FIRE_NARRATIVE_MISMATCH`) döner.
 
 ---
 
@@ -254,11 +280,11 @@ Fatal hata yangın döngüsünden önce oluşsa bile, yazılabiliyorsa aynı şe
 
 ## 8. Test Kapsamı (`backend/ImportTool.Tests`)
 
-xUnit, 51 test (40 DB gerektirmeyen test + 11 LocalDB entegrasyon testi) —
+xUnit, 58 test (40 DB gerektirmeyen test + 18 LocalDB entegrasyon testi) —
 `dotnet test backend/ReGreen.sln` ile çalıştırılır. Entegrasyon testleri
 varsayılan olarak atlanır; çalıştırmak için `REGREEN_RUN_LOCALDB_TESTS=1`
-ayarlanır. API testleriyle birlikte backend çözümünde toplam 119 test vardır
-(68 API + 51 ImportTool).
+ayarlanır. API testleriyle birlikte backend çözümünde toplam 137 test vardır
+(79 API + 58 ImportTool).
 
 **Unit testler** (DB gerektirmez):
 - `PriorityCalculatorTests` — `oncelik.py` portunun doğruluğu, **gerçek `sample-data` satırlarından** alınan değerlerle (uydurma değil): `AKD_2021_05_000160` ve `ornek_hucreler.json`'daki `AKD_2021_01_032026` örnekleri
@@ -267,6 +293,7 @@ ayarlanır. API testleriyle birlikte backend çözümünde toplam 119 test vard�
 
 **Entegrasyon testleri** (gerçek LocalDB, her koşuda benzersiz adlı geçici veritabanı oluşturulur ve sonunda silinir; dev veritabanı `ReGreen`'e DOKUNMAZ):
 - `OrchestratorTests` — taze import, idempotency (ikinci çalıştırma çoğaltmıyor), dry-run (hiçbir şey yazmıyor), `skipped`/`--allow-partial` exit code sözleşmesi, FATAL (desteklenmeyen `schema_version`), insert-or-verify (bozulmuş hücre reddediliyor, rollback), dry-run'da bozuk mevcut hücrenin reddi ve **regresyon testleri**: eksik zorunlu metadata alanı sessizce kabul edilmiyor, bozuk bir satır tüm çalışmayı düşürmüyor (diğer yangın işlenmeye devam ediyor)
+- **Hüküm katmanı:** aynı ModelRun'da farklı hükmün dry-run dahil reddi; yeni ModelRun'da aynı hücre için yeni hükmün sürümlenmesi; eksik anlatı dosya çiftinin FATAL olması ve geriye dönük uyumluluk test edilir.
 
 Testler `SyntheticFireFixture` ile kendinden-tutarlı, izole, geçici paketler üretir — `sample-data/` dosyalarına dokunmaz. Ayrıca 53 yangınlık güncel backend sample-data paketi DB'ye yazmadan otomatik olarak tüm dosya/iş kuralı doğrulamalarından geçirilir.
 
@@ -281,12 +308,14 @@ Testler `SyntheticFireFixture` ile kendinden-tutarlı, izole, geçici paketler �
 | 1.0 | İlk import akışı: yangın başına transaction, dry-run, recoverable hata ve JSON rapor kararları |
 | 1.1 | Kısmi import exit politikası ve `--allow-partial`; tam manifest/metadata/CSV/GeoJSON doğrulaması; skor ile sınıf kontrolünün ayrılması; kör `Fires`/`Cells` upsert yerine insert-or-verify; yazmadan önce idempotency kontrolü ve yarış durumu; `cells_validated`/`cells_inserted`; FATAL ve atomik rapor davranışı eklendi |
 | 1.2 | `backend/ImportTool` gerçekten yazıldı (C#/.NET 9, EF Core) ve LocalDB üzerinde `sample-data/backend-data`'nın TAMAMIYLA (53 yangın, 37.163 hücre) uçtan uca doğrulandı — DB'deki nihai sayılar data-contract'taki değerlerle birebir eşleşti. İlk implementasyon turunda review ile bulunan 5 kritik + 6 ikincil açık düzeltildi: zorunlu JSON alanları artık `required` (eksikse sessizce `""`/`0` olmuyor); manifest↔metadata karşılaştırması `model_version`/`generated_at`/`cell_size_m`/`crs`/ağırlık/eşiklere genişletildi; GeoJSON'daki `fire_date`/`province`/`region` da artık çapraz kontrol ediliyor; bir yangının doğrulama/import'undaki beklenmeyen exception artık TÜM çalışmayı düşürmüyor (per-fire try/catch, `Orchestrator.cs`'e çıkarıldı); dry-run artık DB'ye yazmadan ÖNCE tüm salt-okunur kontrolleri (cross-fire `cell_id` ve mevcut değişmez Fire/Cell karşılaştırmaları dahil) çalıştırıyor; `slope_deg`/`road_distance_km` için de gerçek predicted min/max karşılaştırması eklendi (önceden sadece `recovery_gap_pred`); skor karşılaştırma toleransı `1e-4`'ten `1e-9`'a çekildi (business tolerance ile floating-point gürültüsü karıştırılmıyordu); `CanConnectAsync()` dönüş değeri kontrol ediliyor; `files_per_fire` şablonları gerçekten kullanılıyor; GeoJSON'da beklenmeyen property reddediliyor; geometri karşılaştırması ham metin yerine normalize edilmiş koordinatlar üzerinde yapılıyor; rapor artık null alanları gizlemiyor; `schema.sql`'e EF'in ürettiği 2 ekstra FK-destek indeksi eklendi. Ayrıca `ImportTool.Tests` (xUnit unit + opt-in gerçek LocalDB entegrasyon testleri) eklendi — bkz. §8. |
+| 1.3 | Hüküm katmanı eklendi (docs/hukum_sozlesmesi.md, AI ekibinin ayrı opsiyonel yan-teslimatı) — `{fire_id}_hukumler.csv` (yangın düzeyinde, `FireValidator`) + `hukum_sozlugu.json`/`yangin_ozetleri.json`/`yangin_metinleri.json` (paket düzeyinde, `Orchestrator`, yangın döngüsünden ÖNCE bir kez) çözülür ve doğrulanır (bkz. §3.8); `CellVerdicts`/`FireNarratives`/`HukumSozlugu` insert-or-verify ile yazılır (bkz. §4). Gerçek `sample-data/backend-data` üzerinde uçtan uca doğrulanırken önemli bir davranış ortaya çıktı: ana veri (`Fires`/`Cells`/`ModelRuns`/`Predictions`) DAHA ÖNCE (bu katman eklenmeden önce) import edilmiş olabilir — bu durumda erken `already_imported` kısayolu hüküm katmanını hiç yazmadan dönerdi. Düzeltildi: `already_imported` artık hüküm katmanının backfill edilmesini ENGELLEMİYOR (§4'teki ilgili not). |
 
 ---
 
 ## 10. Kaynak Dosyalar
 
 - [`docs/data-contract.md`](./data-contract.md) v1.5 — alanlar ve doğrulama kuralları
-- [`docs/db-schema.md`](./db-schema.md) v1.2 ve [`backend/db/schema.sql`](../backend/db/schema.sql) — DB garantileri
+- [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md) — hüküm katmanının (§3.8) veri sözleşmesi ve semantiği
+- [`docs/db-schema.md`](./db-schema.md) v1.4 ve [`backend/db/schema.sql`](../backend/db/schema.sql) — DB garantileri
 - `sample-data/backend-data/oncelik.py` — priority hesaplamasının referans uygulaması
 - `ReGreen_Teknik Mimari Planı.pdf` v4.1 §8 — başlangıç mimarisi

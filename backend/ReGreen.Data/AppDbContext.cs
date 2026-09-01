@@ -14,6 +14,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Cell> Cells => Set<Cell>();
     public DbSet<ModelRun> ModelRuns => Set<ModelRun>();
     public DbSet<Prediction> Predictions => Set<Prediction>();
+    public DbSet<CellVerdict> CellVerdicts => Set<CellVerdict>();
+    public DbSet<FireNarrative> FireNarratives => Set<FireNarrative>();
+    public DbSet<HukumSozlugu> HukumSozlugu => Set<HukumSozlugu>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,6 +24,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         ConfigureCells(modelBuilder);
         ConfigureModelRuns(modelBuilder);
         ConfigurePredictions(modelBuilder);
+        ConfigureCellVerdicts(modelBuilder);
+        ConfigureFireNarratives(modelBuilder);
+        ConfigureHukumSozlugu(modelBuilder);
     }
 
     private static void ConfigureFires(ModelBuilder modelBuilder)
@@ -186,6 +192,94 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(p => new { p.FireId, p.ModelRunId })
                 .HasPrincipalKey(m => new { m.FireId, m.Id })
                 .OnDelete(DeleteBehavior.NoAction);
+        });
+    }
+
+    private static void ConfigureCellVerdicts(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CellVerdict>(e =>
+        {
+            e.ToTable("CellVerdicts", t =>
+            {
+                t.HasCheckConstraint("CK_CellVerdicts_Hukum",
+                    "Hukum IN ('KAPSAM_DISI', 'SAHA_KONTROL', 'IZLE', 'EROZYON_ONCE', " +
+                    "'DIKIM_ADAYI', 'ONCELIGE_GORE', 'GENCLESME_IZLE')");
+                t.HasCheckConstraint("CK_CellVerdicts_ToparlanmaOrani_Range",
+                    "ToparlanmaOrani IS NULL OR ToparlanmaOrani BETWEEN 0 AND 1");
+            });
+
+            e.HasKey(v => new { v.CellId, v.ModelRunId, v.HukumSozluguSurum });
+            e.Property(v => v.CellId).HasMaxLength(50);
+            e.Property(v => v.FireId).HasMaxLength(50);
+            e.Property(v => v.HukumSozluguSurum).HasMaxLength(20);
+            e.Property(v => v.Hukum).HasMaxLength(20);
+            e.Property(v => v.EkKosullar).HasMaxLength(120);
+            e.Property(v => v.TurOnerisi).HasMaxLength(500);
+            e.Property(v => v.Tetikleyen).HasMaxLength(300);
+            e.Property(v => v.Ozet).HasColumnType("nvarchar(max)");
+            e.Property(v => v.Ayrinti).HasColumnType("nvarchar(max)");
+
+            e.HasOne(v => v.Cell)
+                .WithMany(c => c.Verdicts)
+                .HasForeignKey(v => new { v.FireId, v.CellId })
+                .HasPrincipalKey(c => new { c.FireId, c.CellId })
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasOne(v => v.ModelRun)
+                .WithMany(m => m.CellVerdicts)
+                .HasForeignKey(v => new { v.FireId, v.ModelRunId })
+                .HasPrincipalKey(m => new { m.FireId, m.Id })
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasOne(v => v.HukumSozlugu)
+                .WithMany(h => h.CellVerdicts)
+                .HasForeignKey(v => v.HukumSozluguSurum)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasIndex(v => new { v.ModelRunId, v.CellId })
+                .HasDatabaseName("IX_CellVerdicts_ModelRunId_CellId");
+        });
+    }
+
+    private static void ConfigureFireNarratives(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<FireNarrative>(e =>
+        {
+            e.ToTable("FireNarratives", t => t.HasCheckConstraint("CK_FireNarratives_Profil",
+                "Profil IN ('yogun_mudahale', 'karisik', 'kendi_toparlaniyor', " +
+                "'dik_arazi', 'belirsiz', 'kapsam_dar')"));
+
+            e.Property(n => n.FireId).HasMaxLength(50);
+            e.Property(n => n.NarrativeVersion).HasMaxLength(20);
+            e.Property(n => n.Paragraf).HasColumnType("nvarchar(max)");
+            e.Property(n => n.Profil).HasMaxLength(30);
+            e.Property(n => n.Uretim).HasMaxLength(100);
+            e.Property(n => n.SayiBlogu).HasColumnType("nvarchar(max)");
+
+            e.HasOne(n => n.Fire)
+                .WithMany(f => f.Narratives)
+                .HasForeignKey(n => n.FireId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasOne(n => n.ModelRun)
+                .WithMany(m => m.Narratives)
+                .HasForeignKey(n => new { n.FireId, n.ModelRunId })
+                .HasPrincipalKey(m => new { m.FireId, m.Id })
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasKey(n => new { n.ModelRunId, n.NarrativeVersion });
+        });
+    }
+
+    private static void ConfigureHukumSozlugu(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<HukumSozlugu>(e =>
+        {
+            e.ToTable("HukumSozlugu");
+            e.HasKey(h => h.Surum);
+            e.Property(h => h.Surum).HasMaxLength(20);
+            e.Property(h => h.JsonIcerik).HasColumnType("nvarchar(max)");
+            e.Property(h => h.ImportedAt).HasDefaultValueSql("SYSUTCDATETIME()");
         });
     }
 }

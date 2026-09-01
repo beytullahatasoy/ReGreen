@@ -39,4 +39,43 @@ describe("MockFireService", () => {
     expect(cell?.priority_score).not.toBeNull();
     expect(cell?.priority_class).not.toBeNull();
   });
+
+  it("returns a cell verdict parsed from the hukumler CSV, including quoted comma-bearing fields", async () => {
+    const service = new MockFireService();
+
+    const response = await service.getCells("AKD_2021_01");
+    const cells = response.items;
+    const verdict = await service.getCellVerdict("AKD_2021_01", cells[0]!.cell_id);
+
+    expect(verdict.cell_id).toBe(cells[0]!.cell_id);
+    expect(verdict.hukum).toBeTruthy();
+    expect(Array.isArray(verdict.ek_kosullar)).toBe(true);
+  });
+
+  it("rejects an unknown cell id when fetching a verdict", async () => {
+    const service = new MockFireService();
+
+    await expect(service.getCellVerdict("AKD_2021_01", "does-not-exist")).rejects.toThrow();
+  });
+
+  it("returns the fire narrative paragraph for a known fire", async () => {
+    const service = new MockFireService();
+
+    const narrative = await service.getFireNarrative("AKD_2021_01");
+
+    expect(narrative.fire_id).toBe("AKD_2021_01");
+    expect(narrative.paragraf.length).toBeGreaterThan(0);
+    expect(narrative.uretim).toBeTruthy();
+    expect(narrative.sayi_blogu.buyukluk?.hucre).toBeGreaterThan(0);
+    expect(narrative.sayi_blogu.hukum_dagilimi?.ONCELIGE_GORE).toBeTypeOf("number");
+  });
+
+  it("returns the global hukum dictionary with all 7 verdict definitions", async () => {
+    const service = new MockFireService();
+
+    const sozluk = await service.getHukumSozlugu();
+
+    expect(sozluk.hukumler).toHaveLength(7);
+    expect(sozluk.tur_tablosu.onaylandi).toBe(false);
+  });
 });
