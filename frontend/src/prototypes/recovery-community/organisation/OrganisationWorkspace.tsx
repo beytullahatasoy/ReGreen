@@ -1,31 +1,160 @@
-import { useState } from "react";
-import { activities, observations, zones } from "../data/demoData";
-import type { RecoveryZoneDemo } from "../types";
+import { useMemo, useState } from "react";
+import { aciliyeteGore, toplamlar, useRecoveryZones } from "../../../hooks/useRecoveryZones";
+import { activities } from "../data/demoData";
+import { useObservations } from "../data/useObservations";
 import { Icon } from "../components/Icons";
 import { ObservationReview } from "../components/ObservationReview";
 import { PrototypeModal } from "../components/PrototypeModal";
 import { PrototypeShell } from "../components/PrototypeShell";
-import { RecoveryUpdateCard } from "../components/RecoveryUpdateCard";
-import { SummaryStrip } from "../components/SummaryStrip";
-import { ZoneDetailModal } from "../components/ZoneDetailModal";
+import {
+  DemoNotice, ZoneBrief, ZoneError, ZoneLoading, ZoneRow, hektar, kare,
+} from "../components/RealZone";
 
+/**
+ * The organisation screen has one job:
+ *
+ *     "Where do I send a crew today, and what needs my approval?"
+ *
+ * The previous version had 7 sections (hero, 5 counters, zone catalogue, 4
+ * action buttons, activity table, observation review, recovery card) and none
+ * stood out from the others. Now there are two jobs: an area queue and an
+ * evidence queue.
+ *
+ * Zones are NO LONGER INVENTED — they come from the 53 real fires and the
+ * verdict layer. Activities and observations are still demo, labelled as such.
+ */
 export function OrganisationWorkspace() {
-  const [selected, setSelected] = useState<RecoveryZoneDemo | null>(null);
+  const { zones, yukleniyor, hata, eksikOzet } = useRecoveryZones();
+  const [seciliId, setSeciliId] = useState<string | null>(null);
   const [action, setAction] = useState<string | null>(null);
-  const summary = [
-    { label: "Active Recovery Zones", value: "03", note: "Across 2 regions", icon: "zone" as const },
-    { label: "Activities in progress", value: "03", note: "Demo workflow", icon: "activity" as const },
-    { label: "Registered volunteers", value: "62", note: "Across open activities", icon: "people" as const },
-    { label: "Awaiting review", value: String(observations.filter(o=>o.status==="Pending").length).padStart(2,"0"), note: "Supporting evidence", icon: "observe" as const },
-    { label: "Next milestone", value: "18d", note: "Monitoring review", icon: "recovery" as const },
-  ];
-  return <PrototypeShell mode="organisation"><main className="rc-main">
-    <section className="rc-hero"><div><span className="rc-kicker rc-kicker--orange">Organisation recovery operations</span><h1>From prioritised recovery need<br/>to verified field action.</h1><p>Coordinate expert-reviewed Recovery Zones, approved activities, supporting field evidence and long-term monitoring.</p></div><div className="rc-hero__stat"><span>Action layer</span><strong>03</strong><small>demo Recovery Zones</small></div></section>
-    <SummaryStrip items={summary}/>
-    <section className="rc-section"><div className="rc-section-head"><div><span className="rc-kicker">Operational portfolio</span><h2>Recovery Zones</h2></div><span className="rc-demo-pill">Demo data</span></div><div className="rc-zone-operations">{zones.map(zone=>{const zoneActivities=activities.filter(a=>a.zoneId===zone.id);return <article key={zone.id}><div className="rc-zone-operation__head"><div><span className="rc-priority">{zone.priority}</span><h3>{zone.name}</h3><p>{zone.province} · {zone.region}</p></div><span className="rc-status">{zone.status}</span></div><p className="rc-zone-operation__why">{zone.why}</p><div className="rc-progress"><span><small>{zone.stage}</small><b>{zone.progress}%</b></span><i><b style={{width:`${zone.progress}%`}}/></i></div><dl><div><dt>Assigned organisation</dt><dd>{zone.organisation}</dd></div><div><dt>Available activities</dt><dd>{zoneActivities.length}</dd></div><div><dt>Next action</dt><dd>{zone.nextMilestone}</dd></div><div><dt>Last update</dt><dd>{zone.lastUpdate}</dd></div></dl><button onClick={()=>setSelected(zone)}>Open Recovery Zone <Icon name="arrow"/></button></article>})}</div></section>
-    <section className="rc-actions" aria-label="Organisation prototype actions">{([["Create Activity","activity"],["Review Observations","observe"],["Update Zone Status","zone"],["View Recovery Report","report"]] as const).map(([label,icon])=><button key={label} onClick={()=>setAction(label)}><Icon name={icon}/><span><strong>{label}</strong><small>Prototype action · no data mutation</small></span><Icon name="arrow"/></button>)}</section>
-    <section className="rc-section"><div className="rc-section-head"><div><span className="rc-kicker">Approved coordination</span><h2>Activity management</h2></div><span className="rc-demo-pill">Demo workflow</span></div><div className="rc-activity-table">{activities.map(item=>{const zone=zones.find(z=>z.id===item.zoneId)!;return <article key={item.id}><div><span className="rc-status">{item.status}</span><h3>{item.type}</h3><p>{zone.name} · {item.date}</p></div><div><small>Coordinator</small><strong>{item.coordinator}</strong><span>{item.organisation}</span></div><div><small>Volunteer capacity</small><strong>{item.joined} / {item.capacity}</strong><span>{item.capacity-item.joined} places available</span></div><button onClick={()=>setAction(`Manage ${item.type}`)}>Manage →</button></article>})}</div></section>
-    <ObservationReview onAction={setAction}/>
-    <section className="rc-section"><div className="rc-section-head"><div><span className="rc-kicker">Monitoring outcome</span><h2>Recovery update</h2></div></div><RecoveryUpdateCard/></section>
-  </main>{selected&&<ZoneDetailModal zone={selected} onClose={()=>setSelected(null)}/>} {action&&<PrototypeModal title={action} message="Prototype — backend integration is not connected. This action does not change, persist or submit any data." onClose={()=>setAction(null)}/>}</PrototypeShell>;
+
+  // Heaviest intervention load first: the organisation user sees a QUEUE, not
+  // a catalogue. The top of the list is where today's attention belongs.
+  const sirali = useMemo(() => aciliyeteGore(zones), [zones]);
+  const secili = sirali.find((z) => z.fireId === seciliId) ?? sirali[0] ?? null;
+  const toplam = useMemo(() => toplamlar(zones), [zones]);
+  const observations = useObservations();
+  const bekleyenKanit = observations.filter((o) => o.status === "Pending").length;
+  // Activities are keyed to real fire ids, so only the selected area's
+  // activities are shown — not an arbitrary first two.
+  const bolgeEtkinlikleri = activities.filter((a) => a.fireId === secili?.fireId);
+
+  return (
+    <PrototypeShell mode="organisation">
+      <main className="rc-main">
+        <section className="rc-hero rc-hero--compact">
+          <div>
+            <span className="rc-kicker rc-kicker--orange">Organisation · field operations</span>
+            <h1>Where should a crew go today?</h1>
+            <p>
+              All 53 fires ranked by intervention load from the verdict layer.
+              The top of the queue is where attention is needed first.
+            </p>
+          </div>
+        </section>
+
+        {!yukleniyor && !hata && (
+          <section className="rc-summary" aria-label="Portfolio summary">
+            <article>
+              <Icon name="zone" />
+              <div>
+                <span>Direct action</span>
+                <strong>{hektar(toplam.mudahaleHa)}</strong>
+                <small>{kare(toplam.mudahaleHucre)} cells · {zones.length} fires</small>
+              </div>
+            </article>
+            <article>
+              <Icon name="activity" />
+              <div>
+                <span>Erosion control first</span>
+                <strong>{kare(toplam.erozyonHucre)}</strong>
+                <small>stabilise before planting</small>
+              </div>
+            </article>
+            <article>
+              <Icon name="observe" />
+              <div>
+                <span>Awaiting priority call</span>
+                <strong>{kare(toplam.siradaHucre)}</strong>
+                <small>decided by budget and order</small>
+              </div>
+            </article>
+            <article>
+              <Icon name="recovery" />
+              <div>
+                <span>High-uncertainty regions</span>
+                <strong>{String(toplam.dusukGuven).padStart(2, "0")}</strong>
+                <small>field verification required</small>
+              </div>
+            </article>
+          </section>
+        )}
+
+        {hata && <div className="rc-section"><ZoneError mesaj={hata} /></div>}
+        {yukleniyor && <div className="rc-section"><ZoneLoading mesaj="Loading verdict distribution for 53 fires…" /></div>}
+
+        {!yukleniyor && !hata && secili && (
+          <div className="rc-workspace-grid">
+            <section className="rc-panel rc-zone-list" aria-label="Intervention queue">
+              <div className="rc-section-head">
+                <div>
+                  <span className="rc-kicker">By intervention load</span>
+                  <h2>Area queue <span>Alan kuyruğu</span></h2>
+                </div>
+              </div>
+              <div className="rc-zone-stack">
+                {sirali.slice(0, 12).map((zone) => (
+                  <ZoneRow
+                    key={zone.fireId}
+                    zone={zone}
+                    secili={zone.fireId === secili.fireId}
+                    onSelect={() => setSeciliId(zone.fireId)}
+                  />
+                ))}
+              </div>
+              <p className="rc-section-intro">
+                Showing the 12 heaviest of {zones.length} fires.
+                {eksikOzet > 0 && ` ${eksikOzet} summaries could not be loaded.`}
+              </p>
+            </section>
+
+            <ZoneBrief zone={secili}>
+              {bolgeEtkinlikleri.length > 0 && (
+                <>
+                  <DemoNotice>Activities in this area are demo. Measurements are real.</DemoNotice>
+                  <div className="rc-zone-activities">
+                    {bolgeEtkinlikleri.map((item) => (
+                      <button key={item.id} type="button" onClick={() => setAction(`Manage ${item.type}`)}>
+                        <strong>{item.type}</strong>
+                        <small>{item.date} · {item.joined}/{item.capacity} volunteers</small>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </ZoneBrief>
+          </div>
+        )}
+
+        <section className="rc-section">
+          <div className="rc-section-head">
+            <div>
+              <span className="rc-kicker">Supporting field evidence</span>
+              <h2>Review queue <span>İnceleme kuyruğu</span></h2>
+            </div>
+            <span className="rc-demo-pill">{bekleyenKanit} pending · stored in this browser only</span>
+          </div>
+          <ObservationReview zones={zones} />
+        </section>
+      </main>
+
+      {action && (
+        <PrototypeModal
+          title={action}
+          message="Activity management has no backend connection yet, so this action does nothing. Area measurements are real, and volunteer observations are stored in this browser."
+          onClose={() => setAction(null)}
+        />
+      )}
+    </PrototypeShell>
+  );
 }

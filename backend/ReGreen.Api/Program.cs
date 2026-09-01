@@ -76,6 +76,7 @@ app.UseCors("Default");
 
 app.MapFireEndpoints();
 app.MapHukumEndpoints();
+app.MapCommunityEndpoints();
 app.MapHealthEndpoints();
 
 app.Run();

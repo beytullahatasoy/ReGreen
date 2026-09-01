@@ -43,6 +43,36 @@ internal static class ApiProblems
         StatusCodes.Status400BadRequest, "INVALID_QUERY_PARAMETER", "Geçersiz sorgu parametresi",
         detail, "invalid-query-parameter");
 
+    // --- Topluluk katmanı (docs/topluluk_veri_sozlesmesi.md) ---
+
+    public static IResult OrganisationNotFound(int id) => Problem(
+        StatusCodes.Status404NotFound, "ORGANISATION_NOT_FOUND", "Kurum bulunamadı",
+        $"{id} kimlikli kurum bulunamadı.", "organisation-not-found");
+
+    public static IResult VolunteerNotFound(Guid id) => Problem(
+        StatusCodes.Status404NotFound, "VOLUNTEER_NOT_FOUND", "Gönüllü bulunamadı",
+        $"'{id}' kimlikli gönüllü kaydı bulunamadı.", "volunteer-not-found");
+
+    public static IResult ActivityNotFound(int id) => Problem(
+        StatusCodes.Status404NotFound, "ACTIVITY_NOT_FOUND", "Etkinlik bulunamadı",
+        $"{id} kimlikli etkinlik bulunamadı.", "activity-not-found");
+
+    public static IResult ActivityFull(int id, int capacity) => Problem(
+        StatusCodes.Status409Conflict, "ACTIVITY_FULL", "Etkinlik kontenjanı dolu",
+        $"{id} kimlikli etkinliğin {capacity} kişilik kontenjanı doldu.", "activity-full");
+
+    public static IResult ActivityNotOpen(int id, string status) => Problem(
+        StatusCodes.Status409Conflict, "ACTIVITY_NOT_OPEN", "Etkinlik katılıma kapalı",
+        $"{id} kimlikli etkinlik '{status}' durumunda; yeni katılım alınmıyor.", "activity-not-open");
+
+    public static IResult ObservationNotFound(int id) => Problem(
+        StatusCodes.Status404NotFound, "OBSERVATION_NOT_FOUND", "Gözlem bulunamadı",
+        $"{id} kimlikli gözlem bulunamadı.", "observation-not-found");
+
+    public static IResult InvalidRequestBody(string detail) => Problem(
+        StatusCodes.Status400BadRequest, "INVALID_REQUEST_BODY", "Geçersiz istek gövdesi",
+        detail, "invalid-request-body");
+
     public static IResult PerimeterDataCorrupt(string fireId) => Problem(
         StatusCodes.Status500InternalServerError, "PERIMETER_DATA_CORRUPT", "Yangın sınırı verisi bozuk",
         $"'{fireId}' için saklanan sınır GeoJSON'u ayrıştırılamadı.", "perimeter-data-corrupt");

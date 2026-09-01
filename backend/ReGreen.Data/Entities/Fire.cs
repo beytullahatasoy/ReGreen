@@ -27,4 +27,10 @@ public class Fire
 
     /// <summary>Model teslimatı başına opsiyonel anlatı.</summary>
     public List<FireNarrative> Narratives { get; set; } = [];
+
+    /// <summary>Bu alan için kurumların açtığı saha etkinlikleri.</summary>
+    public List<FieldActivity> Activities { get; set; } = [];
+
+    /// <summary>Bu alan için gönüllülerin kaydettiği saha gözlemleri.</summary>
+    public List<FieldObservation> Observations { get; set; } = [];
 }

@@ -18,6 +18,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<FireNarrative> FireNarratives => Set<FireNarrative>();
     public DbSet<HukumSozlugu> HukumSozlugu => Set<HukumSozlugu>();
 
+    // Topluluk katmani — bkz. docs/topluluk_veri_sozlesmesi.md. Model/hukum
+    // tablolariyla YALNIZCA FireId uzerinden iliskilidir: gozlem tahmine girmez.
+    public DbSet<Organisation> Organisations => Set<Organisation>();
+    public DbSet<Volunteer> Volunteers => Set<Volunteer>();
+    public DbSet<FieldActivity> FieldActivities => Set<FieldActivity>();
+    public DbSet<ActivityParticipant> ActivityParticipants => Set<ActivityParticipant>();
+    public DbSet<FieldObservation> FieldObservations => Set<FieldObservation>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ConfigureFires(modelBuilder);
@@ -27,7 +35,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         ConfigureCellVerdicts(modelBuilder);
         ConfigureFireNarratives(modelBuilder);
         ConfigureHukumSozlugu(modelBuilder);
+        ConfigureOrganisations(modelBuilder);
+        ConfigureVolunteers(modelBuilder);
+        ConfigureFieldActivities(modelBuilder);
+        ConfigureActivityParticipants(modelBuilder);
+        ConfigureFieldObservations(modelBuilder);
     }
+
+    /// <summary>CHECK kisiti metnini sabit dizisinden uretir — sozluk tek yerde kalsin.</summary>
+    private static string InList(string column, IEnumerable<string> values) =>
+        $"{column} IN ({string.Join(", ", values.Select(v => $"'{v}'"))})";
 
     private static void ConfigureFires(ModelBuilder modelBuilder)
     {
@@ -280,6 +297,143 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(h => h.Surum).HasMaxLength(20);
             e.Property(h => h.JsonIcerik).HasColumnType("nvarchar(max)");
             e.Property(h => h.ImportedAt).HasDefaultValueSql("SYSUTCDATETIME()");
+        });
+    }
+
+    private static void ConfigureOrganisations(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Organisation>(e =>
+        {
+            e.ToTable("Organisations");
+            e.HasKey(o => o.Id);
+            e.Property(o => o.Name).HasMaxLength(150);
+            e.Property(o => o.ContactEmail).HasMaxLength(200);
+            e.Property(o => o.CreatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
+            e.HasIndex(o => o.Name).IsUnique().HasDatabaseName("UQ_Organisations_Name");
+        });
+    }
+
+    private static void ConfigureVolunteers(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Volunteer>(e =>
+        {
+            e.ToTable("Volunteers");
+            e.HasKey(v => v.Id);
+            // Guid'i uygulama uretir (endpoint), DB degil — istemci kimligi yanitla
+            // birlikte geri aliyor, ekstra bir okuma turu gerekmiyor.
+            e.Property(v => v.Id).ValueGeneratedNever();
+            e.Property(v => v.Alias).HasMaxLength(60);
+            e.Property(v => v.CreatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
+        });
+    }
+
+    private static void ConfigureFieldActivities(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<FieldActivity>(e =>
+        {
+            e.ToTable("FieldActivities", t =>
+            {
+                t.HasCheckConstraint("CK_FieldActivities_Kind", InList("Kind", ActivityKinds.All));
+                t.HasCheckConstraint("CK_FieldActivities_Status", InList("Status", ActivityStatuses.All));
+                t.HasCheckConstraint("CK_FieldActivities_Capacity", "Capacity > 0 AND Capacity <= 1000");
+            });
+
+            e.HasKey(a => a.Id);
+            e.Property(a => a.FireId).HasMaxLength(50);
+            e.Property(a => a.Kind).HasMaxLength(40);
+            e.Property(a => a.Title).HasMaxLength(150);
+            e.Property(a => a.Description).HasMaxLength(1000);
+            e.Property(a => a.MeetingPoint).HasMaxLength(200);
+            e.Property(a => a.Requirements).HasMaxLength(500);
+            e.Property(a => a.Status).HasMaxLength(20);
+            e.Property(a => a.CreatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+            e.HasOne(a => a.Fire)
+                .WithMany(f => f.Activities)
+                .HasForeignKey(a => a.FireId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasOne(a => a.Organisation)
+                .WithMany(o => o.Activities)
+                .HasForeignKey(a => a.OrganisationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Community listesi "acik etkinlikler, tarihe gore" sorusunu soruyor.
+            e.HasIndex(a => new { a.Status, a.ScheduledFor }).HasDatabaseName("IX_FieldActivities_Status_ScheduledFor");
+            e.HasIndex(a => a.FireId).HasDatabaseName("IX_FieldActivities_FireId");
+        });
+    }
+
+    private static void ConfigureActivityParticipants(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ActivityParticipant>(e =>
+        {
+            e.ToTable("ActivityParticipants");
+            e.HasKey(p => new { p.ActivityId, p.VolunteerId });
+            e.Property(p => p.JoinedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+            e.HasOne(p => p.Activity)
+                .WithMany(a => a.Participants)
+                .HasForeignKey(p => p.ActivityId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasOne(p => p.Volunteer)
+                .WithMany(v => v.Participations)
+                .HasForeignKey(p => p.VolunteerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasIndex(p => p.VolunteerId).HasDatabaseName("IX_ActivityParticipants_VolunteerId");
+        });
+    }
+
+    private static void ConfigureFieldObservations(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<FieldObservation>(e =>
+        {
+            e.ToTable("FieldObservations", t =>
+            {
+                t.HasCheckConstraint("CK_FieldObservations_Status", InList("Status", ObservationStatuses.All));
+                // Cevapsiz gozlem kanit degil, kuyrukta gurultudur.
+                t.HasCheckConstraint("CK_FieldObservations_Answers", "LEN(Answers) > 0");
+                // Karar verilmis kaydin zamani da olmali.
+                t.HasCheckConstraint("CK_FieldObservations_ReviewedAt",
+                    "(Status = 'pending' AND ReviewedAt IS NULL) OR (Status <> 'pending' AND ReviewedAt IS NOT NULL)");
+            });
+
+            e.HasKey(o => o.Id);
+            e.Property(o => o.FireId).HasMaxLength(50);
+            e.Property(o => o.Location).HasMaxLength(200);
+            e.Property(o => o.PhotoName).HasMaxLength(260);
+            e.Property(o => o.Answers).HasMaxLength(1000);
+            e.Property(o => o.Note).HasMaxLength(1000);
+            e.Property(o => o.Status).HasMaxLength(30);
+            e.Property(o => o.ReviewNote).HasMaxLength(500);
+            e.Property(o => o.SubmittedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+            e.HasOne(o => o.Fire)
+                .WithMany(f => f.Observations)
+                .HasForeignKey(o => o.FireId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasOne(o => o.Activity)
+                .WithMany(a => a.Observations)
+                .HasForeignKey(o => o.ActivityId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasOne(o => o.Volunteer)
+                .WithMany(v => v.Observations)
+                .HasForeignKey(o => o.VolunteerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasOne(o => o.ReviewedByOrganisation)
+                .WithMany()
+                .HasForeignKey(o => o.ReviewedByOrganisationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Organisation kuyrugu: once bekleyenler, en yeni ustte.
+            e.HasIndex(o => new { o.Status, o.SubmittedAt }).HasDatabaseName("IX_FieldObservations_Status_SubmittedAt");
+            e.HasIndex(o => o.FireId).HasDatabaseName("IX_FieldObservations_FireId");
+            e.HasIndex(o => o.VolunteerId).HasDatabaseName("IX_FieldObservations_VolunteerId");
         });
     }
 }
