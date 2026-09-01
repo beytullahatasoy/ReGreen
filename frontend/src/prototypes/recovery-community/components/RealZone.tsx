@@ -1,4 +1,5 @@
 import type { RecoveryZone } from "../../../hooks/useRecoveryZones";
+import type { ActivityKind, ActivityStatus } from "../../../types/community";
 import { Icon } from "./Icons";
 
 /**
@@ -14,6 +15,7 @@ import { Icon } from "./Icons";
 
 const sayi = new Intl.NumberFormat("tr-TR");
 const ondalik = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 });
+const tarihBicimi = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" });
 
 export function hektar(v: number) {
   return `${ondalik.format(v)} ha`;
@@ -22,6 +24,26 @@ export function hektar(v: number) {
 export function kare(v: number) {
   return sayi.format(v);
 }
+
+/** Backend'den gelen ISO zaman damgasını ekranlardaki kısa tarih biçimine çevirir. */
+export function tarih(iso: string) {
+  return tarihBicimi.format(new Date(iso));
+}
+
+export const ACTIVITY_KIND_LABEL: Record<ActivityKind, string> = {
+  planting: "Planting activity",
+  cleanup: "Controlled cleanup",
+  erosion_observation: "Soil / erosion observation",
+  vegetation_monitoring: "Vegetation monitoring",
+  field_assessment: "Field assessment",
+};
+
+export const ACTIVITY_STATUS_LABEL: Record<ActivityStatus, string> = {
+  open: "Open",
+  scheduled: "Scheduled",
+  closed: "Closed",
+  completed: "Completed",
+};
 
 const CONFIDENCE_LABEL: Record<RecoveryZone["guven"], string> = {
   yuksek: "High confidence",

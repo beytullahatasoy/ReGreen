@@ -1,13 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { aciliyeteGore, toplamlar, useRecoveryZones } from "../../../hooks/useRecoveryZones";
-import { activities } from "../data/demoData";
+import { communityService } from "../../../services";
+import type { FieldActivity } from "../../../types/community";
+import { useActivities } from "../data/useActivities";
 import { useObservations } from "../data/useObservations";
 import { Icon } from "../components/Icons";
 import { ObservationReview } from "../components/ObservationReview";
-import { PrototypeModal } from "../components/PrototypeModal";
 import { PrototypeShell } from "../components/PrototypeShell";
 import {
-  DemoNotice, ZoneBrief, ZoneError, ZoneLoading, ZoneRow, hektar, kare,
+  ACTIVITY_KIND_LABEL, ACTIVITY_STATUS_LABEL, ZoneBrief, ZoneError, ZoneLoading, ZoneRow, hektar, kare,
 } from "../components/RealZone";
 
 /**
@@ -15,29 +16,29 @@ import {
  *
  *     "Where do I send a crew today, and what needs my approval?"
  *
- * The previous version had 7 sections (hero, 5 counters, zone catalogue, 4
- * action buttons, activity table, observation review, recovery card) and none
- * stood out from the others. Now there are two jobs: an area queue and an
- * evidence queue.
- *
- * Zones are NO LONGER INVENTED — they come from the 53 real fires and the
- * verdict layer. Activities and observations are still demo, labelled as such.
+ * Zones come from the 53 real fires and the verdict layer. Activities and
+ * observations are now real too (backend/ReGreen.Api/Endpoints/CommunityEndpoints.cs):
+ * whatever appears here was actually opened by an organisation and actually
+ * submitted by a volunteer. The only demo record left on this screen is the
+ * 12-month recovery card.
  */
 export function OrganisationWorkspace() {
   const { zones, yukleniyor, hata, eksikOzet } = useRecoveryZones();
   const [seciliId, setSeciliId] = useState<string | null>(null);
-  const [action, setAction] = useState<string | null>(null);
+  const [yonetilen, setYonetilen] = useState<FieldActivity | null>(null);
 
   // Heaviest intervention load first: the organisation user sees a QUEUE, not
   // a catalogue. The top of the list is where today's attention belongs.
   const sirali = useMemo(() => aciliyeteGore(zones), [zones]);
   const secili = sirali.find((z) => z.fireId === seciliId) ?? sirali[0] ?? null;
   const toplam = useMemo(() => toplamlar(zones), [zones]);
-  const observations = useObservations();
-  const bekleyenKanit = observations.filter((o) => o.status === "Pending").length;
+
+  const observationsState = useObservations({ limit: 100 });
+  const bekleyenKanit = observationsState.observations.filter((o) => o.status === "pending").length;
+
   // Activities are keyed to real fire ids, so only the selected area's
   // activities are shown — not an arbitrary first two.
-  const bolgeEtkinlikleri = activities.filter((a) => a.fireId === secili?.fireId);
+  const activitiesState = useActivities({ fire_id: secili?.fireId });
 
   return (
     <PrototypeShell mode="organisation">
@@ -119,18 +120,22 @@ export function OrganisationWorkspace() {
             </section>
 
             <ZoneBrief zone={secili}>
-              {bolgeEtkinlikleri.length > 0 && (
-                <>
-                  <DemoNotice>Activities in this area are demo. Measurements are real.</DemoNotice>
-                  <div className="rc-zone-activities">
-                    {bolgeEtkinlikleri.map((item) => (
-                      <button key={item.id} type="button" onClick={() => setAction(`Manage ${item.type}`)}>
-                        <strong>{item.type}</strong>
-                        <small>{item.date} · {item.joined}/{item.capacity} volunteers</small>
-                      </button>
-                    ))}
-                  </div>
-                </>
+              {activitiesState.hata && <p className="rc-form-warning" role="alert">{activitiesState.hata}</p>}
+              {!activitiesState.hata && activitiesState.yukleniyor && (
+                <p className="rc-section-intro">Loading activities…</p>
+              )}
+              {!activitiesState.hata && !activitiesState.yukleniyor && activitiesState.activities.length === 0 && (
+                <p className="rc-section-intro">No activity has been opened for this area yet.</p>
+              )}
+              {!activitiesState.hata && !activitiesState.yukleniyor && activitiesState.activities.length > 0 && (
+                <div className="rc-zone-activities">
+                  {activitiesState.activities.map((item) => (
+                    <button key={item.id} type="button" onClick={() => setYonetilen(item)}>
+                      <strong>{ACTIVITY_KIND_LABEL[item.kind]}</strong>
+                      <small>{item.scheduled_for} · {item.joined}/{item.capacity} volunteers · {ACTIVITY_STATUS_LABEL[item.status]}</small>
+                    </button>
+                  ))}
+                </div>
               )}
             </ZoneBrief>
           </div>
@@ -142,19 +147,83 @@ export function OrganisationWorkspace() {
               <span className="rc-kicker">Supporting field evidence</span>
               <h2>Review queue <span>İnceleme kuyruğu</span></h2>
             </div>
-            <span className="rc-demo-pill">{bekleyenKanit} pending · stored in this browser only</span>
+            <span className="rc-demo-pill">{bekleyenKanit} pending</span>
           </div>
-          <ObservationReview zones={zones} />
+          <ObservationReview
+            zones={zones}
+            observations={observationsState.observations}
+            yukleniyor={observationsState.yukleniyor}
+            hata={observationsState.hata}
+            onReviewed={observationsState.yenile}
+          />
         </section>
       </main>
 
-      {action && (
-        <PrototypeModal
-          title={action}
-          message="Activity management has no backend connection yet, so this action does nothing. Area measurements are real, and volunteer observations are stored in this browser."
-          onClose={() => setAction(null)}
+      {yonetilen && (
+        <ActivityManageModal
+          activity={yonetilen}
+          onClose={() => setYonetilen(null)}
+          onUpdated={(guncel) => { setYonetilen(guncel); activitiesState.yenile(); }}
         />
       )}
     </PrototypeShell>
+  );
+}
+
+/** Real status toggle — backed by PATCH /api/activities/{id}. */
+function ActivityManageModal({
+  activity, onClose, onUpdated,
+}: { activity: FieldActivity; onClose: () => void; onUpdated: (activity: FieldActivity) => void }) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const [gonderiliyor, setGonderiliyor] = useState(false);
+  const [hata, setHata] = useState<string | null>(null);
+
+  useEffect(() => {
+    const previous = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("keydown", onKey); previous?.focus(); };
+  }, [onClose]);
+
+  const acik = activity.status === "open";
+
+  async function durumDegistir() {
+    setGonderiliyor(true);
+    setHata(null);
+    try {
+      const guncel = await communityService.updateActivity(activity.id, { status: acik ? "closed" : "open" });
+      onUpdated(guncel);
+    } catch (reason: unknown) {
+      setHata(reason instanceof Error ? reason.message : "Etkinlik güncellenemedi.");
+    } finally {
+      setGonderiliyor(false);
+    }
+  }
+
+  return (
+    <div className="rc-modal-backdrop" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+      <section className="rc-modal" role="dialog" aria-modal="true" aria-labelledby="manage-activity-title">
+        <button ref={closeRef} className="rc-modal__close" onClick={onClose} aria-label="Close dialog">×</button>
+        <span className="rc-kicker">{ACTIVITY_KIND_LABEL[activity.kind]}</span>
+        <h2 id="manage-activity-title">{activity.title}</h2>
+        <p>{activity.description}</p>
+        <dl>
+          <div><dt>Date</dt><dd>{activity.scheduled_for}</dd></div>
+          <div><dt>Meeting point</dt><dd>{activity.meeting_point}</dd></div>
+          <div><dt>Capacity</dt><dd>{activity.joined} / {activity.capacity}</dd></div>
+          <div><dt>Status</dt><dd>{ACTIVITY_STATUS_LABEL[activity.status]}</dd></div>
+          <div><dt>Observations submitted</dt><dd>{activity.observation_count}</dd></div>
+        </dl>
+        {hata && <p className="rc-form-warning" role="alert">{hata}</p>}
+        <button
+          className="rc-button rc-button--primary"
+          disabled={gonderiliyor || activity.status === "completed"}
+          onClick={durumDegistir}
+        >
+          {acik ? "Close activity" : "Reopen activity"}
+        </button>
+      </section>
+    </div>
   );
 }

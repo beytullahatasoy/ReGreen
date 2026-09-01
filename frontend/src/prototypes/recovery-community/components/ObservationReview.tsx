@@ -1,26 +1,37 @@
+import { useState } from "react";
 import type { RecoveryZone } from "../../../hooks/useRecoveryZones";
-import { observationService, type FieldObservation } from "../data/observationService";
-import { useObservations } from "../data/useObservations";
+import { communityService } from "../../../services";
+import type { FieldObservation, ObservationStatus } from "../../../types/community";
+import { tarih } from "./RealZone";
+
+const STATUS_LABEL: Record<ObservationStatus, string> = {
+  pending: "Pending",
+  accepted: "Accepted as supporting evidence",
+  needs_clarification: "Needs clarification",
+  rejected: "Rejected",
+};
+
+interface Props {
+  zones: RecoveryZone[];
+  observations: FieldObservation[];
+  yukleniyor: boolean;
+  hata: string | null;
+  onReviewed: () => void;
+}
 
 /**
  * Review queue for volunteer observations — the organisation's second job.
  *
- * Two kinds of record appear here and they behave differently on purpose:
+ * Every record here is real (GET /api/observations): a volunteer submitted
+ * it through the Community screen, it is reviewed here, and the decision is
+ * visible back on the volunteer's screen the next time they load it.
  *
- *   local  submitted through the Community screen in THIS browser. It is
- *          actionable: accepting it or asking for clarification really changes
- *          its status, and the volunteer sees that change on their own screen.
- *   demo   a seeded sample. Read-only, because pretending to decide on a
- *          record nobody submitted would be theatre.
- *
- * The area each observation belongs to is real: the fire matching `fireId` is
- * resolved from the verdict layer, so no invented zone name appears.
+ * The area each observation belongs to is real: the fire matching `fire_id`
+ * is resolved from the verdict layer, so no invented zone name appears.
  *
  * The heading and badge come from the parent section.
  */
-export function ObservationReview({ zones }: { zones: RecoveryZone[] }) {
-  const observations = useObservations();
-
+export function ObservationReview({ zones, observations, yukleniyor, hata, onReviewed }: Props) {
   return (
     <>
       <p className="rc-section-intro">
@@ -29,44 +40,62 @@ export function ObservationReview({ zones }: { zones: RecoveryZone[] }) {
         enter the dataset unaccepted.
       </p>
 
-      {observations.length === 0 ? (
-        <div className="rc-empty">No observation is waiting for review.</div>
-      ) : (
-        <div className="rc-observation-list">
-          {observations.map((item) => (
-            <ObservationCard
-              key={item.id}
-              item={item}
-              zone={zones.find((z) => z.fireId === item.fireId)}
-            />
-          ))}
-        </div>
+      {hata && <div className="rc-empty rc-empty--error" role="alert">{hata}</div>}
+      {!hata && yukleniyor && <div className="rc-empty" role="status">Loading review queue…</div>}
+
+      {!hata && !yukleniyor && (
+        observations.length === 0 ? (
+          <div className="rc-empty">No observation is waiting for review.</div>
+        ) : (
+          <div className="rc-observation-list">
+            {observations.map((item) => (
+              <ObservationCard
+                key={item.id}
+                item={item}
+                zone={zones.find((z) => z.fireId === item.fire_id)}
+                onReviewed={onReviewed}
+              />
+            ))}
+          </div>
+        )
       )}
     </>
   );
 }
 
 function ObservationCard({
-  item, zone,
-}: { item: FieldObservation; zone: RecoveryZone | undefined }) {
-  const karar = item.status !== "Pending";
-  const duzenlenebilir = item.origin === "local";
+  item, zone, onReviewed,
+}: { item: FieldObservation; zone: RecoveryZone | undefined; onReviewed: () => void }) {
+  const [gonderiliyor, setGonderiliyor] = useState<ObservationStatus | null>(null);
+  const [hata, setHata] = useState<string | null>(null);
+  const karar = item.status !== "pending";
+
+  async function kararVer(status: ObservationStatus) {
+    setGonderiliyor(status);
+    setHata(null);
+    try {
+      await communityService.reviewObservation(item.id, { status });
+      onReviewed();
+    } catch (reason: unknown) {
+      setHata(reason instanceof Error ? reason.message : "Karar kaydedilemedi.");
+    } finally {
+      setGonderiliyor(null);
+    }
+  }
 
   return (
-    <article className={item.origin === "local" ? "is-live" : undefined}>
+    <article className="is-live">
       <div>
-        <span className={`rc-status${karar ? " rc-status--complete" : ""}`}>{item.status}</span>
-        <h3>{zone ? `${zone.il} · ${zone.fireId}` : item.fireId}</h3>
-        <p>{item.submittedBy} · {item.displayDate}</p>
-        {item.origin === "local" && (
-          <small className="rc-origin">Submitted in this browser</small>
-        )}
+        <span className={`rc-status${karar ? " rc-status--complete" : ""}`}>{STATUS_LABEL[item.status]}</span>
+        <h3>{zone ? `${zone.il} · ${zone.fireId}` : item.fire_id}</h3>
+        <p>{item.volunteer_alias} · {tarih(item.submitted_at)}</p>
+        {item.activity_title && <small className="rc-origin">{item.activity_title}</small>}
       </div>
 
       <div>
         <strong>Location</strong>
         <p>{item.location}</p>
-        {item.photoName && <small>Photo: {item.photoName}</small>}
+        {item.photo_name && <small>Photo: {item.photo_name}</small>}
       </div>
 
       <div>
@@ -75,30 +104,25 @@ function ObservationCard({
         {item.note && <small>Note: {item.note}</small>}
       </div>
 
-      {duzenlenebilir ? (
-        <div className="rc-review-actions">
-          <button
-            type="button"
-            className="rc-button rc-button--primary"
-            disabled={item.status === "Accepted as supporting evidence"}
-            onClick={() => observationService.review(item.id, "Accepted as supporting evidence")}
-          >
-            Accept as evidence
-          </button>
-          <button
-            type="button"
-            className="rc-button"
-            disabled={item.status === "Needs clarification"}
-            onClick={() => observationService.review(item.id, "Needs clarification")}
-          >
-            Ask for clarification
-          </button>
-        </div>
-      ) : (
-        <p className="rc-review-actions rc-review-actions--readonly">
-          Sample record · read-only
-        </p>
-      )}
+      <div className="rc-review-actions">
+        <button
+          type="button"
+          className="rc-button rc-button--primary"
+          disabled={item.status === "accepted" || gonderiliyor !== null}
+          onClick={() => kararVer("accepted")}
+        >
+          Accept as evidence
+        </button>
+        <button
+          type="button"
+          className="rc-button"
+          disabled={item.status === "needs_clarification" || gonderiliyor !== null}
+          onClick={() => kararVer("needs_clarification")}
+        >
+          Ask for clarification
+        </button>
+      </div>
+      {hata && <p className="rc-form-warning" role="alert">{hata}</p>}
     </article>
   );
 }
