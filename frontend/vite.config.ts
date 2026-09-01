@@ -10,6 +10,12 @@ const virtualMockLoaders = "virtual:mock-data-loaders";
 const resolvedVirtualMockLoaders = `\0${virtualMockLoaders}`;
 const virtualMockDataPrefix = "virtual:mock-data/";
 const resolvedVirtualMockDataPrefix = `\0${virtualMockDataPrefix}`;
+const virtualMockHukumSozlugu = "virtual:mock-hukum-sozlugu";
+const resolvedVirtualMockHukumSozlugu = `\0${virtualMockHukumSozlugu}`;
+const virtualMockYanginMetinleri = "virtual:mock-yangin-metinleri";
+const resolvedVirtualMockYanginMetinleri = `\0${virtualMockYanginMetinleri}`;
+const virtualMockYanginOzetleri = "virtual:mock-yangin-ozetleri";
+const resolvedVirtualMockYanginOzetleri = `\0${virtualMockYanginOzetleri}`;
 
 function mockFireSummariesPlugin() {
   const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -19,24 +25,37 @@ function mockFireSummariesPlugin() {
     resolveId(id: string) {
       if (id === virtualMockSummaries) return resolvedVirtualMockSummaries;
       if (id === virtualMockLoaders) return resolvedVirtualMockLoaders;
+      if (id === virtualMockHukumSozlugu) return resolvedVirtualMockHukumSozlugu;
+      if (id === virtualMockYanginMetinleri) return resolvedVirtualMockYanginMetinleri;
+      if (id === virtualMockYanginOzetleri) return resolvedVirtualMockYanginOzetleri;
       if (id.startsWith(virtualMockDataPrefix)) return `\0${id}`;
       return null;
     },
     load(id: string) {
       const manifest = JSON.parse(readFileSync(resolve(dataDirectory, "manifest.json"), "utf8")) as { fires: Array<{ fire_id: string }> };
       if (id === resolvedVirtualMockLoaders) {
-        const loaderMap = (kind: "metadata" | "perimeter" | "cells") => `{${manifest.fires.map(({ fire_id }) =>
+        const loaderMap = (kind: "metadata" | "perimeter" | "cells" | "hukum") => `{${manifest.fires.map(({ fire_id }) =>
           `${JSON.stringify(fire_id)}: () => import(${JSON.stringify(`${virtualMockDataPrefix}${kind}/${fire_id}`)}).then(module => module.default)`,
         ).join(",")}}`;
         return [
           `export const metadataLoaders = ${loaderMap("metadata")};`,
           `export const perimeterLoaders = ${loaderMap("perimeter")};`,
           `export const cellLoaders = ${loaderMap("cells")};`,
+          `export const hukumLoaders = ${loaderMap("hukum")};`,
         ].join("\n");
+      }
+      if (id === resolvedVirtualMockHukumSozlugu) {
+        return `export default ${readFileSync(resolve(dataDirectory, "hukum_sozlugu.json"), "utf8")};`;
+      }
+      if (id === resolvedVirtualMockYanginMetinleri) {
+        return `export default ${readFileSync(resolve(dataDirectory, "yangin_metinleri.json"), "utf8")};`;
+      }
+      if (id === resolvedVirtualMockYanginOzetleri) {
+        return `export default ${readFileSync(resolve(dataDirectory, "yangin_ozetleri.json"), "utf8")};`;
       }
       if (id.startsWith(resolvedVirtualMockDataPrefix)) {
         const [kind, fireId] = id.slice(resolvedVirtualMockDataPrefix.length).split("/");
-        const suffix = kind === "metadata" ? "_metadata.json" : kind === "perimeter" ? "_sinir.geojson" : kind === "cells" ? "_hucreler.csv" : null;
+        const suffix = kind === "metadata" ? "_metadata.json" : kind === "perimeter" ? "_sinir.geojson" : kind === "cells" ? "_hucreler.csv" : kind === "hukum" ? "_hukumler.csv" : null;
         if (!suffix || !fireId || !manifest.fires.some((fire) => fire.fire_id === fireId)) return null;
         return `export default ${JSON.stringify(readFileSync(resolve(dataDirectory, `${fireId}${suffix}`), "utf8"))};`;
       }

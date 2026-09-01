@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fireService } from "../services";
-import type { Cell, CellsResponse, FirePerimeter, FireSummary, PredictionStatus, PriorityClass, PriorityWeights } from "../types";
+import { ApiError, fireService } from "../services";
+import type { Cell, CellsResponse, CellVerdict, FireNarrative, FirePerimeter, FireSummary, HukumSozlugu, PredictionStatus, PriorityClass, PriorityWeights } from "../types";
 import { comparePriorityScenarios, type PriorityScenarioComparison } from "../utils/comparePriorityScenarios";
 
 export function useFireWorkspace() {
@@ -19,6 +19,10 @@ export function useFireWorkspace() {
   const [scenarioFeedback, setScenarioFeedback] = useState<string | null>(null);
   const [scenarioComparison, setScenarioComparison] = useState<PriorityScenarioComparison | null>(null);
   const [scenarioHighlights, setScenarioHighlights] = useState<{ increased: Set<string>; decreased: Set<string> }>({ increased: new Set(), decreased: new Set() });
+  const [hukumSozlugu, setHukumSozlugu] = useState<HukumSozlugu | null>(null);
+  const [fireNarrative, setFireNarrative] = useState<FireNarrative | null>(null);
+  const [selectedCellVerdict, setSelectedCellVerdict] = useState<CellVerdict | null>(null);
+  const [verdictLoading, setVerdictLoading] = useState(false);
   const previousResponseRef = useRef<CellsResponse | null>(null);
 
   useEffect(() => {
@@ -66,6 +70,52 @@ export function useFireWorkspace() {
   }, [selectedFireId, weights]);
 
   useEffect(() => {
+    let active = true;
+    fireService.getHukumSozlugu()
+      .then((sozluk) => { if (active) setHukumSozlugu(sozluk); })
+      .catch((reason: unknown) => {
+        if (!active) return;
+        setHukumSozlugu(null);
+        console.error("Decision dictionary could not be loaded; species data remains unapproved.", reason);
+      });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (!selectedFireId) { setFireNarrative(null); return; }
+    let active = true;
+    setFireNarrative(null);
+    fireService.getFireNarrative(selectedFireId).then((narrative) => {
+      if (active) setFireNarrative(narrative);
+    }).catch(() => { if (active) setFireNarrative(null); });
+    return () => { active = false; };
+  }, [selectedFireId]);
+
+  useEffect(() => {
+    if (!selectedCell || !selectedFireId) { setSelectedCellVerdict(null); setVerdictLoading(false); return; }
+    let active = true;
+    setSelectedCellVerdict(null);
+    setVerdictLoading(true);
+    fireService.getCellVerdict(selectedFireId, selectedCell.cell_id).then(async (verdict) => {
+      if (hukumSozlugu?.surum !== verdict.hukum_version) {
+        try {
+          const sozluk = await fireService.getHukumSozlugu(verdict.hukum_version);
+          if (active) setHukumSozlugu(sozluk);
+        } catch (reason: unknown) {
+          if (active) console.error("Versioned decision dictionary could not be loaded.", reason);
+        }
+      }
+      if (active) setSelectedCellVerdict(verdict);
+    }).catch((reason: unknown) => {
+      if (!active) return;
+      setSelectedCellVerdict(null);
+      const isKnownMissingVerdict = reason instanceof ApiError && (reason.problem.code === "CELL_VERDICT_NOT_FOUND" || reason.problem.code === "CELL_NOT_FOUND");
+      if (!isKnownMissingVerdict) console.error("Cell verdict could not be loaded.", reason);
+    }).finally(() => { if (active) setVerdictLoading(false); });
+    return () => { active = false; };
+  }, [selectedFireId, selectedCell?.cell_id]);
+
+  useEffect(() => {
     if (!scenarioFeedback) return;
     const timer = window.setTimeout(() => setScenarioFeedback(null), 2200);
     return () => window.clearTimeout(timer);
@@ -103,11 +153,12 @@ export function useFireWorkspace() {
   });
 
   return { fires, selectedFire, selectedFireId, selectFire, perimeter, cellsResponse, visibleCells,
-    selectedCell, setSelectedCell, weights: weights ?? cellsResponse?.applied_weights ?? null, setWeights,
+    selectedCell, setSelectedCell, weights: weights ?? cellsResponse?.applied_weights ?? null, defaultWeights, setWeights,
     resetWeights: () => defaultWeights && setWeights({ ...defaultWeights }), priorityClasses, togglePriority,
     clearScenarioComparison: () => {
       setScenarioComparison(null);
       setScenarioHighlights({ increased: new Set(), decreased: new Set() });
     },
-    predictionStatuses, toggleStatus, loading, loadingMessage, error, scenarioFeedback, scenarioComparison, scenarioHighlights };
+    predictionStatuses, toggleStatus, loading, loadingMessage, error, scenarioFeedback, scenarioComparison, scenarioHighlights,
+    hukumSozlugu, fireNarrative, selectedCellVerdict, verdictLoading };
 }

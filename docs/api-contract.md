@@ -1,7 +1,7 @@
 # ReGreen — API Sözleşmesi (api-contract.md)
 
-**Sürüm:** 1.0
-**Kapsam:** `backend/ReGreen.Api` — PDF v4.1 §9'daki 3 endpoint. Alan anlamları/tipleri için tek doğru kaynak [`docs/data-contract.md`](./data-contract.md)'dir; bu belge SADECE HTTP sözleşmesini (yol, query parametresi, response zarfı, hata kodu) tanımlar, alan anlamlarını tekrar etmez.
+**Sürüm:** 1.1
+**Kapsam:** `backend/ReGreen.Api` — PDF v4.1 §9'daki 3 endpoint (§2-§4) + docs/hukum_sozlesmesi.md'deki "hüküm katmanı" 3 endpoint'i (§5-§7, v1.1 ile eklendi). Alan anlamları/tipleri için tek doğru kaynak [`docs/data-contract.md`](./data-contract.md) ve [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md)'dir; bu belge SADECE HTTP sözleşmesini (yol, query parametresi, response zarfı, hata kodu) tanımlar, alan anlamlarını tekrar etmez.
 **Kural:** Bu dosya tek doğru kaynaktır. Endpoint davranışı değişecekse önce bu dosya güncellenir, sonra kod.
 
 ---
@@ -170,7 +170,136 @@ Geçersiz değer → `400 INVALID_QUERY_PARAMETER`.
 
 ---
 
-## 5. Hata sözleşmesi (RFC 7807 `ProblemDetails`)
+## 5. `GET /api/fires/{fireId}/cells/{cellId}/hukum`
+
+Bir hücrenin **hükmünü** döner. Aktif ağırlıklardan bağımsızdır; ancak model tahminini kullandığı için `/cells` ile aynı en güncel `ModelRun` seçilir.
+
+### 5.1. Seçim kuralı
+
+Sıra: önce yangın var mı, sonra hücre o yangına ait mi, sonra hücrenin hükmü var mı. Üçü de ayrı hata koduna sahiptir (bkz. §8) — `CELL_NOT_FOUND` ile `CELL_VERDICT_NOT_FOUND` KARIŞTIRILMAZ: biri "böyle bir hücre yok", diğeri "hücre var ama henüz hükmü içe aktarılmamış" (ör. yangının `_hukumler.csv` teslimatı henüz yapılmadı).
+
+### 5.2. Response — `CellVerdictDto`
+
+```json
+{
+  "cell_id": "AKD_2021_01_020514",
+  "model_run_id": 53,
+  "model_version": "ridge_v2",
+  "generated_at": "2026-08-23T16:13:19+00:00",
+  "hukum_version": "1.2",
+  "hukum": "EROZYON_ONCE",
+  "ek_kosullar": ["AGIR_YANMIS"],
+  "toparlanma_orani": 0.2727,
+  "tur_onerisi": "kızılçam, fıstıkçamı",
+  "tetikleyen": "toparlanma=0.27 egim=36.0>=25 <0.35",
+  "ozet": "Önce erozyon kontrolü. Toparlanma tahmini zayıf ve eğim 36,0° — dikimden önce toprak tutma önlemi gerekiyor.",
+  "ayrinti": "Modelin tahminine göre yangın öncesi örtünün ancak %27 kadarı iki yılda geri gelecek. ...",
+  "zamanlama_notu_var": true
+}
+```
+
+- `hukum` — 7 değerden biri: `KAPSAM_DISI`, `SAHA_KONTROL`, `IZLE`, `EROZYON_ONCE`, `DIKIM_ADAYI`, `ONCELIGE_GORE`, `GENCLESME_IZLE`.
+- `ek_kosullar` — 0..6 elemanlı dizi (DB'de `\|` ile ayrılmış tek string olarak saklanır, API'de dizi olarak açılır; boşsa `[]`, asla `null` değil).
+- `toparlanma_orani`/`tur_onerisi` — `null` olabilir (data-contract §9.4 ile aynı null kuralı).
+- `tur_onerisi` **onaylanmamış örnek veridir** — `GET /api/hukum-sozlugu`'daki `tur_tablosu.onaylandi` `false` olduğu sürece UI bu alanı kaynak notu olmadan göstermemeli (bkz. §7).
+- `zamanlama_notu_var` `true` ise sabit `zamanlama_notu` metni `GET /api/hukum-sozlugu`'dan okunur (hücre başına tekrarlanmaz).
+
+### 5.3. Hatalar
+
+| `code` | HTTP | Ne zaman |
+| --- | --- | --- |
+| `FIRE_NOT_FOUND` | 404 | `{fireId}` hiçbir yangına ait değil |
+| `CELL_NOT_FOUND` | 404 | Yangın var, ama `{cellId}` o yangında yok |
+| `CELL_VERDICT_NOT_FOUND` | 404 | Hücre var, ama henüz hükmü içe aktarılmamış (bkz. §5.1) |
+
+---
+
+## 6. `GET /api/fires/{fireId}/summary`
+
+Bölge seçilince gösterilecek yangın özetini (Katman 1 anlatı) döner — tek paragraf + paragrafın dayandığı ham sayı bloğu (docs/hukum_sozlesmesi.md "Katman 1 — yangın özeti").
+
+### 6.1. Seçim kuralı
+
+Önce yangın var mı, sonra o yangının anlatı girdisi var mı (`yangin_metinleri.json`/`yangin_ozetleri.json`'da `{fireId}` anahtarı). İkisi ayrı hata kodu (bkz. §8).
+
+### 6.2. Response — `FireNarrativeDto`
+
+```json
+{
+  "fire_id": "AKD_2021_01",
+  "model_run_id": 53,
+  "model_version": "ridge_v2",
+  "generated_at": "2026-08-23T16:13:19+00:00",
+  "narrative_version": "1.0",
+  "paragraf": "Antalya, 29 Temmuz 2021. 56.550 hektarlık alan, 9.048 hücre. ...",
+  "profil": "karisik",
+  "onaylandi": true,
+  "uretim": "sablon (deterministik)",
+  "sayi_blogu": {
+    "fire_id": "AKD_2021_01",
+    "il": "Antalya",
+    "bolge": "Akdeniz",
+    "buyukluk": { "hucre": 9048, "alan_ha": 56550.0, "tahminli_hucre": 4917 },
+    "hukum_dagilimi": { "KAPSAM_DISI": 913, "EROZYON_ONCE": 233, "...": "..." }
+  }
+}
+```
+
+- `profil` — 6 değerden biri: `yogun_mudahale`, `karisik`, `kendi_toparlaniyor`, `dik_arazi`, `belirsiz`, `kapsam_dar` — hangi anlatı kalıbının kullanıldığını söyler (bkz. docs/hukum_sozlesmesi.md "Anlatı profili").
+- `sayi_blogu` — **opak JSON**, `perimeter`'daki teknikle aynı (`JsonDocument.Parse(...).RootElement.Clone()`) aynen geçirilir; alt alanları bu belge TEK TEK tanımlamaz (data-contract'ın "hücre CSV'si" gibi sabit bir sözleşmesi yok, AI ekibinin `yangin_ozetleri.json` çıktısı neyse odur). Frontend paragraf yerine kendi görselini üretmek isterse bu bloktan yararlanabilir.
+- `uretim` — üretim yöntemi (şu an sabit `"sablon (deterministik)"`); ileride bir dil modeliyle yeniden yazılırsa değişebilir, ama çalışma anında API asla dil modeli çağırmaz — metin her zaman DB'den statik okunur.
+
+### 6.3. Hatalar
+
+| `code` | HTTP | Ne zaman |
+| --- | --- | --- |
+| `FIRE_NOT_FOUND` | 404 | `{fireId}` hiçbir yangına ait değil |
+| `FIRE_NARRATIVE_NOT_FOUND` | 404 | Yangın var, ama henüz anlatı özeti içe aktarılmamış |
+
+---
+
+## 7. `GET /api/hukum-sozlugu`
+
+Hüküm katmanının GLOBAL (yangına özgü olmayan) sabit sözlüğünü döner — hüküm/ek koşul başlıkları, eşikler, tür tablosu onay bayrağı. Frontend'in hüküm koduna göre renk/rozet/başlık göstermesi veya `ek_kosullar` şablon cümlelerini doldurması için gereken TEK kaynak; hücre başına tekrar tekrar çekilmez (uygulama açılışında bir kez alınıp önbelleklenmesi ÖNERİLİR).
+
+### 7.1. Seçim kuralı
+
+Opsiyonel `surum` query parametresi verilirse o sürüm, verilmezse `ImportedAt DESC, Surum DESC` sırasındaki en güncel sözlük döner. Frontend, hüküm yanıtındaki `hukum_version` ile aynı sözlüğü istemelidir.
+
+### 7.2. Response — ham JSON passthrough
+
+Response, DB'de saklanan `hukum_sozlugu.json` içeriğinin **aynen** geçirilmiş hâlidir (DTO yok, `JsonElement` olarak `Results.Ok(...)`'a sarılır):
+
+```json
+{
+  "surum": "1.2",
+  "dil": "tr",
+  "hukumler": [
+    { "kod": "KAPSAM_DISI", "baslik": "Ağaçlandırma kapsamı dışı", "sira": 0 }
+  ],
+  "ek_kosullar": {
+    "AGIR_YANMIS": "Yangın {siddet_adi} sınıfında (dNBR {dnbr}); toprak yüzeyi büyük olasılıkla açıkta."
+  },
+  "zamanlama_notu": "Ölçümlerimizde 1. yıl değerleri ...",
+  "esikler": { "toparlanma_zayif": 0.35, "toparlanma_iyi": 0.5, "egim_dik_derece": 25.0 },
+  "tur_tablosu": { "kaynak": "ÖRNEK TABLO — OGM tür-yetişme ortamı rehberi ile değiştirilecek", "surum": "0.1-ornek", "onaylandi": false },
+  "aciklama": "..."
+}
+```
+
+- **Kritik alan:** `tur_tablosu.onaylandi`. `false` olduğu sürece `CellVerdictDto.tur_onerisi`'nin gösterildiği HER yerde bu uyarı da gösterilmelidir (bkz. §5.2, docs/hukum_sozlesmesi.md "Tür önerisi — dikkat").
+- `hukumler[]` — 7 kod için `{kod, baslik, sira}`; `sira`, UI'da hüküm listesinin gösterim SIRASINI verir (öncelik SIRALAMASI değil — hüküm önceliksiz bir kategoridir).
+- `ek_kosullar` — kod → Türkçe şablon cümle sözlüğü (`{yol}`, `{egim}` gibi yer tutucular içerir; `CellVerdictDto.ek_kosullar`'daki kodlarla eşlenir).
+
+### 7.3. Hatalar
+
+| `code` | HTTP | Ne zaman |
+| --- | --- | --- |
+| `HUKUM_SOZLUGU_NOT_FOUND` | 404 | Global satır hiç içe aktarılmamış — ImportTool çalıştıktan sonra normal koşulda GERÇEKLEŞMEMESİ gereken bir durum |
+
+---
+
+## 8. Hata sözleşmesi (RFC 7807 `ProblemDetails`)
 
 Tüm hatalar aynı gövde şeklinde döner, `code` alanı programatik ayrım için:
 
@@ -192,12 +321,16 @@ Tüm hatalar aynı gövde şeklinde döner, `code` alanı programatik ayrım iç
 | `INVALID_BOUNDING_BOX` | 400 | 1/2/3 bbox parametresi verilmiş, ya da değerler NaN/Infinity, `min >= max`, ya da EPSG:4326 sınırı dışı |
 | `INVALID_QUERY_PARAMETER` | 400 | Geçersiz `quality_flag` / `prediction_status` / `priority_class`, ya da sayısal olması gereken bir parametreye (`recovery`/`erosion`/`access`/`min_lon`/`min_lat`/`max_lon`/`max_lat`) sayısal olmayan bir değer verilmiş (ör. `?recovery=abc`) |
 | `PERIMETER_DATA_CORRUPT` | 500 | DB'deki `PerimeterGeoJson` parse edilemedi (olmaması gereken durum, savunma amaçlı) |
+| `CELL_NOT_FOUND` | 404 | Yangın var, ama `{cellId}` o yangında yok (bkz. §5) |
+| `CELL_VERDICT_NOT_FOUND` | 404 | Hücre var, ama henüz hükmü içe aktarılmamış (bkz. §5) |
+| `FIRE_NARRATIVE_NOT_FOUND` | 404 | Yangın var, ama henüz anlatı özeti içe aktarılmamış (bkz. §6) |
+| `HUKUM_SOZLUGU_NOT_FOUND` | 404 | Global hüküm sözlüğü hiç içe aktarılmamış (bkz. §7) |
 | `DB_UNAVAILABLE` | 503 | Veritabanına bağlanılamadı / bağlantı sorgu sırasında koptu |
 | `UNEXPECTED_ERROR` | 500 | Yukarıdakilerin hiçbiri değil — gerçekten beklenmeyen bir istisna (genel `AddProblemDetails()` fallback'i). Endpoint'in kendi ürettiği bir `code` varsa bu ASLA onun üzerine yazmaz. |
 
 ---
 
-## 6. Sağlık kontrolü (health check)
+## 9. Sağlık kontrolü (health check)
 
 Auth/veri sözleşmesi dışında, ops/monitoring için:
 
@@ -210,7 +343,7 @@ Auth/veri sözleşmesi dışında, ops/monitoring için:
 
 ---
 
-## 7. Performans ve sıkıştırma
+## 10. Performans ve sıkıştırma
 
 `/cells`, en büyük yangında (`AKD_2021_01`, 9048 hücre) sıkıştırılmamış ~4 MB JSON döner. Response compression (Brotli/Gzip, `CompressionLevel.Fastest`) açık — auth/gizli veri olmadığı için BREACH/CRIME riski yok, HTTPS için de güvenle etkin.
 
@@ -227,7 +360,7 @@ Sıkıştırma yanıt boyutunu küçültür ama frontend'in **9048 hücreyi işl
 
 ---
 
-## 8. Bağlantı ve ortam
+## 11. Bağlantı ve ortam
 
 - Bağlantı dizesi önceliği: `REGREEN_CONNECTION_STRING` env var → `appsettings.json`'daki `ConnectionStrings:Default` → localdb geliştirme fallback'i (ImportTool ile aynı konvansiyon).
 - Migration API başlangıcında OTOMATİK çalıştırılmaz — şema `dotnet ef database update --project backend/ReGreen.Data` ile elle uygulanır.
@@ -236,8 +369,9 @@ Sıkıştırma yanıt boyutunu küçültür ama frontend'in **9048 hücreyi işl
 
 ---
 
-## 9. Referans
+## 12. Referans
 
 - [`docs/data-contract.md`](./data-contract.md) — alan adı/tip/anlam (tek doğru kaynak).
+- [`docs/hukum_sozlesmesi.md`](./hukum_sozlesmesi.md) — hüküm katmanının (§5-§7) veri sözleşmesi ve semantiği.
 - [`docs/db-schema.md`](./db-schema.md) — DB şeması, CHECK/composite FK kısıtları.
 - [`docs/import-flow.md`](./import-flow.md) — import pipeline kuralları.

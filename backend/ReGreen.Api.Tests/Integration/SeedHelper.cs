@@ -113,4 +113,44 @@ public static class SeedHelper
         DefaultPriorityScore = null,
         DefaultPriorityClass = null,
     };
+
+    public static CellVerdict BuildCellVerdict(
+        string fireId, string cellId, int modelRunId, string hukum = "IZLE",
+        string? ekKosullar = null, double? toparlanmaOrani = 0.42,
+        string? turOnerisi = "Kızılçam, Karaçam", bool zamanlamaNotuVar = true) => new()
+    {
+        CellId = cellId,
+        FireId = fireId,
+        ModelRunId = modelRunId,
+        HukumSozluguSurum = "1.1",
+        Hukum = hukum,
+        EkKosullar = ekKosullar,
+        ToparlanmaOrani = toparlanmaOrani,
+        TurOnerisi = turOnerisi,
+        Tetikleyen = "toparlanma=0.42 test",
+        Ozet = "Test özeti.",
+        Ayrinti = "Test ayrıntısı.",
+        ZamanlamaNotuVar = zamanlamaNotuVar,
+    };
+
+    public static FireNarrative BuildFireNarrative(
+        string fireId, int modelRunId, string paragraf = "Test paragrafı.", string profil = "karisik",
+        bool onaylandi = true, string uretim = "sablon (deterministik)",
+        string? sayiBlogu = null) => new()
+    {
+        FireId = fireId,
+        ModelRunId = modelRunId,
+        NarrativeVersion = "1.0",
+        Paragraf = paragraf,
+        Profil = profil,
+        Onaylandi = onaylandi,
+        Uretim = uretim,
+        SayiBlogu = sayiBlogu ?? $$"""{"fire_id":"{{fireId}}","il":"Test","bolge":"Test"}""",
+    };
+
+    public static HukumSozlugu BuildHukumSozlugu(string surum = "1.1", string? jsonIcerik = null) => new()
+    {
+        Surum = surum,
+        JsonIcerik = jsonIcerik ?? $$"""{"surum":"{{surum}}","dil":"tr","hukumler":[]}""",
+    };
 }

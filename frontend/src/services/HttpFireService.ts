@@ -1,4 +1,4 @@
-import type { ApiProblem, CellsQuery, CellsResponse, FireListQuery, FirePerimeter, FireSummary } from "../types";
+import type { ApiProblem, CellsQuery, CellsResponse, CellVerdict, FireListQuery, FireNarrative, FirePerimeter, FireSummary, HukumSozlugu } from "../types";
 import { ApiError } from "./ApiError";
 import type { FireService } from "./FireService";
 
@@ -35,6 +35,20 @@ export class HttpFireService implements FireService {
       params.set("max_lat", String(query.bbox.max_lat));
     }
     return this.get<CellsResponse>(this.url(`/api/fires/${encodeURIComponent(fireId)}/cells`, params));
+  }
+
+  getCellVerdict(fireId: string, cellId: string): Promise<CellVerdict> {
+    return this.get<CellVerdict>(this.url(`/api/fires/${encodeURIComponent(fireId)}/cells/${encodeURIComponent(cellId)}/hukum`));
+  }
+
+  getFireNarrative(fireId: string): Promise<FireNarrative> {
+    return this.get<FireNarrative>(this.url(`/api/fires/${encodeURIComponent(fireId)}/summary`));
+  }
+
+  getHukumSozlugu(surum?: string): Promise<HukumSozlugu> {
+    const params = new URLSearchParams();
+    if (surum) params.set("surum", surum);
+    return this.get<HukumSozlugu>(this.url("/api/hukum-sozlugu", params));
   }
 
   private url(path: string, params?: URLSearchParams): string {

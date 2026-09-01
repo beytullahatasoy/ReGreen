@@ -86,4 +86,46 @@ public static class EntityComparer
 
         return diffs;
     }
+
+    public static List<string> CompareCellVerdict(
+        CellVerdict existing, Models.HukumRow row, string hukumSozluguSurum)
+    {
+        var diffs = new List<string>();
+
+        void CheckNullableDouble(string name, double? a, double? b)
+        {
+            if (a is null && b is null) return;
+            if (a is null || b is null || !PriorityCalculator.ApproximatelyEqual(a.Value, b.Value))
+                diffs.Add($"{name}: {a} != {b}");
+        }
+
+        if (existing.Hukum != row.Hukum) diffs.Add($"Hukum: {existing.Hukum} != {row.Hukum}");
+        if (existing.HukumSozluguSurum != hukumSozluguSurum)
+            diffs.Add($"HukumSozluguSurum: {existing.HukumSozluguSurum} != {hukumSozluguSurum}");
+        if (existing.EkKosullar != row.EkKosullar) diffs.Add($"EkKosullar: {existing.EkKosullar} != {row.EkKosullar}");
+        CheckNullableDouble(nameof(CellVerdict.ToparlanmaOrani), existing.ToparlanmaOrani, row.ToparlanmaOrani);
+        if (existing.TurOnerisi != row.TurOnerisi) diffs.Add($"TurOnerisi: {existing.TurOnerisi} != {row.TurOnerisi}");
+        if (existing.Tetikleyen != row.Tetikleyen) diffs.Add($"Tetikleyen: {existing.Tetikleyen} != {row.Tetikleyen}");
+        if (existing.Ozet != row.Ozet) diffs.Add($"Ozet: {existing.Ozet} != {row.Ozet}");
+        if (existing.Ayrinti != row.Ayrinti) diffs.Add($"Ayrinti: {existing.Ayrinti} != {row.Ayrinti}");
+        if (existing.ZamanlamaNotuVar != row.ZamanlamaNotuVar)
+            diffs.Add($"ZamanlamaNotuVar: {existing.ZamanlamaNotuVar} != {row.ZamanlamaNotuVar}");
+
+        return diffs;
+    }
+
+    public static List<string> CompareFireNarrative(FireNarrative existing, Validation.FireNarrativeInput incoming)
+    {
+        var diffs = new List<string>();
+
+        if (existing.Paragraf != incoming.Paragraf) diffs.Add("Paragraf farklı");
+        if (existing.Profil != incoming.Profil) diffs.Add($"Profil: {existing.Profil} != {incoming.Profil}");
+        if (existing.Onaylandi != incoming.Onaylandi) diffs.Add($"Onaylandi: {existing.Onaylandi} != {incoming.Onaylandi}");
+        if (existing.Uretim != incoming.Uretim) diffs.Add($"Uretim: {existing.Uretim} != {incoming.Uretim}");
+        if (existing.NarrativeVersion != incoming.NarrativeVersion)
+            diffs.Add($"NarrativeVersion: {existing.NarrativeVersion} != {incoming.NarrativeVersion}");
+        if (existing.SayiBlogu != incoming.SayiBlogu) diffs.Add("SayiBlogu farklı");
+
+        return diffs;
+    }
 }

@@ -36,4 +36,6 @@ public class ModelRun
     public DateTime ImportedAt { get; set; }
 
     public List<Prediction> Predictions { get; set; } = [];
+    public List<CellVerdict> CellVerdicts { get; set; } = [];
+    public List<FireNarrative> Narratives { get; set; } = [];
 }

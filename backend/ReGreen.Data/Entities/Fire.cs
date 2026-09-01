@@ -24,4 +24,7 @@ public class Fire
 
     public List<Cell> Cells { get; set; } = [];
     public List<ModelRun> ModelRuns { get; set; } = [];
+
+    /// <summary>Model teslimatı başına opsiyonel anlatı.</summary>
+    public List<FireNarrative> Narratives { get; set; } = [];
 }

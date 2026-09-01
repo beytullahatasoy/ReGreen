@@ -1,14 +1,22 @@
 import type { Feature, MultiPolygon, Polygon, Position } from "geojson";
-import { cellLoaders, metadataLoaders, perimeterLoaders } from "virtual:mock-data-loaders";
+import { cellLoaders, hukumLoaders, metadataLoaders, perimeterLoaders } from "virtual:mock-data-loaders";
 import mockFireSummaries from "virtual:mock-fire-summaries";
+import mockHukumSozlugu from "virtual:mock-hukum-sozlugu";
+import mockYanginMetinleri from "virtual:mock-yangin-metinleri";
+import mockYanginOzetleri from "virtual:mock-yangin-ozetleri";
 import type {
   Cell,
   CellsQuery,
   CellsResponse,
+  CellVerdict,
+  EkKosulKod,
   FireListQuery,
+  FireNarrative,
   FirePerimeter,
   FirePerimeterProperties,
   FireSummary,
+  HukumKod,
+  HukumSozlugu,
   LandCover,
   PredictionStatus,
   PriorityClass,
@@ -42,6 +50,7 @@ interface Metadata {
 }
 
 type RawLoader = () => Promise<string>;
+type RawCellVerdict = Omit<CellVerdict, "model_run_id" | "model_version" | "generated_at" | "hukum_version">;
 
 const numberOrNull = (value: string): number | null => value === "" ? null : Number(value);
 const normalize = (value: number, range: { min: number; max: number }) =>
@@ -71,6 +80,50 @@ function parseCells(csv: string): Cell[] {
   });
 }
 
+function parseCsvLine(line: string): string[] {
+  const values: string[] = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (inQuotes) {
+      if (char === '"' && line[i + 1] === '"') { current += '"'; i++; }
+      else if (char === '"') { inQuotes = false; }
+      else current += char;
+    } else if (char === '"') {
+      inQuotes = true;
+    } else if (char === ",") {
+      values.push(current);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  values.push(current);
+  return values;
+}
+
+function parseVerdicts(csv: string): RawCellVerdict[] {
+  const [headerLine, ...lines] = csv.trim().split(/\r?\n/);
+  if (!headerLine) return [];
+  const headers = parseCsvLine(headerLine);
+  return lines.filter(Boolean).map((line) => {
+    const values = parseCsvLine(line);
+    const row = Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
+    return {
+      cell_id: row.cell_id ?? "",
+      hukum: row.hukum as HukumKod,
+      ek_kosullar: row.ek_kosullar ? row.ek_kosullar.split("|").filter(Boolean) as EkKosulKod[] : [],
+      toparlanma_orani: numberOrNull(row.toparlanma_orani ?? ""),
+      tur_onerisi: row.tur_onerisi || null,
+      tetikleyen: row.tetikleyen ?? "",
+      ozet: row.ozet ?? "",
+      ayrinti: row.ayrinti ?? "",
+      zamanlama_notu_var: (row.zamanlama_notu_var ?? "").toLowerCase() === "true",
+    };
+  });
+}
+
 function outerRings(feature: Feature<Polygon | MultiPolygon>): Position[][] {
   return feature.geometry.type === "Polygon"
     ? [feature.geometry.coordinates[0] ?? []]
@@ -96,6 +149,7 @@ export class MockFireService implements FireService {
   private readonly metadataCache = new Map<string, Promise<Metadata>>();
   private readonly perimeterCache = new Map<string, Promise<Feature<Polygon | MultiPolygon, FirePerimeterProperties>>>();
   private readonly cellsCache = new Map<string, Promise<Cell[]>>();
+  private readonly verdictsCache = new Map<string, Promise<RawCellVerdict[]>>();
 
   async getFires(query: FireListQuery = {}): Promise<FireSummary[]> {
     return mockFireSummaries.filter((fire) => !query.quality_flag || fire.quality_flag === query.quality_flag);
@@ -146,8 +200,53 @@ export class MockFireService implements FireService {
     };
   }
 
+  async getCellVerdict(fireId: string, cellId: string): Promise<CellVerdict> {
+    this.assertKnownFire(fireId);
+    const [verdicts, metadata] = await Promise.all([this.loadVerdicts(fireId), this.loadMetadata(fireId)]);
+    const verdict = verdicts.find((item) => item.cell_id === cellId);
+    if (!verdict) throw new Error(`Cell verdict not found: ${cellId} (fire ${fireId})`);
+    return {
+      ...verdict,
+      model_run_id: 0,
+      model_version: metadata.model_version,
+      generated_at: metadata.generated_at,
+      hukum_version: mockHukumSozlugu.surum,
+    };
+  }
+
+  async getFireNarrative(fireId: string): Promise<FireNarrative> {
+    this.assertKnownFire(fireId);
+    const [metadata, entry] = await Promise.all([
+      this.loadMetadata(fireId),
+      Promise.resolve(mockYanginMetinleri.yanginlar[fireId]),
+    ]);
+    if (!entry) throw new Error(`Fire narrative not found: ${fireId}`);
+    return {
+      fire_id: fireId,
+      model_run_id: 0,
+      model_version: metadata.model_version,
+      generated_at: metadata.generated_at,
+      narrative_version: mockYanginMetinleri.surum,
+      paragraf: entry.paragraf,
+      profil: entry.profil,
+      onaylandi: entry.onaylandi,
+      uretim: mockYanginMetinleri.uretim,
+      sayi_blogu: mockYanginOzetleri.yanginlar[fireId] ?? {},
+    };
+  }
+
+  async getHukumSozlugu(surum?: string): Promise<HukumSozlugu> {
+    if (surum && surum !== mockHukumSozlugu.surum)
+      throw new Error(`Decision dictionary not found: ${surum}`);
+    return mockHukumSozlugu;
+  }
+
   private assertKnownFire(fireId: string): void {
     if (!mockFireSummaries.some((fire) => fire.fire_id === fireId)) throw new Error(`Fire not found: ${fireId}`);
+  }
+
+  private loadVerdicts(fireId: string): Promise<RawCellVerdict[]> {
+    return cached(this.verdictsCache, fireId, async () => parseVerdicts(await requireLoader(hukumLoaders, fireId)()));
   }
 
   private loadMetadata(fireId: string): Promise<Metadata> {

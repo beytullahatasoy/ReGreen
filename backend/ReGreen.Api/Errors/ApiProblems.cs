@@ -15,6 +15,22 @@ internal static class ApiProblems
         StatusCodes.Status404NotFound, "MODEL_RUN_NOT_FOUND", "Model run bulunamadı",
         $"'{fireId}' için henüz içe aktarılmış bir model run yok.", "model-run-not-found");
 
+    public static IResult CellNotFound(string fireId, string cellId) => Problem(
+        StatusCodes.Status404NotFound, "CELL_NOT_FOUND", "Hücre bulunamadı",
+        $"'{fireId}' yangınında '{cellId}' kimlikli hücre bulunamadı.", "cell-not-found");
+
+    public static IResult CellVerdictNotFound(string cellId) => Problem(
+        StatusCodes.Status404NotFound, "CELL_VERDICT_NOT_FOUND", "Hüküm bulunamadı",
+        $"'{cellId}' hücresi için henüz içe aktarılmış bir hüküm yok.", "cell-verdict-not-found");
+
+    public static IResult FireNarrativeNotFound(string fireId) => Problem(
+        StatusCodes.Status404NotFound, "FIRE_NARRATIVE_NOT_FOUND", "Yangın özeti bulunamadı",
+        $"'{fireId}' için henüz içe aktarılmış bir yangın özeti (anlatı) yok.", "fire-narrative-not-found");
+
+    public static IResult HukumSozluguNotFound() => Problem(
+        StatusCodes.Status404NotFound, "HUKUM_SOZLUGU_NOT_FOUND", "Hüküm sözlüğü bulunamadı",
+        "Hüküm sözlüğü henüz içe aktarılmamış.", "hukum-sozlugu-not-found");
+
     public static IResult InvalidPriorityWeights(string detail) => Problem(
         StatusCodes.Status400BadRequest, "INVALID_PRIORITY_WEIGHTS", "Geçersiz öncelik ağırlıkları",
         detail, "invalid-priority-weights");

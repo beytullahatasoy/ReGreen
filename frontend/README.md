@@ -16,6 +16,17 @@ Sorumlu: Zeynep
 
 Geliştirme aşamasında.
 
+## Ekranlar
+
+- `/`: Gerçek API veya mock servisle çalışan Expert Workspace.
+- `/organisation`: Kurumların iyileştirme faaliyetlerini planlama ve izleme akışını gösteren frontend prototipi.
+- `/community`: Gönüllülerin onaylanmış faaliyetleri keşfetme ve gözlem paylaşma akışını gösteren frontend prototipi.
+
+Organisation ve Community ekranları şimdilik açıkça etiketlenmiş demo verisi kullanır;
+backend'e kaydedilen gerçek plan veya faaliyet verisi izlenimi vermez. Eski
+`/prototype/organisation` ve `/prototype/volunteer` adresleri geriye uyumluluk
+için çalışmaya devam eder.
+
 ## Çalıştırma
 
 ```bash
