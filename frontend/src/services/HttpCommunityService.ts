@@ -35,6 +35,7 @@ export class HttpCommunityService implements CommunityService {
     const params = new URLSearchParams();
     if (query.fire_id) params.set("fire_id", query.fire_id);
     if (query.status) params.set("status", query.status);
+    if (query.volunteer_id) params.set("volunteer_id", query.volunteer_id);
     if (query.limit) params.set("limit", String(query.limit));
     return this.request<FieldActivity[]>("GET", this.withQuery("/api/activities", params));
   }

@@ -5,8 +5,11 @@ import { Icon } from "./Icons";
 /**
  * Recovery Zone components backed by REAL data.
  *
- * Every figure here comes from the API (verdict layer + fire summary). The
- * activity and volunteer side is still demo and lives behind DemoNotice.
+ * Every figure here comes from the API (verdict layer + fire summary).
+ *
+ * Bunlar KURUM ekranının bileşenleri. Community ekranı bu dosyayı bilerek
+ * hiç import etmez: vatandaş karar vermeye değil katılmaya geliyor, hüküm
+ * dağılımı ve hektar orada işine yaramıyor.
  *
  * Language follows the Expert screen: English labels, Turkish helper text
  * where it clarifies. Verdict sentences arriving from the API stay Turkish —
@@ -148,16 +151,6 @@ export function ZoneBrief({ zone, children }: { zone: RecoveryZone; children?: R
 
       {children}
     </section>
-  );
-}
-
-/** ONE honesty badge per screen, instead of the eight scattered "demo" pills. */
-export function DemoNotice({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="rc-demo-notice">
-      <span className="rc-demo-pill">Prototype</span>
-      {children}
-    </p>
   );
 }
 

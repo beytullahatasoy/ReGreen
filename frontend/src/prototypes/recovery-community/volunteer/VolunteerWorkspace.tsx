@@ -1,437 +1,379 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { aciliyeteGore, useRecoveryZones, type RecoveryZone } from "../../../hooks/useRecoveryZones";
 import { communityService } from "../../../services";
 import type { FieldActivity } from "../../../types/community";
-import { getCachedVolunteerId, ensureVolunteer } from "../data/volunteerIdentity";
-import { useObservations } from "../data/useObservations";
+import { ensureVolunteer, getCachedVolunteerId } from "../data/volunteerIdentity";
 import { useActivities } from "../data/useActivities";
+import { useObservations } from "../data/useObservations";
 import { Icon } from "../components/Icons";
-import { PrototypeShell } from "../components/PrototypeShell";
-import { RecoveryUpdateCard } from "../components/RecoveryUpdateCard";
+import { WorkspaceShell } from "../components/WorkspaceShell";
+import { ObservationForm } from "./ObservationForm";
 import {
-  ACTIVITY_KIND_LABEL, VerdictBar, ZoneError, ZoneLoading, hektar, tarih,
-} from "../components/RealZone";
+  GOZLEM_DURUMU, NE_YAPILACAK, YENI_BASLAYANA_UYGUN,
+  ayKisa, gunSayisi, kalanYer, tamTarih,
+} from "./volunteerText";
 
 /**
- * The community screen has one job:
+ * Community — vatandaşın ekranı.
  *
- *     "Where can I go, and what can I do?"
+ * <b>Buraya gelen kişi karar vermeye değil katılmaya geliyor.</b> Bu yüzden
+ * ekranda tek bir uzman verisi yok: hektar, hüküm dağılımı, hücre sayısı,
+ * tahmin güveni ve model paragrafı Expert ile Organisation ekranlarında
+ * kalır. Bu dosya `useRecoveryZones`'u ve hüküm bileşenlerini BİLEREK hiç
+ * import etmez — kural kodun kendisinde görünsün diye.
  *
- * There are four steps and each one opens only after the previous:
- *   1  What is near me   (province filter + real zones)
- *   2  Join              (appears once an area is chosen)
- *   3  Observation form  (appears once you join an activity)
- *   4  What happened     (appears once you have submitted something)
+ * Önceki sürüm bir "alan seçici" ile başlıyordu: 4.706 ha müdahale adayı,
+ * hüküm çubuğu, "bu bölgede tahmin belirsizliği yüksek". Ormanı hiç
+ * bilmeyen biri için bunların hiçbiri bir sonraki adımı göstermiyordu.
  *
- * All four now talk to the real backend (backend/ReGreen.Api/Endpoints/CommunityEndpoints.cs):
- * activities are ones an organisation actually opened, joining registers a
- * real participant row, and a submitted observation lands in the
- * Organisation review queue for real.
+ * Şimdi ekranın omurgası tek bir liste: <b>gidebileceğin günler.</b>
+ *   1  Katılabileceğin etkinlikler   (gerçek /api/activities)
+ *   2  Katıldıysan: ne getireceğin + gördüğünü anlatma formu
+ *   3  Senin katkın               (gerçek gözlemlerin ve sonuçları)
+ *
+ * Alan bilgisi kartta yalnızca "nerede" olarak geçer (il + buluşma noktası);
+ * ölçüm olarak değil.
  */
 export function VolunteerWorkspace() {
-  const { zones, yukleniyor, hata } = useRecoveryZones();
-  const [il, setIl] = useState("All provinces");
-  const [seciliZoneId, setSeciliZoneId] = useState<string | null>(null);
-  const [activity, setActivity] = useState<FieldActivity | null>(null);
-  const [katilHata, setKatilHata] = useState<string | null>(null);
-  const [katiliyor, setKatiliyor] = useState(false);
   const [volunteerId, setVolunteerId] = useState<string | null>(getCachedVolunteerId());
+  // Kimlik varsa sunucu her gun icin "bu kisi kayitli mi"yi de dondurur; sayfa
+  // yenilendiginde katildigin gun yeniden "Count me in" gorunmesin diye.
+  const { activities, yukleniyor, hata, yenile } = useActivities({ volunteer_id: volunteerId ?? undefined });
+  const [il, setIl] = useState<string | null>(null);
+  const [acilanId, setAcilanId] = useState<number | null>(null);
+  const [katildiklarim, setKatildiklarim] = useState<Record<number, FieldActivity>>({});
   const [gonderimSayaci, setGonderimSayaci] = useState(0);
 
-  const iller = useMemo(
-    () => [...new Set(zones.map((z) => z.il))].sort((a, b) => a.localeCompare(b, "tr")),
-    [zones],
+  // Katılıma açık olanlar önce; kapananlar listeyi tıkamasın.
+  const acikOlanlar = useMemo(
+    () => activities.filter((a) => a.status === "open" || a.status === "scheduled"),
+    [activities],
   );
 
-  // A citizen sees places they could go, not a catalogue: areas that actually
-  // need action come first, at most six.
-  const gosterilen = useMemo(() => {
-    const suzulmus = zones.filter((z) => (il === "All provinces" || z.il === il) && z.mudahaleHucre > 0);
-    return aciliyeteGore(suzulmus).slice(0, 6);
-  }, [zones, il]);
+  const iller = useMemo(
+    () => [...new Set(acikOlanlar.map((a) => a.province))].sort((a, b) => a.localeCompare(b, "tr")),
+    [acikOlanlar],
+  );
 
-  const secili = gosterilen.find((z) => z.fireId === seciliZoneId) ?? null;
-  const bolgeEtkinlikleri = useActivities({ fire_id: secili?.fireId });
-  const acikEtkinlik = bolgeEtkinlikleri.activities.find((a) => a.status === "open" || a.status === "scheduled") ?? null;
-  const katildi = activity !== null;
+  const gosterilen = useMemo(
+    () => (il === null ? acikOlanlar : acikOlanlar.filter((a) => a.province === il)),
+    [acikOlanlar, il],
+  );
 
-  function zoneSec(zone: RecoveryZone) {
-    setSeciliZoneId(zone.fireId);
-    setActivity(null);
-    setKatilHata(null);
-  }
+  return (
+    <WorkspaceShell mode="volunteer">
+      <main className="rc-main">
+        <section className="rc-volunteer-hero rc-hero--compact">
+          <h1>Give a burnt forest a hand</h1>
+          <p>
+            Forestry teams decide where the work is needed. You pick a day, turn
+            up, and they show you what to do when you get there. No experience
+            and no equipment of your own required.
+          </p>
+        </section>
+
+        <HowItWorks />
+
+        <section className="rc-section">
+          <div className="rc-section-head">
+            <div>
+              <h2>Days you can join <span>Katılabileceğin günler</span></h2>
+            </div>
+            {iller.length > 1 && (
+              <div className="rc-place-filter" role="group" aria-label="Filter by province">
+                <button
+                  type="button"
+                  className={`rc-chip${il === null ? " is-selected" : ""}`}
+                  aria-pressed={il === null}
+                  onClick={() => setIl(null)}
+                >
+                  Everywhere
+                </button>
+                {iller.map((x) => (
+                  <button
+                    key={x}
+                    type="button"
+                    className={`rc-chip${il === x ? " is-selected" : ""}`}
+                    aria-pressed={il === x}
+                    onClick={() => setIl(x)}
+                  >
+                    {x}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {hata && (
+            <div className="rc-empty rc-empty--error" role="alert">
+              <strong>We could not load the list of days.</strong>
+              <p>{hata}</p>
+              <button type="button" className="rc-button" onClick={yenile}>Try again</button>
+            </div>
+          )}
+
+          {!hata && yukleniyor && (
+            <div className="rc-empty" role="status">Looking for days near you…</div>
+          )}
+
+          {!hata && !yukleniyor && gosterilen.length === 0 && (
+            <div className="rc-empty">
+              <strong>Nothing open here at the moment.</strong>
+              <p>
+                {il === null
+                  ? "Organisations post new days as areas become ready to work on. It is worth checking back."
+                  : "Try “Everywhere” — there may be a day in a neighbouring province."}
+              </p>
+              {il !== null && (
+                <button type="button" className="rc-button" onClick={() => setIl(null)}>
+                  Show everywhere
+                </button>
+              )}
+            </div>
+          )}
+
+          {!hata && !yukleniyor && gosterilen.length > 0 && (
+            <ol className="rc-days">
+              {gosterilen.map((activity) => (
+                <ActivityRow
+                  key={activity.id}
+                  activity={katildiklarim[activity.id] ?? activity}
+                  acik={acilanId === activity.id}
+                  katildi={katildiklarim[activity.id]?.joined_by_me ?? activity.joined_by_me}
+                  onToggle={() => setAcilanId((id) => (id === activity.id ? null : activity.id))}
+                  onJoined={(guncel) => setKatildiklarim((o) => ({ ...o, [guncel.id]: guncel }))}
+                  onVolunteerRegistered={setVolunteerId}
+                  onSubmitted={() => setGonderimSayaci((n) => n + 1)}
+                />
+              ))}
+            </ol>
+          )}
+        </section>
+
+        <MyReports volunteerId={volunteerId} refreshToken={gonderimSayaci} />
+      </main>
+    </WorkspaceShell>
+  );
+}
+
+/* ------------------------------------------------------------ nasıl işliyor */
+
+/**
+ * Hiç bilmeyen biri için üç cümle. Dekoratif bir "akış şeridi" değil:
+ * ekranın gerçekten yaptığı üç şeyi sırayla söylüyor.
+ */
+function HowItWorks() {
+  const adimlar = [
+    { icon: "zone", baslik: "Pick a day", metin: "Every day below is run by a forestry organisation on an area that has already been surveyed." },
+    { icon: "people", baslik: "Turn up", metin: "You are shown what to do on arrival. Bring what the day asks for — usually just closed shoes and water." },
+    { icon: "observe", baslik: "Tell us what you saw", metin: "Four short questions at the end. It goes to the team looking after that hillside." },
+  ] as const;
+
+  return (
+    <section className="rc-how" aria-label="How it works">
+      {adimlar.map((adim, i) => (
+        <div key={adim.baslik}>
+          <span className="rc-how__mark"><Icon name={adim.icon} /></span>
+          <h2>{adim.baslik}</h2>
+          <p>{adim.metin}</p>
+          {i < adimlar.length - 1 && <i className="rc-how__link" aria-hidden="true" />}
+        </div>
+      ))}
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ bir gün */
+
+function ActivityRow({
+  activity, acik, katildi, onToggle, onJoined, onVolunteerRegistered, onSubmitted,
+}: {
+  activity: FieldActivity;
+  acik: boolean;
+  katildi: boolean;
+  onToggle: () => void;
+  onJoined: (guncel: FieldActivity) => void;
+  onVolunteerRegistered: (id: string) => void;
+  onSubmitted: () => void;
+}) {
+  const [katiliyor, setKatiliyor] = useState(false);
+  const [katilHata, setKatilHata] = useState<string | null>(null);
+  const yer = kalanYer(activity);
+  const dolu = activity.capacity - activity.joined <= 0;
 
   async function katil() {
-    if (!acikEtkinlik) return;
     setKatiliyor(true);
     setKatilHata(null);
     try {
       const gonullu = await ensureVolunteer();
-      setVolunteerId(gonullu.id);
-      const guncel = await communityService.joinActivity(acikEtkinlik.id, gonullu.id);
-      setActivity(guncel);
+      onVolunteerRegistered(gonullu.id);
+      onJoined(await communityService.joinActivity(activity.id, gonullu.id));
     } catch (reason: unknown) {
-      setKatilHata(reason instanceof Error ? reason.message : "Etkinliğe katılınamadı.");
+      setKatilHata(reason instanceof Error ? reason.message : "Could not add you to this day. Try again.");
     } finally {
       setKatiliyor(false);
     }
   }
 
   return (
-    <PrototypeShell mode="volunteer">
-      <main className="rc-main">
-        <section className="rc-volunteer-hero rc-hero--compact">
-          <span className="rc-kicker rc-kicker--orange">Community · field contribution</span>
-          <h1>Where can I go?</h1>
-          <p>
-            Pick an area that has been through expert assessment, join an activity
-            opened by a verified organisation, and record what you see.
-          </p>
-        </section>
+    <li className={`rc-day${acik ? " is-open" : ""}${katildi ? " is-joined" : ""}`}>
+      <button
+        type="button"
+        className="rc-day__summary"
+        onClick={onToggle}
+        aria-expanded={acik}
+      >
+        <time className="rc-day__date" dateTime={activity.scheduled_for}>
+          <span>{ayKisa(activity.scheduled_for)}</span>
+          <b>{gunSayisi(activity.scheduled_for)}</b>
+        </time>
 
-        {hata && <div className="rc-section"><ZoneError mesaj={hata} /></div>}
-        {yukleniyor && <div className="rc-section"><ZoneLoading mesaj="Loading areas…" /></div>}
+        <span className="rc-day__what">
+          <strong>{NE_YAPILACAK[activity.kind]}</strong>
+          <small>{activity.province} · {activity.meeting_point}</small>
+          {YENI_BASLAYANA_UYGUN[activity.kind] && !katildi && (
+            <em className="rc-day__badge">Fine for a first time</em>
+          )}
+          {katildi && <em className="rc-day__badge rc-day__badge--joined">You are on the list</em>}
+        </span>
 
-        {!yukleniyor && !hata && (
-          <section className="rc-section">
-            <div className="rc-section-head">
-              <div>
-                <span className="rc-kicker">01 · Choose an area</span>
-                <h2>What is near me? <span>Yakınımda ne var?</span></h2>
-              </div>
-              <label className="rc-il-secim">
-                Province
-                <select value={il} onChange={(e) => { setIl(e.target.value); setSeciliZoneId(null); }}>
-                  <option>All provinces</option>
-                  {iller.map((x) => <option key={x}>{x}</option>)}
-                </select>
-              </label>
-            </div>
-
-            {gosterilen.length === 0 ? (
-              <div className="rc-empty">No area in this province currently needs intervention.</div>
-            ) : (
-              <div className="rc-zone-picks">
-                {gosterilen.map((zone) => (
-                  <button
-                    key={zone.fireId}
-                    type="button"
-                    className={`rc-zone-pick${zone.fireId === seciliZoneId ? " is-selected" : ""}`}
-                    onClick={() => zoneSec(zone)}
-                    aria-pressed={zone.fireId === seciliZoneId}
-                  >
-                    <span className="rc-zone-pick__head">
-                      <strong>{zone.il}</strong>
-                      <small>{zone.bolge}</small>
-                    </span>
-                    <span className="rc-zone-pick__figure">
-                      <b>{hektar(zone.mudahaleHa)}</b>
-                      <small>needs direct action</small>
-                    </span>
-                    <VerdictBar zone={zone} />
-                    {zone.guven === "dusuk" && (
-                      <em className="rc-zone-pick__warn">Prediction uncertainty is high in this region</em>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </section>
-        )}
-
-        {secili && (
-          <section className="rc-section">
-            <div className="rc-section-head">
-              <div>
-                <span className="rc-kicker">02 · Join</span>
-                <h2>{acikEtkinlik ? `Open activity in ${secili.il}` : `${secili.il} · no open activity yet`}</h2>
-              </div>
-            </div>
-
-            <div className="rc-join">
-              <div className="rc-join__zone">
-                <p>{secili.paragraf || "The summary for this area could not be loaded."}</p>
-              </div>
-
-              {bolgeEtkinlikleri.yukleniyor && <p className="rc-section-intro">Loading activities…</p>}
-              {bolgeEtkinlikleri.hata && <p className="rc-form-warning" role="alert">{bolgeEtkinlikleri.hata}</p>}
-
-              {!bolgeEtkinlikleri.yukleniyor && !acikEtkinlik && (
-                <div className="rc-join__activity rc-join__activity--bos">
-                  <p>
-                    No verified organisation has opened an activity here yet.
-                    Check back later, or record an observation on your own below.
-                  </p>
-                </div>
-              )}
-
-              {acikEtkinlik && (
-                <div className="rc-join__activity">
-                  <span className="rc-status">{acikEtkinlik.status}</span>
-                  <h3>{ACTIVITY_KIND_LABEL[acikEtkinlik.kind]}</h3>
-                  <p>{acikEtkinlik.description}</p>
-                  <dl>
-                    <div><dt>Date</dt><dd>{acikEtkinlik.scheduled_for}</dd></div>
-                    <div><dt>Meeting point</dt><dd>{acikEtkinlik.meeting_point}</dd></div>
-                    <div><dt>Organiser</dt><dd>{acikEtkinlik.organisation}</dd></div>
-                    <div><dt>Capacity</dt><dd>{(activity ?? acikEtkinlik).joined} / {acikEtkinlik.capacity}</dd></div>
-                  </dl>
-                  <button
-                    type="button"
-                    className="rc-button rc-button--primary"
-                    onClick={katil}
-                    disabled={katildi || katiliyor}
-                  >
-                    {katildi ? "Joined" : katiliyor ? "Joining…" : "Join activity"} <Icon name="arrow" />
-                  </button>
-                  {katilHata && <p className="rc-form-warning" role="alert">{katilHata}</p>}
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {secili && (
-          <section className="rc-section">
-            <div className="rc-section-head">
-              <div>
-                <span className="rc-kicker">03 · Record your contribution</span>
-                <h2>Note what you see <span>Gördüğünü not et</span></h2>
-              </div>
-            </div>
-            <FieldObservationForm
-              key={`${secili.fireId}:${acikEtkinlik?.id ?? "none"}`}
-              zone={secili}
-              activityId={katildi ? acikEtkinlik?.id ?? null : null}
-              meetingPoint={acikEtkinlik?.meeting_point ?? ""}
-              onVolunteerRegistered={setVolunteerId}
-              onSubmitted={() => setGonderimSayaci((n) => n + 1)}
-            />
-          </section>
-        )}
-
-        <MySubmissions zones={zones} volunteerId={volunteerId} refreshToken={gonderimSayaci} />
-
-        <section className="rc-section">
-          <div className="rc-section-head">
-            <div>
-              <span className="rc-kicker">What your contribution leads to</span>
-              <h2>Twelve months on</h2>
-            </div>
-          </div>
-          <RecoveryUpdateCard zones={zones} />
-        </section>
-      </main>
-    </PrototypeShell>
-  );
-}
-
-/* ------------------------------------------------------------------ form */
-
-/** Question -> options. The submitted answer is stored as "Question: value". */
-const SORULAR = [
-  { alan: "Vegetation visible?", secenekler: ["Not visible", "Sparse", "Mixed", "Dense"] },
-  { alan: "Signs of erosion?", secenekler: ["Not observed", "Possible", "Visible"] },
-  { alan: "Ground condition", secenekler: ["Dry", "Moist", "Loose surface", "Other"] },
-  { alan: "Access issue", secenekler: ["None", "Path blocked", "Unsafe access", "Other"] },
-] as const;
-
-function FieldObservationForm({
-  zone, activityId, meetingPoint, onVolunteerRegistered, onSubmitted,
-}: {
-  zone: RecoveryZone;
-  activityId: number | null;
-  meetingPoint: string;
-  onVolunteerRegistered: (id: string) => void;
-  onSubmitted: () => void;
-}) {
-  const [cevaplar, setCevaplar] = useState<Record<string, string>>({});
-  const [konum, setKonum] = useState(meetingPoint);
-  const [not, setNot] = useState("");
-  const [fotoAdi, setFotoAdi] = useState<string | null>(null);
-  const [uyari, setUyari] = useState<string | null>(null);
-  const [gonderiliyor, setGonderiliyor] = useState(false);
-  const [gonderildi, setGonderildi] = useState(false);
-  const dosyaRef = useRef<HTMLInputElement>(null);
-
-  const verilenCevaplar = SORULAR
-    .filter((s) => cevaplar[s.alan])
-    .map((s) => `${s.alan.replace(/\?$/, "")}: ${cevaplar[s.alan]}`);
-
-  async function gonder(e: React.FormEvent) {
-    e.preventDefault();
-    // An observation with no answer at all is not evidence — it is noise in
-    // the organisation's queue. This is the only hard requirement.
-    if (verilenCevaplar.length === 0) {
-      setUyari("Answer at least one question before submitting.");
-      return;
-    }
-    if (!konum.trim()) {
-      setUyari("Say where you made the observation.");
-      return;
-    }
-    setUyari(null);
-    setGonderiliyor(true);
-    try {
-      const gonullu = await ensureVolunteer();
-      onVolunteerRegistered(gonullu.id);
-      await communityService.createObservation(zone.fireId, {
-        volunteer_id: gonullu.id,
-        activity_id: activityId,
-        location: konum.trim(),
-        photo_name: fotoAdi,
-        answers: verilenCevaplar,
-        note: not.trim() || undefined,
-      });
-      setGonderildi(true);
-      onSubmitted();
-    } catch (reason: unknown) {
-      setUyari(reason instanceof Error ? reason.message : "Gözlem gönderilemedi.");
-    } finally {
-      setGonderiliyor(false);
-    }
-  }
-
-  function yenidenDoldur() {
-    setCevaplar({});
-    setNot("");
-    setFotoAdi(null);
-    setUyari(null);
-    setGonderildi(false);
-    if (dosyaRef.current) dosyaRef.current.value = "";
-  }
-
-  if (gonderildi) {
-    return (
-      <div className="rc-observation rc-observation--done">
-        <span className="rc-status rc-status--complete">Submitted</span>
-        <h3>Your observation is in the review queue</h3>
-        <p>
-          It is now waiting for the organisation running this area. You can follow
-          its status under <strong>“What happened to my observations?”</strong> below.
-        </p>
-        <button type="button" className="rc-button" onClick={yenidenDoldur}>
-          Record another observation
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <form className="rc-observation" onSubmit={gonder}>
-      <p>You record what you see; experts interpret what it means.</p>
-
-      <label>
-        Geotagged field photo
-        {/* The file never leaves the browser: only the name is kept, so the
-            organisation can ask for it. Storing the image itself would blow
-            the browser storage quota within a few submissions. */}
-        <input
-          ref={dosyaRef}
-          type="file"
-          accept="image/*"
-          className="rc-file-input"
-          onChange={(e) => setFotoAdi(e.target.files?.[0]?.name ?? null)}
-        />
-        <small>{fotoAdi ? `Selected: ${fotoAdi}` : "The file is not uploaded — only its name is recorded."}</small>
-      </label>
-
-      <div className="rc-form-grid">
-        {SORULAR.map((soru) => (
-          <label key={soru.alan}>
-            {soru.alan}
-            <select
-              value={cevaplar[soru.alan] ?? ""}
-              onChange={(e) => setCevaplar((o) => ({ ...o, [soru.alan]: e.target.value }))}
-            >
-              <option value="">Select what you observe</option>
-              {soru.secenekler.map((secenek) => <option key={secenek}>{secenek}</option>)}
-            </select>
-          </label>
-        ))}
-      </div>
-
-      <label>
-        Where exactly?
-        <input
-          type="text"
-          value={konum}
-          onChange={(e) => setKonum(e.target.value)}
-          placeholder="Meeting point, path name, landmark…"
-        />
-      </label>
-
-      <label>
-        Additional observation
-        <textarea
-          value={not}
-          onChange={(e) => setNot(e.target.value)}
-          placeholder="Describe only what you can directly see…"
-        />
-      </label>
-
-      {uyari && <p className="rc-form-warning" role="alert">{uyari}</p>}
-
-      <button type="submit" className="rc-button rc-button--primary" disabled={gonderiliyor}>
-        {gonderiliyor ? "Submitting…" : `Submit observation (${verilenCevaplar.length}/4 answered)`}
+        <span className={`rc-day__places${yer.acil ? " is-urgent" : ""}`}>{yer.metin}</span>
+        <span className="rc-day__chevron" aria-hidden="true"><Icon name="arrow" /></span>
       </button>
 
-      <p className="rc-integrity-note">
-        Volunteer observations <strong>do not train the model.</strong> The model
-        learns from satellite data; your observation is reviewed as supporting
-        field evidence for the expert's decision.
-      </p>
-    </form>
+      {acik && (
+        <div className="rc-day__detail">
+          <div className="rc-day__brief">
+            <h3>{activity.title}</h3>
+            <p>{activity.description}</p>
+
+            <dl>
+              <div><dt>When</dt><dd>{tamTarih(activity.scheduled_for)}</dd></div>
+              <div><dt>Where to meet</dt><dd>{activity.meeting_point}, {activity.province}</dd></div>
+              <div>
+                <dt>Run by</dt>
+                <dd>
+                  {activity.organisation}
+                  {activity.organisation_verified && (
+                    <span className="rc-verified" title="Checked by ReGreen">verified</span>
+                  )}
+                </dd>
+              </div>
+            </dl>
+
+            {activity.requirements.length > 0 && (
+              <div className="rc-bring">
+                <h4>What to bring</h4>
+                <ul>{activity.requirements.map((r) => <li key={r}>{r}</li>)}</ul>
+              </div>
+            )}
+
+            {!katildi && (
+              <>
+                <button
+                  type="button"
+                  className="rc-button rc-button--primary"
+                  onClick={katil}
+                  disabled={katiliyor || dolu}
+                >
+                  {dolu ? "This day is full" : katiliyor ? "Adding you…" : "Count me in"}
+                  {!dolu && !katiliyor && <Icon name="arrow" />}
+                </button>
+                {dolu && (
+                  <p className="rc-day__note">
+                    Everyone has signed up for this one. The organisations post new
+                    days regularly.
+                  </p>
+                )}
+                {katilHata && <p className="rc-form-warning" role="alert">{katilHata}</p>}
+              </>
+            )}
+          </div>
+
+          {katildi && (
+            <div className="rc-day__report">
+              <h3>Back from the field?</h3>
+              <p className="rc-day__note">
+                Tell the team what you saw. It is read by the people looking after
+                this hillside — it does not change the satellite model, it helps
+                them check it against the ground.
+              </p>
+              <ObservationForm
+                fireId={activity.fire_id}
+                yer={activity.meeting_point}
+                activityId={activity.id}
+                onVolunteerRegistered={onVolunteerRegistered}
+                onSubmitted={onSubmitted}
+              />
+            </div>
+          )}
+        </div>
+      )}
+    </li>
   );
 }
 
-/* ------------------------------------------------- step 4: what happened */
+/* -------------------------------------------------------------- senin katkın */
 
 /**
- * The volunteer's own submissions and what the organisation decided.
- * Hidden until there is a registered identity, and again until it has at
- * least one submission, so it never sits there empty.
+ * Gönüllünün kendi kayıtları ve kurumun ne yaptığı.
+ *
+ * Buradaki her satır gerçek: GET /api/observations?volunteer_id=… Eskiden bu
+ * bölümün yerinde uydurma bir "12 ay sonra" kartı vardı (sahte uydu
+ * karşılaştırması ve "Assessment result is demo" rozetiyle); üretmediğimiz
+ * bir sonucu göstermektense insanın gerçekten yaptığı şeyi gösteriyoruz.
+ *
+ * Hiç gönderim yoksa hiç görünmez — boş bir bölüm kimseyi motive etmez.
  */
-function MySubmissions({
-  zones, volunteerId, refreshToken,
-}: { zones: RecoveryZone[]; volunteerId: string | null; refreshToken: number }) {
-  const { observations, yukleniyor, hata, yenile } = useObservations({ volunteer_id: volunteerId ?? undefined }, volunteerId !== null);
-  const ilkYenileme = useRef(refreshToken);
+function MyReports({
+  volunteerId, refreshToken,
+}: { volunteerId: string | null; refreshToken: number }) {
+  const { observations, yukleniyor, hata, yenile } = useObservations(
+    { volunteer_id: volunteerId ?? undefined }, volunteerId !== null,
+  );
+
+  const sonYenileme = useRef(refreshToken);
   useEffect(() => {
-    if (refreshToken !== ilkYenileme.current) { ilkYenileme.current = refreshToken; yenile(); }
+    if (refreshToken !== sonYenileme.current) {
+      sonYenileme.current = refreshToken;
+      yenile();
+    }
   }, [refreshToken, yenile]);
-  if (volunteerId === null || (!yukleniyor && !hata && observations.length === 0)) return null;
+
+  if (volunteerId === null) return null;
+  if (!yukleniyor && !hata && observations.length === 0) return null;
+
+  const kullanilan = observations.filter((o) => o.status === "accepted").length;
 
   return (
     <section className="rc-section">
       <div className="rc-section-head">
         <div>
-          <span className="rc-kicker">04 · Follow-up</span>
-          <h2>What happened to my observations? <span>Gözlemlerime ne oldu?</span></h2>
+          <h2>What you sent in <span>Senin gönderdiklerin</span></h2>
         </div>
+        {kullanilan > 0 && (
+          <p className="rc-tally">
+            <b>{kullanilan}</b> of your {observations.length} used as field evidence
+          </p>
+        )}
       </div>
 
       {hata && <p className="rc-form-warning" role="alert">{hata}</p>}
-      {yukleniyor && <p className="rc-section-intro">Loading…</p>}
+      {yukleniyor && <div className="rc-empty" role="status">Loading…</div>}
 
       {!yukleniyor && !hata && (
-        <div className="rc-my-observations">
-          {observations.map((o) => {
-            const zone = zones.find((z) => z.fireId === o.fire_id);
-            return (
-              <article key={o.id}>
-                <div>
-                  <strong>{zone ? `${zone.il} · ${zone.fireId}` : o.fire_id}</strong>
-                  <small>{o.location} · {tarih(o.submitted_at)}</small>
-                </div>
-                <p>{o.answers.join(" · ")}</p>
-                <span className={`rc-status${o.status !== "pending" ? " rc-status--complete" : ""}`}>
-                  {o.status === "pending" ? "Waiting for review" : o.status.replace(/_/g, " ")}
-                </span>
-              </article>
-            );
-          })}
-        </div>
+        <ul className="rc-mine">
+          {observations.map((o) => (
+            <li key={o.id} className={o.status === "accepted" ? "is-accepted" : undefined}>
+              <div>
+                <strong>{o.province}</strong>
+                <small>{o.activity_title ?? o.location}</small>
+              </div>
+              <p>{o.answers.join(" · ")}</p>
+              <span className={`rc-outcome rc-outcome--${o.status}`}>{GOZLEM_DURUMU[o.status]}</span>
+              {o.review_note && <q>{o.review_note}</q>}
+            </li>
+          ))}
+        </ul>
       )}
     </section>
   );
