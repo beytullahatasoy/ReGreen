@@ -138,7 +138,8 @@ public static class CommunityEndpoints
     // ------------------------------------------------------------ etkinlikler
 
     private static async Task<IResult> GetActivities(
-        AppDbContext db, string? fire_id, string? status, int? limit, CancellationToken ct)
+        AppDbContext db, string? fire_id, string? status, Guid? volunteer_id, int? limit,
+        CancellationToken ct)
     {
         if (status is not null && !ActivityStatuses.All.Contains(status))
             return ApiProblems.InvalidQueryParameter(
@@ -155,7 +156,7 @@ public static class CommunityEndpoints
             .OrderBy(a => a.ScheduledFor)
             .ThenBy(a => a.Id)
             .Take(take)
-            .Select(ActivityProjection())
+            .Select(ActivityProjection(volunteer_id))
             .ToArrayAsync(ct);
 
         return Results.Ok(activities);
@@ -290,7 +291,7 @@ public static class CommunityEndpoints
             await db.SaveChangesAsync(ct);
         }
 
-        return Results.Ok(await LoadActivity(db, id, ct));
+        return Results.Ok(await LoadActivity(db, id, ct, volunteerId));
     }
 
     private static async Task<IResult> LeaveActivity(
@@ -431,7 +432,8 @@ public static class CommunityEndpoints
     /// Etkinlik projeksiyonu. <c>Joined</c> ve <c>ObservationCount</c> ilişkili
     /// satırlardan sayılır; tek sorguda dönmesi için ayrı bir tur atılmaz.
     /// </summary>
-    private static System.Linq.Expressions.Expression<Func<FieldActivity, FieldActivityDto>> ActivityProjection() =>
+    private static System.Linq.Expressions.Expression<Func<FieldActivity, FieldActivityDto>> ActivityProjection(
+        Guid? volunteerId = null) =>
         a => new FieldActivityDto(
             a.Id, a.FireId, a.Fire.Province, a.OrganisationId, a.Organisation.Name,
             a.Organisation.Verified, a.Kind, a.Title, a.Description, a.ScheduledFor,
@@ -439,7 +441,8 @@ public static class CommunityEndpoints
             a.Requirements == null || a.Requirements == ""
                 ? new string[0]
                 : a.Requirements.Split('|', StringSplitOptions.None),
-            a.Status, a.Observations.Count);
+            a.Status, a.Observations.Count,
+            volunteerId != null && a.Participants.Any(p => p.VolunteerId == volunteerId));
 
     private static System.Linq.Expressions.Expression<Func<FieldObservation, FieldObservationDto>> ObservationProjection() =>
         o => new FieldObservationDto(
@@ -451,8 +454,10 @@ public static class CommunityEndpoints
             o.ReviewedByOrganisation == null ? null : o.ReviewedByOrganisation.Name,
             o.SubmittedAt, o.ReviewedAt);
 
-    private static Task<FieldActivityDto?> LoadActivity(AppDbContext db, int id, CancellationToken ct) =>
-        db.FieldActivities.AsNoTracking().Where(a => a.Id == id).Select(ActivityProjection()).FirstOrDefaultAsync(ct);
+    private static Task<FieldActivityDto?> LoadActivity(
+        AppDbContext db, int id, CancellationToken ct, Guid? volunteerId = null) =>
+        db.FieldActivities.AsNoTracking().Where(a => a.Id == id)
+            .Select(ActivityProjection(volunteerId)).FirstOrDefaultAsync(ct);
 
     private static Task<FieldObservationDto?> LoadObservation(AppDbContext db, int id, CancellationToken ct) =>
         db.FieldObservations.AsNoTracking().Where(o => o.Id == id).Select(ObservationProjection()).FirstOrDefaultAsync(ct);

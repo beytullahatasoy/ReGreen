@@ -49,6 +49,8 @@ export interface FieldActivity {
   requirements: string[];
   status: ActivityStatus;
   observation_count: number;
+  /** Bu istekteki gönüllü bu güne kayıtlı mı — yalnızca volunteer_id verilirse anlamlı. */
+  joined_by_me: boolean;
 }
 
 export interface CreateActivityInput {
@@ -99,6 +101,8 @@ export interface CreateObservationInput {
 export interface ActivityQuery {
   fire_id?: string;
   status?: ActivityStatus;
+  /** Verilirse yanıttaki `joined_by_me` bu gönüllüye göre hesaplanır. */
+  volunteer_id?: string;
   limit?: number;
 }
 

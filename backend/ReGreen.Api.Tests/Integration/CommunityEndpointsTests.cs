@@ -100,6 +100,28 @@ public class CommunityEndpointsTests(DatabaseFixture fixture) : IAsyncLifetime
     }
 
     [LocalDbFact]
+    public async Task Activity_list_remembers_that_this_volunteer_joined()
+    {
+        await SeedFireAsync();
+        var client = _factory.CreateClient();
+        var activityId = await CreateActivityAsync(client);
+        var volunteerId = await CreateVolunteerAsync(client);
+        await Join(client, activityId, volunteerId);
+
+        // Sayfa yenilendiginde ekran gonullunun kaydini unutmamali.
+        var mine = await client.GetFromJsonAsync<FieldActivityDto[]>(
+            $"/api/activities?volunteer_id={volunteerId}");
+        // volunteer_id verilmezse bayrak her zaman false.
+        var anonymous = await client.GetFromJsonAsync<FieldActivityDto[]>("/api/activities");
+        var someoneElse = await client.GetFromJsonAsync<FieldActivityDto[]>(
+            $"/api/activities?volunteer_id={await CreateVolunteerAsync(client)}");
+
+        Assert.True(mine!.Single(a => a.Id == activityId).JoinedByMe);
+        Assert.False(anonymous!.Single(a => a.Id == activityId).JoinedByMe);
+        Assert.False(someoneElse!.Single(a => a.Id == activityId).JoinedByMe);
+    }
+
+    [LocalDbFact]
     public async Task Joining_a_full_activity_is_rejected()
     {
         await SeedFireAsync();

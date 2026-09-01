@@ -30,6 +30,10 @@ public record class CreateVolunteerRequest(
 /// <summary>
 /// Saha etkinliği. <c>joined</c>, katılımcı SATIRLARINDAN sayılır — ayrı bir sayaç
 /// kolonu tutulmaz ki sayaç ile gerçek katılım birbirinden ayrışamasın.
+///
+/// <c>joined_by_me</c> yalnızca istekte <c>volunteer_id</c> verildiğinde anlamlıdır;
+/// verilmezse her zaman false döner. Community ekranı bunu okuyor: sayfa
+/// yenilendiğinde gönüllünün kaydı unutulmasın diye.
 /// </summary>
 public record class FieldActivityDto(
     [property: JsonPropertyName("id")] int Id,
@@ -47,7 +51,8 @@ public record class FieldActivityDto(
     [property: JsonPropertyName("joined")] int Joined,
     [property: JsonPropertyName("requirements")] string[] Requirements,
     [property: JsonPropertyName("status")] string Status,
-    [property: JsonPropertyName("observation_count")] int ObservationCount);
+    [property: JsonPropertyName("observation_count")] int ObservationCount,
+    [property: JsonPropertyName("joined_by_me")] bool JoinedByMe);
 
 public record class CreateActivityRequest(
     [property: JsonPropertyName("fire_id")] string? FireId,

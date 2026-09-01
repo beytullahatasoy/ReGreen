@@ -6,7 +6,8 @@ import { useActivities } from "../data/useActivities";
 import { useObservations } from "../data/useObservations";
 import { Icon } from "../components/Icons";
 import { ObservationReview } from "../components/ObservationReview";
-import { PrototypeShell } from "../components/PrototypeShell";
+import { WorkspaceShell } from "../components/WorkspaceShell";
+import { NewActivityForm } from "./NewActivityForm";
 import {
   ACTIVITY_KIND_LABEL, ACTIVITY_STATUS_LABEL, ZoneBrief, ZoneError, ZoneLoading, ZoneRow, hektar, kare,
 } from "../components/RealZone";
@@ -41,11 +42,10 @@ export function OrganisationWorkspace() {
   const activitiesState = useActivities({ fire_id: secili?.fireId });
 
   return (
-    <PrototypeShell mode="organisation">
+    <WorkspaceShell mode="organisation">
       <main className="rc-main">
         <section className="rc-hero rc-hero--compact">
           <div>
-            <span className="rc-kicker rc-kicker--orange">Organisation · field operations</span>
             <h1>Where should a crew go today?</h1>
             <p>
               All 53 fires ranked by intervention load from the verdict layer.
@@ -99,7 +99,6 @@ export function OrganisationWorkspace() {
             <section className="rc-panel rc-zone-list" aria-label="Intervention queue">
               <div className="rc-section-head">
                 <div>
-                  <span className="rc-kicker">By intervention load</span>
                   <h2>Area queue <span>Alan kuyruğu</span></h2>
                 </div>
               </div>
@@ -125,7 +124,9 @@ export function OrganisationWorkspace() {
                 <p className="rc-section-intro">Loading activities…</p>
               )}
               {!activitiesState.hata && !activitiesState.yukleniyor && activitiesState.activities.length === 0 && (
-                <p className="rc-section-intro">No activity has been opened for this area yet.</p>
+                <p className="rc-section-intro">
+                  No field day is open here yet — volunteers see nothing for this area.
+                </p>
               )}
               {!activitiesState.hata && !activitiesState.yukleniyor && activitiesState.activities.length > 0 && (
                 <div className="rc-zone-activities">
@@ -137,6 +138,11 @@ export function OrganisationWorkspace() {
                   ))}
                 </div>
               )}
+              <NewActivityForm
+                fireId={secili.fireId}
+                il={secili.il}
+                onCreated={() => activitiesState.yenile()}
+              />
             </ZoneBrief>
           </div>
         )}
@@ -144,7 +150,6 @@ export function OrganisationWorkspace() {
         <section className="rc-section">
           <div className="rc-section-head">
             <div>
-              <span className="rc-kicker">Supporting field evidence</span>
               <h2>Review queue <span>İnceleme kuyruğu</span></h2>
             </div>
             <span className="rc-demo-pill">{bekleyenKanit} pending</span>
@@ -166,7 +171,7 @@ export function OrganisationWorkspace() {
           onUpdated={(guncel) => { setYonetilen(guncel); activitiesState.yenile(); }}
         />
       )}
-    </PrototypeShell>
+    </WorkspaceShell>
   );
 }
 
@@ -195,7 +200,7 @@ function ActivityManageModal({
       const guncel = await communityService.updateActivity(activity.id, { status: acik ? "closed" : "open" });
       onUpdated(guncel);
     } catch (reason: unknown) {
-      setHata(reason instanceof Error ? reason.message : "Etkinlik güncellenemedi.");
+      setHata(reason instanceof Error ? reason.message : "Could not update the activity.");
     } finally {
       setGonderiliyor(false);
     }
@@ -205,7 +210,7 @@ function ActivityManageModal({
     <div className="rc-modal-backdrop" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <section className="rc-modal" role="dialog" aria-modal="true" aria-labelledby="manage-activity-title">
         <button ref={closeRef} className="rc-modal__close" onClick={onClose} aria-label="Close dialog">×</button>
-        <span className="rc-kicker">{ACTIVITY_KIND_LABEL[activity.kind]}</span>
+        <p className="rc-modal__kind">{ACTIVITY_KIND_LABEL[activity.kind]}</p>
         <h2 id="manage-activity-title">{activity.title}</h2>
         <p>{activity.description}</p>
         <dl>

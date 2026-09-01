@@ -9,27 +9,33 @@ export interface ActivitiesState {
   yenile: () => void;
 }
 
-/** Fetches field activities from the real backend (GET /api/activities). */
+/**
+ * Fetches field activities from the real backend (GET /api/activities).
+ *
+ * With no `fire_id` it returns EVERY activity — that is what the Community
+ * screen asks for: a citizen browses the days they could turn up to, not the
+ * activities of one fire they had to pick first. The Organisation screen
+ * still passes `fire_id` to scope the list to the area it is looking at.
+ */
 export function useActivities(query: ActivityQuery = {}): ActivitiesState {
-  const { fire_id, status, limit } = query;
+  const { fire_id, status, volunteer_id, limit } = query;
   const [activities, setActivities] = useState<FieldActivity[]>([]);
   const [yukleniyor, setYukleniyor] = useState(true);
   const [hata, setHata] = useState<string | null>(null);
   const [tetik, setTetik] = useState(0);
 
   useEffect(() => {
-    if (!fire_id) { setActivities([]); setYukleniyor(false); return; }
     let aktif = true;
     setYukleniyor(true);
-    communityService.getActivities({ fire_id, status, limit })
+    communityService.getActivities({ fire_id, status, volunteer_id, limit })
       .then((data) => { if (aktif) { setActivities(data); setHata(null); } })
       .catch((reason: unknown) => {
-        if (aktif) setHata(reason instanceof Error ? reason.message : "Etkinlikler yüklenemedi.");
+        if (aktif) setHata(reason instanceof Error ? reason.message : "Could not load activities.");
       })
       .finally(() => { if (aktif) setYukleniyor(false); });
     return () => { aktif = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fire_id, status, limit, tetik]);
+  }, [fire_id, status, volunteer_id, limit, tetik]);
 
   const yenile = useCallback(() => setTetik((n) => n + 1), []);
 
