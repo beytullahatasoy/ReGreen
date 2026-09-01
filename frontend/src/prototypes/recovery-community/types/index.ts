@@ -1,35 +1,34 @@
-export type ZoneStatus = "Under Expert Assessment" | "Approved for Field Action" | "Active" | "Monitoring" | "Completed";
-export type ActivityStatus = "Open" | "Scheduled" | "In review";
-export type RecoveryStage = "Prioritised" | "Expert Reviewed" | "Recovery Zone" | "Field Action" | "Monitoring" | "Recovery Update";
-export type ObservationStatus = "Pending" | "Reviewed" | "Accepted as supporting evidence" | "Needs clarification";
+/**
+ * Types for the DEMO records on the Organisation and Community screens.
+ *
+ * RecoveryZoneDemo / ZoneStatus / RecoveryStage were REMOVED: zones are no
+ * longer invented. They come from real fire data through
+ * src/hooks/useRecoveryZones.ts -> RecoveryZone.
+ *
+ * The three types below cover records that still have no backend: field
+ * activities, volunteer observations and recovery updates. Each one is tied
+ * to a REAL fire through `fireId`.
+ */
 
-export interface RecoveryZoneDemo {
-  id: string;
-  name: string;
-  province: string;
-  region: string;
-  priority: "High Priority" | "Medium Priority";
-  status: ZoneStatus;
-  interventionStatus: string;
-  organisation: string;
-  lastUpdate: string;
-  sourceFire: string;
-  why: string;
-  assessment: string;
-  stage: RecoveryStage;
-  progress: number;
-  nextMilestone: string;
-  monitoringStatus: string;
-  activityAvailable: boolean;
-  priorityReasons: { label: "Recovery" | "Terrain / slope" | "Accessibility"; description: string }[];
-  followed?: boolean;
-}
+export type ActivityStatus = "Open" | "Scheduled" | "In review";
+
+export type ObservationStatus =
+  | "Pending"
+  | "Reviewed"
+  | "Accepted as supporting evidence"
+  | "Needs clarification";
 
 export interface FieldActivityDemo {
   id: string;
-  type: "Field Assessment" | "Controlled Cleanup" | "Soil / Erosion Observation" | "Vegetation Monitoring" | "Expert-Approved Planting Activity";
+  type:
+    | "Field Assessment"
+    | "Controlled Cleanup"
+    | "Soil / Erosion Observation"
+    | "Vegetation Monitoring"
+    | "Expert-Approved Planting Activity";
   date: string;
-  zoneId: string;
+  /** Real fire identifier — the `fire_id` from /api/fires. */
+  fireId: string;
   organisation: string;
   capacity: number;
   joined: number;
@@ -41,7 +40,7 @@ export interface FieldActivityDemo {
 }
 
 export interface RecoveryUpdateDemo {
-  zoneId: string;
+  fireId: string;
   title: string;
   status: "Completed";
   trend: "Improving" | "Stable" | "Needs further expert review";
@@ -49,7 +48,7 @@ export interface RecoveryUpdateDemo {
 
 export interface FieldObservationDemo {
   id: string;
-  zoneId: string;
+  fireId: string;
   submittedBy: string;
   date: string;
   location: string;
