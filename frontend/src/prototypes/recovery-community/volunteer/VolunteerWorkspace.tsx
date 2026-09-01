@@ -1,15 +1,15 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { aciliyeteGore, useRecoveryZones, type RecoveryZone } from "../../../hooks/useRecoveryZones";
-import { activities } from "../data/demoData";
-import { observationService } from "../data/observationService";
+import { communityService } from "../../../services";
+import type { FieldActivity } from "../../../types/community";
+import { getCachedVolunteerId, ensureVolunteer } from "../data/volunteerIdentity";
 import { useObservations } from "../data/useObservations";
-import type { FieldActivityDemo } from "../types";
+import { useActivities } from "../data/useActivities";
 import { Icon } from "../components/Icons";
-import { PrototypeModal } from "../components/PrototypeModal";
 import { PrototypeShell } from "../components/PrototypeShell";
 import { RecoveryUpdateCard } from "../components/RecoveryUpdateCard";
 import {
-  DemoNotice, VerdictBar, ZoneError, ZoneLoading, hektar,
+  ACTIVITY_KIND_LABEL, VerdictBar, ZoneError, ZoneLoading, hektar, tarih,
 } from "../components/RealZone";
 
 /**
@@ -17,28 +17,26 @@ import {
  *
  *     "Where can I go, and what can I do?"
  *
- * The previous version opened with a decorative 5-step strip, 4 invented
- * counters, 4 filters, 3 zone cards, 3 activity cards AND a 6-field
- * observation form all at once. Nobody knew where to start.
- *
- * Now there are four steps and each one opens only after the previous:
+ * There are four steps and each one opens only after the previous:
  *   1  What is near me   (province filter + real zones)
  *   2  Join              (appears once an area is chosen)
  *   3  Observation form  (appears once you join an activity)
  *   4  What happened     (appears once you have submitted something)
  *
- * Step 4 is the part that used to be missing entirely: the form ended in a
- * modal saying "nothing was submitted", so a volunteer's contribution had no
- * visible consequence. Submissions now go to the observation store, appear in
- * the Organisation review queue, and the decision comes back here.
+ * All four now talk to the real backend (backend/ReGreen.Api/Endpoints/CommunityEndpoints.cs):
+ * activities are ones an organisation actually opened, joining registers a
+ * real participant row, and a submitted observation lands in the
+ * Organisation review queue for real.
  */
 export function VolunteerWorkspace() {
   const { zones, yukleniyor, hata } = useRecoveryZones();
   const [il, setIl] = useState("All provinces");
   const [seciliZoneId, setSeciliZoneId] = useState<string | null>(null);
-  const [activity, setActivity] = useState<FieldActivityDemo | null>(null);
-  const [katildi, setKatildi] = useState(false);
-  const [action, setAction] = useState<string | null>(null);
+  const [activity, setActivity] = useState<FieldActivity | null>(null);
+  const [katilHata, setKatilHata] = useState<string | null>(null);
+  const [katiliyor, setKatiliyor] = useState(false);
+  const [volunteerId, setVolunteerId] = useState<string | null>(getCachedVolunteerId());
+  const [gonderimSayaci, setGonderimSayaci] = useState(0);
 
   const iller = useMemo(
     () => [...new Set(zones.map((z) => z.il))].sort((a, b) => a.localeCompare(b, "tr")),
@@ -53,12 +51,30 @@ export function VolunteerWorkspace() {
   }, [zones, il]);
 
   const secili = gosterilen.find((z) => z.fireId === seciliZoneId) ?? null;
+  const bolgeEtkinlikleri = useActivities({ fire_id: secili?.fireId });
+  const acikEtkinlik = bolgeEtkinlikleri.activities.find((a) => a.status === "open" || a.status === "scheduled") ?? null;
+  const katildi = activity !== null;
 
   function zoneSec(zone: RecoveryZone) {
     setSeciliZoneId(zone.fireId);
-    // Activities are tied to the area: the one opened for that fire is shown.
-    setActivity(activities.find((a) => a.fireId === zone.fireId) ?? null);
-    setKatildi(false);
+    setActivity(null);
+    setKatilHata(null);
+  }
+
+  async function katil() {
+    if (!acikEtkinlik) return;
+    setKatiliyor(true);
+    setKatilHata(null);
+    try {
+      const gonullu = await ensureVolunteer();
+      setVolunteerId(gonullu.id);
+      const guncel = await communityService.joinActivity(acikEtkinlik.id, gonullu.id);
+      setActivity(guncel);
+    } catch (reason: unknown) {
+      setKatilHata(reason instanceof Error ? reason.message : "Etkinliğe katılınamadı.");
+    } finally {
+      setKatiliyor(false);
+    }
   }
 
   return (
@@ -128,7 +144,7 @@ export function VolunteerWorkspace() {
             <div className="rc-section-head">
               <div>
                 <span className="rc-kicker">02 · Join</span>
-                <h2>{activity ? `Open activity in ${secili.il}` : `${secili.il} · no open activity yet`}</h2>
+                <h2>{acikEtkinlik ? `Open activity in ${secili.il}` : `${secili.il} · no open activity yet`}</h2>
               </div>
             </div>
 
@@ -137,51 +153,45 @@ export function VolunteerWorkspace() {
                 <p>{secili.paragraf || "The summary for this area could not be loaded."}</p>
               </div>
 
-              {!activity && (
+              {bolgeEtkinlikleri.yukleniyor && <p className="rc-section-intro">Loading activities…</p>}
+              {bolgeEtkinlikleri.hata && <p className="rc-form-warning" role="alert">{bolgeEtkinlikleri.hata}</p>}
+
+              {!bolgeEtkinlikleri.yukleniyor && !acikEtkinlik && (
                 <div className="rc-join__activity rc-join__activity--bos">
                   <p>
                     No verified organisation has opened an activity here yet.
-                    You can follow the area and join when one opens.
+                    Check back later, or record an observation on your own below.
                   </p>
-                  <button
-                    type="button"
-                    className="rc-button"
-                    onClick={() => setAction("Follow area")}
-                  >
-                    Follow this area <Icon name="arrow" />
-                  </button>
-                  <DemoNotice>Activity data is demo. Area measurements are real.</DemoNotice>
                 </div>
               )}
 
-              {activity && (
+              {acikEtkinlik && (
                 <div className="rc-join__activity">
-                  <span className="rc-status">{activity.status}</span>
-                  <h3>{activity.type}</h3>
-                  <p>{activity.description}</p>
+                  <span className="rc-status">{acikEtkinlik.status}</span>
+                  <h3>{ACTIVITY_KIND_LABEL[acikEtkinlik.kind]}</h3>
+                  <p>{acikEtkinlik.description}</p>
                   <dl>
-                    <div><dt>Date</dt><dd>{activity.date}</dd></div>
-                    <div><dt>Meeting point</dt><dd>{activity.location}</dd></div>
-                    <div><dt>Organiser</dt><dd>{activity.organisation}</dd></div>
-                    <div><dt>Capacity</dt><dd>{activity.joined} / {activity.capacity}</dd></div>
+                    <div><dt>Date</dt><dd>{acikEtkinlik.scheduled_for}</dd></div>
+                    <div><dt>Meeting point</dt><dd>{acikEtkinlik.meeting_point}</dd></div>
+                    <div><dt>Organiser</dt><dd>{acikEtkinlik.organisation}</dd></div>
+                    <div><dt>Capacity</dt><dd>{(activity ?? acikEtkinlik).joined} / {acikEtkinlik.capacity}</dd></div>
                   </dl>
                   <button
                     type="button"
                     className="rc-button rc-button--primary"
-                    onClick={() => setKatildi(true)}
+                    onClick={katil}
+                    disabled={katildi || katiliyor}
                   >
-                    {katildi ? "Joined" : "Join activity"} <Icon name="arrow" />
+                    {katildi ? "Joined" : katiliyor ? "Joining…" : "Join activity"} <Icon name="arrow" />
                   </button>
-                  <DemoNotice>
-                    Activity and capacity data is demo. Area measurements are real.
-                  </DemoNotice>
+                  {katilHata && <p className="rc-form-warning" role="alert">{katilHata}</p>}
                 </div>
               )}
             </div>
           </section>
         )}
 
-        {katildi && secili && activity && (
+        {secili && (
           <section className="rc-section">
             <div className="rc-section-head">
               <div>
@@ -189,11 +199,18 @@ export function VolunteerWorkspace() {
                 <h2>Note what you see <span>Gördüğünü not et</span></h2>
               </div>
             </div>
-            <FieldObservationForm zone={secili} activity={activity} />
+            <FieldObservationForm
+              key={`${secili.fireId}:${acikEtkinlik?.id ?? "none"}`}
+              zone={secili}
+              activityId={katildi ? acikEtkinlik?.id ?? null : null}
+              meetingPoint={acikEtkinlik?.meeting_point ?? ""}
+              onVolunteerRegistered={setVolunteerId}
+              onSubmitted={() => setGonderimSayaci((n) => n + 1)}
+            />
           </section>
         )}
 
-        <MySubmissions zones={zones} />
+        <MySubmissions zones={zones} volunteerId={volunteerId} refreshToken={gonderimSayaci} />
 
         <section className="rc-section">
           <div className="rc-section-head">
@@ -205,14 +222,6 @@ export function VolunteerWorkspace() {
           <RecoveryUpdateCard zones={zones} />
         </section>
       </main>
-
-      {action && (
-        <PrototypeModal
-          title={action}
-          message="This part is a prototype. Following an area is not recorded anywhere; area measurements, however, come from real data."
-          onClose={() => setAction(null)}
-        />
-      )}
     </PrototypeShell>
   );
 }
@@ -228,13 +237,20 @@ const SORULAR = [
 ] as const;
 
 function FieldObservationForm({
-  zone, activity,
-}: { zone: RecoveryZone; activity: FieldActivityDemo }) {
+  zone, activityId, meetingPoint, onVolunteerRegistered, onSubmitted,
+}: {
+  zone: RecoveryZone;
+  activityId: number | null;
+  meetingPoint: string;
+  onVolunteerRegistered: (id: string) => void;
+  onSubmitted: () => void;
+}) {
   const [cevaplar, setCevaplar] = useState<Record<string, string>>({});
-  const [konum, setKonum] = useState(activity.location);
+  const [konum, setKonum] = useState(meetingPoint);
   const [not, setNot] = useState("");
   const [fotoAdi, setFotoAdi] = useState<string | null>(null);
   const [uyari, setUyari] = useState<string | null>(null);
+  const [gonderiliyor, setGonderiliyor] = useState(false);
   const [gonderildi, setGonderildi] = useState(false);
   const dosyaRef = useRef<HTMLInputElement>(null);
 
@@ -242,7 +258,7 @@ function FieldObservationForm({
     .filter((s) => cevaplar[s.alan])
     .map((s) => `${s.alan.replace(/\?$/, "")}: ${cevaplar[s.alan]}`);
 
-  function gonder(e: React.FormEvent) {
+  async function gonder(e: React.FormEvent) {
     e.preventDefault();
     // An observation with no answer at all is not evidence — it is noise in
     // the organisation's queue. This is the only hard requirement.
@@ -254,16 +270,26 @@ function FieldObservationForm({
       setUyari("Say where you made the observation.");
       return;
     }
-    observationService.submit({
-      fireId: zone.fireId,
-      activityId: activity.id,
-      location: konum.trim(),
-      photoName: fotoAdi,
-      answers: verilenCevaplar,
-      note: not,
-    });
     setUyari(null);
-    setGonderildi(true);
+    setGonderiliyor(true);
+    try {
+      const gonullu = await ensureVolunteer();
+      onVolunteerRegistered(gonullu.id);
+      await communityService.createObservation(zone.fireId, {
+        volunteer_id: gonullu.id,
+        activity_id: activityId,
+        location: konum.trim(),
+        photo_name: fotoAdi,
+        answers: verilenCevaplar,
+        note: not.trim() || undefined,
+      });
+      setGonderildi(true);
+      onSubmitted();
+    } catch (reason: unknown) {
+      setUyari(reason instanceof Error ? reason.message : "Gözlem gönderilemedi.");
+    } finally {
+      setGonderiliyor(false);
+    }
   }
 
   function yenidenDoldur() {
@@ -346,15 +372,14 @@ function FieldObservationForm({
 
       {uyari && <p className="rc-form-warning" role="alert">{uyari}</p>}
 
-      <button type="submit" className="rc-button rc-button--primary">
-        Submit observation ({verilenCevaplar.length}/4 answered)
+      <button type="submit" className="rc-button rc-button--primary" disabled={gonderiliyor}>
+        {gonderiliyor ? "Submitting…" : `Submit observation (${verilenCevaplar.length}/4 answered)`}
       </button>
 
       <p className="rc-integrity-note">
         Volunteer observations <strong>do not train the model.</strong> The model
         learns from satellite data; your observation is reviewed as supporting
-        field evidence for the expert's decision. There is no observation backend
-        yet, so your submission is kept in this browser only.
+        field evidence for the expert's decision.
       </p>
     </form>
   );
@@ -364,12 +389,18 @@ function FieldObservationForm({
 
 /**
  * The volunteer's own submissions and what the organisation decided.
- * Hidden until there is at least one, so it never sits there empty.
+ * Hidden until there is a registered identity, and again until it has at
+ * least one submission, so it never sits there empty.
  */
-function MySubmissions({ zones }: { zones: RecoveryZone[] }) {
-  const hepsi = useObservations();
-  const benimkiler = hepsi.filter((o) => o.origin === "local");
-  if (benimkiler.length === 0) return null;
+function MySubmissions({
+  zones, volunteerId, refreshToken,
+}: { zones: RecoveryZone[]; volunteerId: string | null; refreshToken: number }) {
+  const { observations, yukleniyor, hata, yenile } = useObservations({ volunteer_id: volunteerId ?? undefined }, volunteerId !== null);
+  const ilkYenileme = useRef(refreshToken);
+  useEffect(() => {
+    if (refreshToken !== ilkYenileme.current) { ilkYenileme.current = refreshToken; yenile(); }
+  }, [refreshToken, yenile]);
+  if (volunteerId === null || (!yukleniyor && !hata && observations.length === 0)) return null;
 
   return (
     <section className="rc-section">
@@ -378,37 +409,30 @@ function MySubmissions({ zones }: { zones: RecoveryZone[] }) {
           <span className="rc-kicker">04 · Follow-up</span>
           <h2>What happened to my observations? <span>Gözlemlerime ne oldu?</span></h2>
         </div>
-        <button
-          type="button"
-          className="rc-button rc-button--ghost"
-          onClick={() => observationService.clearLocal()}
-        >
-          Clear my submissions
-        </button>
       </div>
 
-      <div className="rc-my-observations">
-        {benimkiler.map((o) => {
-          const zone = zones.find((z) => z.fireId === o.fireId);
-          return (
-            <article key={o.id}>
-              <div>
-                <strong>{zone ? `${zone.il} · ${zone.fireId}` : o.fireId}</strong>
-                <small>{o.location} · {o.displayDate}</small>
-              </div>
-              <p>{o.answers.join(" · ")}</p>
-              <span className={`rc-status${o.status !== "Pending" ? " rc-status--complete" : ""}`}>
-                {o.status === "Pending" ? "Waiting for review" : o.status}
-              </span>
-            </article>
-          );
-        })}
-      </div>
+      {hata && <p className="rc-form-warning" role="alert">{hata}</p>}
+      {yukleniyor && <p className="rc-section-intro">Loading…</p>}
 
-      <p className="rc-section-intro">
-        Stored in this browser only — there is no observation backend yet. Open
-        the Organisation screen to see the review queue these records land in.
-      </p>
+      {!yukleniyor && !hata && (
+        <div className="rc-my-observations">
+          {observations.map((o) => {
+            const zone = zones.find((z) => z.fireId === o.fire_id);
+            return (
+              <article key={o.id}>
+                <div>
+                  <strong>{zone ? `${zone.il} · ${zone.fireId}` : o.fire_id}</strong>
+                  <small>{o.location} · {tarih(o.submitted_at)}</small>
+                </div>
+                <p>{o.answers.join(" · ")}</p>
+                <span className={`rc-status${o.status !== "pending" ? " rc-status--complete" : ""}`}>
+                  {o.status === "pending" ? "Waiting for review" : o.status.replace(/_/g, " ")}
+                </span>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
