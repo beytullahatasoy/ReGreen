@@ -214,6 +214,23 @@ function ActivityRow({
     }
   }
 
+  async function ayril() {
+    const id = getCachedVolunteerId();
+    if (!id) {
+      setKatilHata("Your volunteer identity is unavailable. Reload the page and try again.");
+      return;
+    }
+    setKatiliyor(true);
+    setKatilHata(null);
+    try {
+      onJoined(await communityService.leaveActivity(activity.id, id));
+    } catch (reason: unknown) {
+      setKatilHata(reason instanceof Error ? reason.message : "Could not cancel your place. Try again.");
+    } finally {
+      setKatiliyor(false);
+    }
+  }
+
   return (
     <li className={`rc-day${acik ? " is-open" : ""}${katildi ? " is-joined" : ""}`}>
       <button
@@ -284,9 +301,19 @@ function ActivityRow({
                     days regularly.
                   </p>
                 )}
-                {katilHata && <p className="rc-form-warning" role="alert">{katilHata}</p>}
               </>
             )}
+            {katildi && (
+              <button
+                type="button"
+                className="rc-button"
+                onClick={ayril}
+                disabled={katiliyor}
+              >
+                {katiliyor ? "Cancelling…" : "Cancel my place"}
+              </button>
+            )}
+            {katilHata && <p className="rc-form-warning" role="alert">{katilHata}</p>}
           </div>
 
           {katildi && (
