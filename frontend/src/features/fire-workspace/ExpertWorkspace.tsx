@@ -23,10 +23,12 @@ export function ExpertWorkspace() {
         comparison={data.scenarioComparison} onClearComparison={data.clearScenarioComparison} fireNarrative={data.fireNarrative} />
       <MapWorkspace perimeter={data.perimeter} cells={data.visibleCells} cellSizeM={data.cellsResponse?.cell_size_m ?? 250}
         layer={layer} loading={data.loading} loadingMessage={data.loadingMessage} error={data.error}
-        selectedCell={data.selectedCell} scenarioHighlights={data.scenarioHighlights} scenarioFeedback={data.scenarioFeedback}
+        selectedCell={data.selectedCell} autoSelectedCellId={data.autoSelectedCellId} scenarioHighlights={data.scenarioHighlights} scenarioFeedback={data.scenarioFeedback}
         onSelectCell={selectCell} />
-      <button className="mobile-panel-toggle" onClick={() => setControlsOpen((open) => !open)} aria-label="Toggle controls">Controls</button>
-      <CellDetailPanel cell={data.selectedCell} cellsResponse={data.cellsResponse} priorityTransition={data.selectedCell && data.scenarioComparison ? data.scenarioComparison.transitions.get(data.selectedCell.cell_id) ?? null : null} verdict={data.selectedCellVerdict} hukumSozlugu={data.hukumSozlugu} verdictLoading={data.verdictLoading} onClose={() => data.setSelectedCell(null)} />
+      <button className="mobile-panel-toggle" onClick={() => setControlsOpen((open) => !open)} aria-label="Toggle controls" aria-expanded={controlsOpen}>{controlsOpen ? "Close controls" : "Controls"}</button>
+      <CellDetailPanel cell={data.selectedCell} cellsResponse={data.cellsResponse}
+        isAutoSelected={data.selectedCell !== null && data.selectedCell.cell_id === data.autoSelectedCellId}
+        priorityTransition={data.selectedCell && data.scenarioComparison ? data.scenarioComparison.transitions.get(data.selectedCell.cell_id) ?? null : null} verdict={data.selectedCellVerdict} hukumSozlugu={data.hukumSozlugu} verdictLoading={data.verdictLoading} onClose={() => data.setSelectedCell(null)} />
     </div>
   </main>;
 }

@@ -11,9 +11,9 @@ const style = {
   layers: [{ id: "osm", type: "raster" as const, source: "osm", paint: { "raster-opacity": 0.82, "raster-saturation": -0.72, "raster-contrast": -0.08, "raster-brightness-min": 0.14, "raster-brightness-max": 0.94 } }],
 };
 
-interface Props { perimeter: FirePerimeter | null; cells: Cell[]; cellSizeM: number; layer: MapLayer; loading: boolean; loadingMessage: string; error: string | null; selectedCell: Cell | null; scenarioHighlights: { increased: Set<string>; decreased: Set<string> }; scenarioFeedback: string | null; onSelectCell: (cell: Cell) => void }
+interface Props { perimeter: FirePerimeter | null; cells: Cell[]; cellSizeM: number; layer: MapLayer; loading: boolean; loadingMessage: string; error: string | null; selectedCell: Cell | null; autoSelectedCellId: string | null; scenarioHighlights: { increased: Set<string>; decreased: Set<string> }; scenarioFeedback: string | null; onSelectCell: (cell: Cell) => void }
 
-export function MapWorkspace({ perimeter, cells, cellSizeM, layer, loading, loadingMessage, error, selectedCell, scenarioHighlights, scenarioFeedback, onSelectCell }: Props) {
+export function MapWorkspace({ perimeter, cells, cellSizeM, layer, loading, loadingMessage, error, selectedCell, autoSelectedCellId, scenarioHighlights, scenarioFeedback, onSelectCell }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const markerRef = useRef<Marker | null>(null);
@@ -120,6 +120,20 @@ export function MapWorkspace({ perimeter, cells, cellSizeM, layer, loading, load
     const timer = window.setTimeout(() => map.setPaintProperty("cells-selected", "line-width", 2.5), 260);
     return () => window.clearTimeout(timer);
   }, [selectedCell, ready]);
+
+  // Bir yangın seçildiğinde en yüksek öncelikli hücre otomatik seçilir (useFireWorkspace);
+  // burada o hücreye zoom yapılır. Kullanıcının manuel hücre seçimlerinde (selectedCell
+  // değişse de autoSelectedCellId aynı kalırsa) kamera hareket etmez.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready || !autoSelectedCellId) return;
+    const cell = cellsRef.current.find((item) => item.cell_id === autoSelectedCellId);
+    if (!cell) return;
+    const feature = cellsToGeoJson([cell], cellSizeM).features[0];
+    if (!feature) return;
+    const bounds = boundsFor(feature);
+    if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 160, duration: reducedMotion() ? 0 : 720, maxZoom: 13 });
+  }, [autoSelectedCellId, cellSizeM, ready]);
 
   return <section className="map-stage" aria-label="Fire recovery map">
     <div className="map-canvas" ref={containerRef} />

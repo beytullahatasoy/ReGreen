@@ -297,6 +297,63 @@ public class CommunityEndpointsTests(DatabaseFixture fixture) : IAsyncLifetime
         Assert.Equal(HttpStatusCode.BadRequest, observations.StatusCode);
     }
 
+    [LocalDbFact]
+    public async Task Concurrent_joins_cannot_exceed_capacity()
+    {
+        await SeedFireAsync();
+        var client = _factory.CreateClient();
+        var id = await CreateActivityAsync(client, capacity: 1);
+        var volunteers = await Task.WhenAll(Enumerable.Range(0, 12)
+            .Select(_ => CreateVolunteerAsync(client)));
+
+        var responses = await Task.WhenAll(volunteers.Select(v => Join(client, id, v)));
+
+        Assert.Single(responses, r => r.StatusCode == HttpStatusCode.OK);
+        Assert.Equal(11, responses.Count(r => r.StatusCode == HttpStatusCode.Conflict));
+        await using var db = DatabaseFixture.CreateContext();
+        Assert.Equal(1, await db.ActivityParticipants.CountAsync(p => p.ActivityId == id));
+    }
+
+    [LocalDbFact]
+    public async Task Concurrent_duplicate_joins_and_leaves_are_idempotent()
+    {
+        await SeedFireAsync();
+        var client = _factory.CreateClient();
+        var id = await CreateActivityAsync(client, capacity: 1);
+        var volunteer = await CreateVolunteerAsync(client);
+
+        var joins = await Task.WhenAll(Enumerable.Range(0, 12).Select(_ => Join(client, id, volunteer)));
+        Assert.All(joins, response => Assert.Equal(HttpStatusCode.OK, response.StatusCode));
+        await using var db = DatabaseFixture.CreateContext();
+        Assert.Equal(1, await db.ActivityParticipants.CountAsync(p => p.ActivityId == id));
+
+        var leaves = await Task.WhenAll(Enumerable.Range(0, 12)
+            .Select(_ => client.DeleteAsync($"/api/activities/{id}/participants/{volunteer}")));
+        Assert.All(leaves, response => Assert.Equal(HttpStatusCode.OK, response.StatusCode));
+        Assert.Equal(0, await db.ActivityParticipants.CountAsync(p => p.ActivityId == id));
+    }
+
+    [LocalDbFact]
+    public async Task Concurrent_capacity_update_and_join_preserve_capacity()
+    {
+        await SeedFireAsync();
+        var client = _factory.CreateClient();
+        var id = await CreateActivityAsync(client, capacity: 2);
+        await Join(client, id, await CreateVolunteerAsync(client));
+        var volunteer = await CreateVolunteerAsync(client);
+
+        var results = await Task.WhenAll(
+            client.PatchAsJsonAsync($"/api/activities/{id}", new UpdateActivityRequest(null, 1)),
+            Join(client, id, volunteer));
+
+        Assert.True(
+            (results[0].StatusCode == HttpStatusCode.OK && results[1].StatusCode == HttpStatusCode.Conflict)
+            || (results[0].StatusCode == HttpStatusCode.BadRequest && results[1].StatusCode == HttpStatusCode.OK));
+        await using var db = DatabaseFixture.CreateContext();
+        var activity = await db.FieldActivities.SingleAsync(a => a.Id == id);
+        Assert.True(await db.ActivityParticipants.CountAsync(p => p.ActivityId == id) <= activity.Capacity);
+    }
+
     // ------------------------------------------------------------ yardımcılar
 
     private static async Task SeedFireAsync(string fireId = SeedHelper.FireId)

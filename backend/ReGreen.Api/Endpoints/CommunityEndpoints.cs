@@ -221,7 +221,8 @@ public static class CommunityEndpoints
         if (request is null)
             return ApiProblems.InvalidRequestBody("İstek gövdesi boş olamaz.");
 
-        var activity = await db.FieldActivities.FirstOrDefaultAsync(a => a.Id == id, ct);
+        await using var transaction = await db.Database.BeginTransactionAsync(ct);
+        var activity = await LockActivity(db, id, ct);
         if (activity is null)
             return ApiProblems.ActivityNotFound(id);
 
@@ -248,6 +249,7 @@ public static class CommunityEndpoints
         }
 
         await db.SaveChangesAsync(ct);
+        await transaction.CommitAsync(ct);
         return Results.Ok(await LoadActivity(db, id, ct));
     }
 
@@ -258,10 +260,8 @@ public static class CommunityEndpoints
             return ApiProblems.InvalidRequestBody("volunteer_id zorunludur.");
         var volunteerId = request.VolunteerId.Value;
 
-        var activity = await db.FieldActivities.AsNoTracking()
-            .Where(a => a.Id == id)
-            .Select(a => new { a.Id, a.Status, a.Capacity })
-            .FirstOrDefaultAsync(ct);
+        await using var transaction = await db.Database.BeginTransactionAsync(ct);
+        var activity = await LockActivity(db, id, ct);
         if (activity is null)
             return ApiProblems.ActivityNotFound(id);
 
@@ -291,13 +291,15 @@ public static class CommunityEndpoints
             await db.SaveChangesAsync(ct);
         }
 
+        await transaction.CommitAsync(ct);
         return Results.Ok(await LoadActivity(db, id, ct, volunteerId));
     }
 
     private static async Task<IResult> LeaveActivity(
         int id, Guid volunteerId, AppDbContext db, CancellationToken ct)
     {
-        if (!await db.FieldActivities.AsNoTracking().AnyAsync(a => a.Id == id, ct))
+        await using var transaction = await db.Database.BeginTransactionAsync(ct);
+        if (await LockActivity(db, id, ct) is null)
             return ApiProblems.ActivityNotFound(id);
 
         var participant = await db.ActivityParticipants
@@ -310,6 +312,7 @@ public static class CommunityEndpoints
             await db.SaveChangesAsync(ct);
         }
 
+        await transaction.CommitAsync(ct);
         return Results.Ok(await LoadActivity(db, id, ct));
     }
 
@@ -427,6 +430,14 @@ public static class CommunityEndpoints
     }
 
     // ------------------------------------------------------------ yardımcılar
+
+    // All participation and capacity/status mutations lock the same parent row
+    // until commit, including requests handled by different API instances.
+    // UPDLOCK prevents competing readers from both reserving the last place.
+    private static Task<FieldActivity?> LockActivity(AppDbContext db, int id, CancellationToken ct) =>
+        db.FieldActivities
+            .FromSqlInterpolated($"SELECT * FROM [FieldActivities] WITH (UPDLOCK, HOLDLOCK) WHERE [Id] = {id}")
+            .FirstOrDefaultAsync(ct);
 
     /// <summary>
     /// Etkinlik projeksiyonu. <c>Joined</c> ve <c>ObservationCount</c> ilişkili

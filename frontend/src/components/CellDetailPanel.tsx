@@ -11,7 +11,7 @@ import {
 } from "../utils/presentation";
 import type { PriorityClassTransition } from "../utils/comparePriorityScenarios";
 
-export function CellDetailPanel({ cell, cellsResponse, priorityTransition, verdict, hukumSozlugu, verdictLoading, onClose }: { cell: Cell | null; cellsResponse: CellsResponse | null; priorityTransition: PriorityClassTransition | null; verdict: CellVerdict | null; hukumSozlugu: HukumSozlugu | null; verdictLoading: boolean; onClose: () => void }) {
+export function CellDetailPanel({ cell, cellsResponse, isAutoSelected, priorityTransition, verdict, hukumSozlugu, verdictLoading, onClose }: { cell: Cell | null; cellsResponse: CellsResponse | null; isAutoSelected: boolean; priorityTransition: PriorityClassTransition | null; verdict: CellVerdict | null; hukumSozlugu: HukumSozlugu | null; verdictLoading: boolean; onClose: () => void }) {
   const predicted = cell?.prediction_status === "predicted";
   const priorityClass = cell?.priority_class ? priorityClassLabels[cell.priority_class] : "Not calculated";
   const predictionUnavailableReason = cell ? unavailablePredictionReason(cell.prediction_status) : "Not calculated";
@@ -25,6 +25,7 @@ export function CellDetailPanel({ cell, cellsResponse, priorityTransition, verdi
       <div className="detail-panel__head"><div><p className="eyebrow">Cell Analysis</p><h2>{cell.cell_id}</h2></div><button className="icon-button" onClick={onClose} aria-label="Close cell details">×</button></div>
       <div className="detail-panel__body">
         {predicted && <div className="priority-banner"><strong>{priorityClass}<br />PRIORITY</strong><span>{formatDecimal(cell.priority_score, 2)}</span></div>}
+        {predicted && isAutoSelected && <p className="auto-select-badge">Highest priority in this fire</p>}
         {verdict && <div className="verdict-card"><strong>{hukumTitle(verdict.hukum, verdictDictionary)}</strong><p>{verdict.ozet}</p></div>}
         {verdictLoading && <div className="status-note"><strong>Decision loading</strong><br />The model-linked field recommendation is being loaded.</div>}
         {cell.prediction_status === "low_severity" && <div className="status-note"><strong>Not Prioritized</strong><br />This cell did not satisfy the combined eligibility rule: dNBR ≥ 0.27 and NDVI drop ≥ 0.20. No model-based priority was calculated.</div>}

@@ -9,6 +9,7 @@ export function useFireWorkspace() {
   const [perimeter, setPerimeter] = useState<FirePerimeter | null>(null);
   const [cellsResponse, setCellsResponse] = useState<CellsResponse | null>(null);
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
+  const [autoSelectedCellId, setAutoSelectedCellId] = useState<string | null>(null);
   const [weights, setWeights] = useState<PriorityWeights | null>(null);
   const [defaultWeights, setDefaultWeights] = useState<PriorityWeights | null>(null);
   const [priorityClasses, setPriorityClasses] = useState<Set<PriorityClass>>(new Set(["COK_YUKSEK", "YUKSEK", "ORTA", "DUSUK"]));
@@ -24,6 +25,8 @@ export function useFireWorkspace() {
   const [selectedCellVerdict, setSelectedCellVerdict] = useState<CellVerdict | null>(null);
   const [verdictLoading, setVerdictLoading] = useState(false);
   const previousResponseRef = useRef<CellsResponse | null>(null);
+  const selectedCellRef = useRef<Cell | null>(null);
+  selectedCellRef.current = selectedCell;
 
   useEffect(() => {
     let active = true;
@@ -61,7 +64,19 @@ export function useFireWorkspace() {
         }
         previousResponseRef.current = nextCells;
         setPerimeter(nextPerimeter); setCellsResponse(nextCells);
-        setSelectedCell((current) => current ? nextCells.items.find((cell) => cell.cell_id === current.cell_id) ?? current : null);
+        const current = selectedCellRef.current;
+        if (current) {
+          setSelectedCell(nextCells.items.find((cell) => cell.cell_id === current.cell_id) ?? current);
+        } else if (!weights) {
+          // Taze yangın seçimi: kullanıcı henüz bir hücre seçmediyse, bu yangındaki
+          // en yüksek öncelikli hücreyi otomatik seçip haritada ona zoom yapılır
+          // (bkz. MapWorkspace autoSelectedCellId effect'i).
+          const highest = highestPriorityCell(nextCells.items);
+          setSelectedCell(highest);
+          setAutoSelectedCellId(highest?.cell_id ?? null);
+        } else {
+          setSelectedCell(null);
+        }
         if (!weights) setDefaultWeights(nextCells.applied_weights);
       }).catch((reason: unknown) => active && setError(reason instanceof Error ? reason.message : "Analysis data could not be loaded."))
         .finally(() => active && setLoading(false));
@@ -141,6 +156,7 @@ export function useFireWorkspace() {
     setScenarioFeedback(null);
     setScenarioComparison(null);
     setScenarioHighlights({ increased: new Set(), decreased: new Set() });
+    setAutoSelectedCellId(null);
     setSelectedFireId(fireId);
   };
 
@@ -158,7 +174,7 @@ export function useFireWorkspace() {
   });
 
   return { fires, selectedFire, selectedFireId, selectFire, perimeter, cellsResponse, visibleCells,
-    selectedCell, setSelectedCell, weights: weights ?? cellsResponse?.applied_weights ?? null, defaultWeights, setWeights,
+    selectedCell, setSelectedCell, autoSelectedCellId, weights: weights ?? cellsResponse?.applied_weights ?? null, defaultWeights, setWeights,
     resetWeights: () => defaultWeights && setWeights({ ...defaultWeights }), priorityClasses, togglePriority,
     clearScenarioComparison: () => {
       setScenarioComparison(null);
@@ -166,4 +182,14 @@ export function useFireWorkspace() {
     },
     predictionStatuses, toggleStatus, loading, loadingMessage, error, scenarioFeedback, scenarioComparison, scenarioHighlights,
     hukumSozlugu, fireNarrative, selectedCellVerdict, verdictLoading };
+}
+
+// En yüksek priority_score'a sahip hücreyi döndürür; skoru olmayan hücreler yok sayılır.
+function highestPriorityCell(cells: Cell[]): Cell | null {
+  let best: Cell | null = null;
+  for (const cell of cells) {
+    if (cell.priority_score === null) continue;
+    if (best === null || best.priority_score === null || cell.priority_score > best.priority_score) best = cell;
+  }
+  return best;
 }
